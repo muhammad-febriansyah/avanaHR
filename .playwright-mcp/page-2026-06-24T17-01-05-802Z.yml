@@ -1,0 +1,149 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+            - listitem [ref=e37]:
+              - button "Absensi" [ref=e38]:
+                - img [ref=e39]
+                - generic [ref=e48]: Absensi
+                - img [ref=e49]
+            - listitem [ref=e51]:
+              - button "Cuti & Lembur" [ref=e52]:
+                - img [ref=e53]
+                - generic [ref=e55]: Cuti & Lembur
+                - img [ref=e56]
+            - listitem [ref=e58]:
+              - button "Payroll" [ref=e59]:
+                - img [ref=e60]
+                - generic [ref=e63]: Payroll
+                - img [ref=e64]
+        - generic [ref=e66]:
+          - generic [ref=e67]: Personal
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - button "Self-Service" [ref=e70]:
+                - img [ref=e71]
+                - generic [ref=e75]: Self-Service
+                - img [ref=e76]
+            - listitem [ref=e78]:
+              - button "Persetujuan" [ref=e79]:
+                - img [ref=e80]
+                - generic [ref=e84]: Persetujuan
+                - img [ref=e85]
+        - generic [ref=e87]:
+          - generic [ref=e88]: Sistem
+          - list [ref=e89]:
+            - listitem [ref=e90]:
+              - button "Laporan" [ref=e91]:
+                - img [ref=e92]
+                - generic [ref=e94]: Laporan
+                - img [ref=e95]
+            - listitem [ref=e97]:
+              - button "Pengaturan" [ref=e98]:
+                - img [ref=e99]
+                - generic [ref=e102]: Pengaturan
+                - img [ref=e103]
+      - generic [ref=e107]:
+        - generic [ref=e108]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e109] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e110]
+          - generic [ref=e113]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e114] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e115]
+          - generic [ref=e117]: (021) 5099-9000
+    - main [ref=e118]:
+      - generic [ref=e119]:
+        - button "Toggle sidebar" [ref=e120]:
+          - img
+          - generic [ref=e121]: Toggle sidebar
+        - generic [ref=e122]:
+          - img
+          - searchbox "Cari" [ref=e123]
+        - button "Notifikasi" [ref=e124]:
+          - img [ref=e125]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e130]:
+          - generic [ref=e131]: AA
+          - generic [ref=e132]:
+            - generic [ref=e133]: Admin Avana
+            - generic [ref=e134]: PT Nusantara Jaya
+          - img [ref=e135]
+      - generic [ref=e425]:
+        - generic [ref=e427]:
+          - navigation "Breadcrumb" [ref=e428]:
+            - link "Dashboard" [ref=e429] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/dashboard
+            - img [ref=e430]
+            - link "Pengguna" [ref=e432] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/users
+            - img [ref=e433]
+            - generic [ref=e435]: Admin Avana
+          - heading "Atur Role Pengguna" [level=1] [ref=e436]
+          - paragraph [ref=e437]: Tentukan role untuk Admin Avana (admin@avanahr.id).
+        - generic [ref=e439]:
+          - generic [ref=e440]:
+            - generic [ref=e441]:
+              - img [ref=e442]
+              - generic [ref=e444]: Ini akun Anda sendiri. Role tidak dapat diubah untuk mencegah kehilangan akses.
+            - generic [ref=e445]:
+              - generic [ref=e446]:
+                - checkbox "auditor" [disabled] [ref=e447]
+                - checkbox [disabled]
+                - generic [ref=e448]: auditor
+              - generic [ref=e449]:
+                - checkbox "employee" [disabled] [ref=e450]
+                - checkbox [disabled]
+                - generic [ref=e451]: employee
+              - generic [ref=e452]:
+                - checkbox "finance" [disabled] [ref=e453]
+                - checkbox [disabled]
+                - generic [ref=e454]: finance
+              - generic [ref=e455]:
+                - checkbox "hr-admin" [checked] [disabled] [ref=e456]:
+                  - generic:
+                    - img
+                - checkbox [checked] [disabled]
+                - generic [ref=e457]: hr-admin
+              - generic [ref=e458]:
+                - checkbox "manager" [disabled] [ref=e459]
+                - checkbox [disabled]
+                - generic [ref=e460]: manager
+              - generic [ref=e461]:
+                - checkbox "payroll-officer" [disabled] [ref=e462]
+                - checkbox [disabled]
+                - generic [ref=e463]: payroll-officer
+              - generic [ref=e464]:
+                - checkbox "tenant-admin" [checked] [disabled] [ref=e465]:
+                  - generic:
+                    - img
+                - checkbox [checked] [disabled]
+                - generic [ref=e466]: tenant-admin
+          - generic [ref=e467]:
+            - link "Batal" [ref=e468] [cursor=pointer]:
+              - /url: /users
+              - img
+              - text: Batal
+            - button "Simpan" [disabled]:
+              - img
+              - text: Simpan
+  - region "Notifications alt+T"

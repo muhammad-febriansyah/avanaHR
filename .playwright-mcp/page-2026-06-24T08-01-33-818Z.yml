@@ -1,0 +1,590 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [expanded] [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+              - list [ref=e38]:
+                - listitem [ref=e39]:
+                  - link "Data Karyawan" [ref=e40] [cursor=pointer]:
+                    - /url: /employees
+                    - generic [ref=e41]: Data Karyawan
+                - listitem [ref=e42]:
+                  - link "Struktur Organisasi" [ref=e43] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e44]: Struktur Organisasi
+                - listitem [ref=e45]:
+                  - link "Departemen & Posisi" [ref=e46] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e47]: Departemen & Posisi
+                - listitem [ref=e48]:
+                  - link "Kalender Kerja" [ref=e49] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e50]: Kalender Kerja
+                - listitem [ref=e51]:
+                  - link "Lifecycle" [ref=e52] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e53]: Lifecycle
+                - listitem [ref=e54]:
+                  - link "Dokumen" [ref=e55] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e56]: Dokumen
+                - listitem [ref=e57]:
+                  - link "Tiket HR" [ref=e58] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e59]: Tiket HR
+            - listitem [ref=e60]:
+              - button "Absensi" [ref=e61]:
+                - img [ref=e62]
+                - generic [ref=e71]: Absensi
+                - img [ref=e72]
+            - listitem [ref=e74]:
+              - button "Cuti & Lembur" [ref=e75]:
+                - img [ref=e76]
+                - generic [ref=e78]: Cuti & Lembur
+                - img [ref=e79]
+            - listitem [ref=e81]:
+              - button "Payroll" [ref=e82]:
+                - img [ref=e83]
+                - generic [ref=e86]: Payroll
+                - img [ref=e87]
+        - generic [ref=e89]:
+          - generic [ref=e90]: Personal
+          - list [ref=e91]:
+            - listitem [ref=e92]:
+              - button "Self-Service" [ref=e93]:
+                - img [ref=e94]
+                - generic [ref=e98]: Self-Service
+                - img [ref=e99]
+            - listitem [ref=e101]:
+              - button "Persetujuan" [ref=e102]:
+                - img [ref=e103]
+                - generic [ref=e107]: Persetujuan
+                - img [ref=e108]
+        - generic [ref=e110]:
+          - generic [ref=e111]: Sistem
+          - list [ref=e112]:
+            - listitem [ref=e113]:
+              - button "Laporan" [ref=e114]:
+                - img [ref=e115]
+                - generic [ref=e117]: Laporan
+                - img [ref=e118]
+            - listitem [ref=e120]:
+              - button "Pengaturan" [ref=e121]:
+                - img [ref=e122]
+                - generic [ref=e125]: Pengaturan
+                - img [ref=e126]
+      - generic [ref=e130]:
+        - generic [ref=e131]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e132] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e133]
+          - generic [ref=e136]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e137] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e138]
+          - generic [ref=e140]: (021) 5099-9000
+    - main [ref=e141]:
+      - generic [ref=e142]:
+        - button "Toggle sidebar" [ref=e143]:
+          - img
+          - generic [ref=e144]: Toggle sidebar
+        - generic [ref=e145]:
+          - img
+          - searchbox "Cari" [ref=e146]
+        - button "Notifikasi" [ref=e147]:
+          - img [ref=e148]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e153]:
+          - generic [ref=e154]: AA
+          - generic [ref=e155]:
+            - generic [ref=e156]: Admin Avana
+            - generic [ref=e157]: PT Nusantara Jaya
+          - img [ref=e158]
+      - generic [ref=e160]:
+        - generic [ref=e164]:
+          - list [ref=e166]:
+            - listitem [ref=e167]:
+              - link "AvanaHR" [ref=e168] [cursor=pointer]:
+                - /url: /dashboard
+                - img "AvanaHR" [ref=e169]
+          - generic [ref=e170]:
+            - list [ref=e172]:
+              - listitem [ref=e173]:
+                - link "Dashboard" [ref=e174] [cursor=pointer]:
+                  - /url: /dashboard
+                  - img [ref=e175]
+                  - generic [ref=e180]: Dashboard
+            - generic [ref=e181]:
+              - generic [ref=e182]: Manajemen
+              - list [ref=e183]:
+                - listitem [ref=e184]:
+                  - button "Karyawan" [expanded] [ref=e185]:
+                    - img [ref=e186]
+                    - generic [ref=e191]: Karyawan
+                    - img [ref=e192]
+                  - list [ref=e195]:
+                    - listitem [ref=e196]:
+                      - link "Data Karyawan" [ref=e197] [cursor=pointer]:
+                        - /url: /employees
+                        - generic [ref=e198]: Data Karyawan
+                    - listitem [ref=e199]:
+                      - link "Struktur Organisasi" [ref=e200] [cursor=pointer]:
+                        - /url: ""
+                        - generic [ref=e201]: Struktur Organisasi
+                    - listitem [ref=e202]:
+                      - link "Departemen & Posisi" [ref=e203] [cursor=pointer]:
+                        - /url: ""
+                        - generic [ref=e204]: Departemen & Posisi
+                    - listitem [ref=e205]:
+                      - link "Kalender Kerja" [ref=e206] [cursor=pointer]:
+                        - /url: ""
+                        - generic [ref=e207]: Kalender Kerja
+                    - listitem [ref=e208]:
+                      - link "Lifecycle" [ref=e209] [cursor=pointer]:
+                        - /url: ""
+                        - generic [ref=e210]: Lifecycle
+                    - listitem [ref=e211]:
+                      - link "Dokumen" [ref=e212] [cursor=pointer]:
+                        - /url: ""
+                        - generic [ref=e213]: Dokumen
+                    - listitem [ref=e214]:
+                      - link "Tiket HR" [ref=e215] [cursor=pointer]:
+                        - /url: ""
+                        - generic [ref=e216]: Tiket HR
+                - listitem [ref=e217]:
+                  - button "Absensi" [ref=e218]:
+                    - img [ref=e219]
+                    - generic [ref=e228]: Absensi
+                    - img [ref=e229]
+                - listitem [ref=e231]:
+                  - button "Cuti & Lembur" [ref=e232]:
+                    - img [ref=e233]
+                    - generic [ref=e235]: Cuti & Lembur
+                    - img [ref=e236]
+                - listitem [ref=e238]:
+                  - button "Payroll" [ref=e239]:
+                    - img [ref=e240]
+                    - generic [ref=e243]: Payroll
+                    - img [ref=e244]
+            - generic [ref=e246]:
+              - generic [ref=e247]: Personal
+              - list [ref=e248]:
+                - listitem [ref=e249]:
+                  - button "Self-Service" [ref=e250]:
+                    - img [ref=e251]
+                    - generic [ref=e255]: Self-Service
+                    - img [ref=e256]
+                - listitem [ref=e258]:
+                  - button "Persetujuan" [ref=e259]:
+                    - img [ref=e260]
+                    - generic [ref=e264]: Persetujuan
+                    - img [ref=e265]
+            - generic [ref=e267]:
+              - generic [ref=e268]: Sistem
+              - list [ref=e269]:
+                - listitem [ref=e270]:
+                  - button "Laporan" [ref=e271]:
+                    - img [ref=e272]
+                    - generic [ref=e274]: Laporan
+                    - img [ref=e275]
+                - listitem [ref=e277]:
+                  - button "Pengaturan" [ref=e278]:
+                    - img [ref=e279]
+                    - generic [ref=e282]: Pengaturan
+                    - img [ref=e283]
+          - generic [ref=e287]:
+            - generic [ref=e288]: Butuh Bantuan?
+            - link "support@avanahr.co.id" [ref=e289] [cursor=pointer]:
+              - /url: mailto:support@avanahr.co.id
+              - img [ref=e290]
+              - generic [ref=e293]: support@avanahr.co.id
+            - link "(021) 5099-9000" [ref=e294] [cursor=pointer]:
+              - /url: tel:+622150999000
+              - img [ref=e295]
+              - generic [ref=e297]: (021) 5099-9000
+        - main [ref=e298]:
+          - generic [ref=e299]:
+            - button "Toggle sidebar" [ref=e300]:
+              - img
+              - generic [ref=e301]: Toggle sidebar
+            - generic [ref=e302]:
+              - img
+              - searchbox "Cari" [ref=e303]
+            - button "Notifikasi" [ref=e304]:
+              - img [ref=e305]
+            - button "AA Admin Avana PT Nusantara Jaya" [ref=e310]:
+              - generic [ref=e311]: AA
+              - generic [ref=e312]:
+                - generic [ref=e313]: Admin Avana
+                - generic [ref=e314]: PT Nusantara Jaya
+              - img [ref=e315]
+          - generic [ref=e317]:
+            - generic [ref=e318]:
+              - generic [ref=e319]:
+                - heading "Data Karyawan" [level=1] [ref=e320]
+                - paragraph [ref=e321]: Kelola data seluruh karyawan perusahaan.
+              - link "Tambah Karyawan" [ref=e323] [cursor=pointer]:
+                - /url: /employees/create
+                - img
+                - text: Tambah Karyawan
+            - generic [ref=e325]:
+              - generic [ref=e326]:
+                - generic [ref=e327]:
+                  - img [ref=e328]
+                  - searchbox "Cari nama, NIP, atau email..." [ref=e331]
+                - combobox [ref=e332]:
+                  - generic: Semua Status
+                  - img
+              - table [ref=e335]:
+                - rowgroup [ref=e336]:
+                  - row "No. Karyawan Nama Departemen Posisi Email Status Aksi" [ref=e337]:
+                    - columnheader "No. Karyawan" [ref=e338]
+                    - columnheader "Nama" [ref=e339]
+                    - columnheader "Departemen" [ref=e340]
+                    - columnheader "Posisi" [ref=e341]
+                    - columnheader "Email" [ref=e342]
+                    - columnheader "Status" [ref=e343]
+                    - columnheader "Aksi" [ref=e344]
+                - rowgroup [ref=e345]:
+                  - row "ADM00001 Admin Avana - - admin@avanahr.id Aktif Lihat Edit Hapus" [ref=e346]:
+                    - cell "ADM00001" [ref=e347]
+                    - cell "Admin Avana" [ref=e348]
+                    - cell "-" [ref=e349]
+                    - cell "-" [ref=e350]
+                    - cell "admin@avanahr.id" [ref=e351]
+                    - cell "Aktif" [ref=e352]:
+                      - generic [ref=e353]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e354]:
+                      - generic [ref=e355]:
+                        - link "Lihat" [ref=e356] [cursor=pointer]:
+                          - /url: /employees/21
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e357] [cursor=pointer]:
+                          - /url: /employees/21/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e358]:
+                          - img
+                          - text: Hapus
+                  - row "EMP04148 Nadine Saptono Human Resources Mail Clerk octavia.romaguera@example.com Aktif Lihat Edit Hapus" [ref=e359]:
+                    - cell "EMP04148" [ref=e360]
+                    - cell "Nadine Saptono" [ref=e361]
+                    - cell "Human Resources" [ref=e362]
+                    - cell "Mail Clerk" [ref=e363]
+                    - cell "octavia.romaguera@example.com" [ref=e364]
+                    - cell "Aktif" [ref=e365]:
+                      - generic [ref=e366]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e367]:
+                      - generic [ref=e368]:
+                        - link "Lihat" [ref=e369] [cursor=pointer]:
+                          - /url: /employees/9
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e370] [cursor=pointer]:
+                          - /url: /employees/9/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e371]:
+                          - img
+                          - text: Hapus
+                  - row "EMP69233 Oskar Nurdiyanti Engineering Mail Clerk kevin.howe@example.net Aktif Lihat Edit Hapus" [ref=e372]:
+                    - cell "EMP69233" [ref=e373]
+                    - cell "Oskar Nurdiyanti" [ref=e374]
+                    - cell "Engineering" [ref=e375]
+                    - cell "Mail Clerk" [ref=e376]
+                    - cell "kevin.howe@example.net" [ref=e377]
+                    - cell "Aktif" [ref=e378]:
+                      - generic [ref=e379]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e380]:
+                      - generic [ref=e381]:
+                        - link "Lihat" [ref=e382] [cursor=pointer]:
+                          - /url: /employees/10
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e383] [cursor=pointer]:
+                          - /url: /employees/10/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e384]:
+                          - img
+                          - text: Hapus
+                  - row "EMP18635 Kamila Mangunsong Finance Potter petra.ward@example.org Aktif Lihat Edit Hapus" [ref=e385]:
+                    - cell "EMP18635" [ref=e386]
+                    - cell "Kamila Mangunsong" [ref=e387]
+                    - cell "Finance" [ref=e388]
+                    - cell "Potter" [ref=e389]
+                    - cell "petra.ward@example.org" [ref=e390]
+                    - cell "Aktif" [ref=e391]:
+                      - generic [ref=e392]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e393]:
+                      - generic [ref=e394]:
+                        - link "Lihat" [ref=e395] [cursor=pointer]:
+                          - /url: /employees/11
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e396] [cursor=pointer]:
+                          - /url: /employees/11/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e397]:
+                          - img
+                          - text: Hapus
+                  - row "EMP85320 Johan Hakim Engineering Potter tianna.turner@example.com Aktif Lihat Edit Hapus" [ref=e398]:
+                    - cell "EMP85320" [ref=e399]
+                    - cell "Johan Hakim" [ref=e400]
+                    - cell "Engineering" [ref=e401]
+                    - cell "Potter" [ref=e402]
+                    - cell "tianna.turner@example.com" [ref=e403]
+                    - cell "Aktif" [ref=e404]:
+                      - generic [ref=e405]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e406]:
+                      - generic [ref=e407]:
+                        - link "Lihat" [ref=e408] [cursor=pointer]:
+                          - /url: /employees/12
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e409] [cursor=pointer]:
+                          - /url: /employees/12/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e410]:
+                          - img
+                          - text: Hapus
+                  - row "EMP90816 Ibun Yolanda Engineering Potter barrows.liam@example.net Aktif Lihat Edit Hapus" [ref=e411]:
+                    - cell "EMP90816" [ref=e412]
+                    - cell "Ibun Yolanda" [ref=e413]
+                    - cell "Engineering" [ref=e414]
+                    - cell "Potter" [ref=e415]
+                    - cell "barrows.liam@example.net" [ref=e416]
+                    - cell "Aktif" [ref=e417]:
+                      - generic [ref=e418]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e419]:
+                      - generic [ref=e420]:
+                        - link "Lihat" [ref=e421] [cursor=pointer]:
+                          - /url: /employees/13
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e422] [cursor=pointer]:
+                          - /url: /employees/13/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e423]:
+                          - img
+                          - text: Hapus
+                  - row "EMP28725 Zelda Andriani Human Resources Social Worker macejkovic.dallin@example.net Aktif Lihat Edit Hapus" [ref=e424]:
+                    - cell "EMP28725" [ref=e425]
+                    - cell "Zelda Andriani" [ref=e426]
+                    - cell "Human Resources" [ref=e427]
+                    - cell "Social Worker" [ref=e428]
+                    - cell "macejkovic.dallin@example.net" [ref=e429]
+                    - cell "Aktif" [ref=e430]:
+                      - generic [ref=e431]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e432]:
+                      - generic [ref=e433]:
+                        - link "Lihat" [ref=e434] [cursor=pointer]:
+                          - /url: /employees/14
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e435] [cursor=pointer]:
+                          - /url: /employees/14/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e436]:
+                          - img
+                          - text: Hapus
+                  - row "EMP63799 Jatmiko Winarsih Engineering Mail Clerk barrett.willms@example.com Aktif Lihat Edit Hapus" [ref=e437]:
+                    - cell "EMP63799" [ref=e438]
+                    - cell "Jatmiko Winarsih" [ref=e439]
+                    - cell "Engineering" [ref=e440]
+                    - cell "Mail Clerk" [ref=e441]
+                    - cell "barrett.willms@example.com" [ref=e442]
+                    - cell "Aktif" [ref=e443]:
+                      - generic [ref=e444]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e445]:
+                      - generic [ref=e446]:
+                        - link "Lihat" [ref=e447] [cursor=pointer]:
+                          - /url: /employees/15
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e448] [cursor=pointer]:
+                          - /url: /employees/15/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e449]:
+                          - img
+                          - text: Hapus
+                  - row "EMP23350 Carla Puspita Sales Potter hauck.timmothy@example.org Aktif Lihat Edit Hapus" [ref=e450]:
+                    - cell "EMP23350" [ref=e451]
+                    - cell "Carla Puspita" [ref=e452]
+                    - cell "Sales" [ref=e453]
+                    - cell "Potter" [ref=e454]
+                    - cell "hauck.timmothy@example.org" [ref=e455]
+                    - cell "Aktif" [ref=e456]:
+                      - generic [ref=e457]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e458]:
+                      - generic [ref=e459]:
+                        - link "Lihat" [ref=e460] [cursor=pointer]:
+                          - /url: /employees/16
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e461] [cursor=pointer]:
+                          - /url: /employees/16/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e462]:
+                          - img
+                          - text: Hapus
+                  - row "EMP19054 Lukita Jailani Human Resources Social Worker jkling@example.com Aktif Lihat Edit Hapus" [ref=e463]:
+                    - cell "EMP19054" [ref=e464]
+                    - cell "Lukita Jailani" [ref=e465]
+                    - cell "Human Resources" [ref=e466]
+                    - cell "Social Worker" [ref=e467]
+                    - cell "jkling@example.com" [ref=e468]
+                    - cell "Aktif" [ref=e469]:
+                      - generic [ref=e470]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e471]:
+                      - generic [ref=e472]:
+                        - link "Lihat" [ref=e473] [cursor=pointer]:
+                          - /url: /employees/17
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e474] [cursor=pointer]:
+                          - /url: /employees/17/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e475]:
+                          - img
+                          - text: Hapus
+                  - row "EMP69350 Iriana Aryani Engineering Mail Clerk vlangosh@example.com Aktif Lihat Edit Hapus" [ref=e476]:
+                    - cell "EMP69350" [ref=e477]
+                    - cell "Iriana Aryani" [ref=e478]
+                    - cell "Engineering" [ref=e479]
+                    - cell "Mail Clerk" [ref=e480]
+                    - cell "vlangosh@example.com" [ref=e481]
+                    - cell "Aktif" [ref=e482]:
+                      - generic [ref=e483]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e484]:
+                      - generic [ref=e485]:
+                        - link "Lihat" [ref=e486] [cursor=pointer]:
+                          - /url: /employees/18
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e487] [cursor=pointer]:
+                          - /url: /employees/18/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e488]:
+                          - img
+                          - text: Hapus
+                  - row "EMP98177 Kayun Suryatmi Human Resources Account Manager vtowne@example.net Aktif Lihat Edit Hapus" [ref=e489]:
+                    - cell "EMP98177" [ref=e490]
+                    - cell "Kayun Suryatmi" [ref=e491]
+                    - cell "Human Resources" [ref=e492]
+                    - cell "Account Manager" [ref=e493]
+                    - cell "vtowne@example.net" [ref=e494]
+                    - cell "Aktif" [ref=e495]:
+                      - generic [ref=e496]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e497]:
+                      - generic [ref=e498]:
+                        - link "Lihat" [ref=e499] [cursor=pointer]:
+                          - /url: /employees/19
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e500] [cursor=pointer]:
+                          - /url: /employees/19/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e501]:
+                          - img
+                          - text: Hapus
+                  - row "EMP37581 Prayogo Pangestu Finance Mail Clerk konopelski.paris@example.org Aktif Lihat Edit Hapus" [ref=e502]:
+                    - cell "EMP37581" [ref=e503]
+                    - cell "Prayogo Pangestu" [ref=e504]
+                    - cell "Finance" [ref=e505]
+                    - cell "Mail Clerk" [ref=e506]
+                    - cell "konopelski.paris@example.org" [ref=e507]
+                    - cell "Aktif" [ref=e508]:
+                      - generic [ref=e509]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e510]:
+                      - generic [ref=e511]:
+                        - link "Lihat" [ref=e512] [cursor=pointer]:
+                          - /url: /employees/20
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e513] [cursor=pointer]:
+                          - /url: /employees/20/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e514]:
+                          - img
+                          - text: Hapus
+                  - row "EMP47975 Cinthia Fujiati Engineering Mail Clerk rice.eliane@example.com Aktif Lihat Edit Hapus" [ref=e515]:
+                    - cell "EMP47975" [ref=e516]
+                    - cell "Cinthia Fujiati" [ref=e517]
+                    - cell "Engineering" [ref=e518]
+                    - cell "Mail Clerk" [ref=e519]
+                    - cell "rice.eliane@example.com" [ref=e520]
+                    - cell "Aktif" [ref=e521]:
+                      - generic [ref=e522]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e523]:
+                      - generic [ref=e524]:
+                        - link "Lihat" [ref=e525] [cursor=pointer]:
+                          - /url: /employees/1
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e526] [cursor=pointer]:
+                          - /url: /employees/1/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e527]:
+                          - img
+                          - text: Hapus
+                  - row "EMP47740 Rachel Lazuardi Human Resources Account Manager hodkiewicz.angie@example.com Aktif Lihat Edit Hapus" [ref=e528]:
+                    - cell "EMP47740" [ref=e529]
+                    - cell "Rachel Lazuardi" [ref=e530]
+                    - cell "Human Resources" [ref=e531]
+                    - cell "Account Manager" [ref=e532]
+                    - cell "hodkiewicz.angie@example.com" [ref=e533]
+                    - cell "Aktif" [ref=e534]:
+                      - generic [ref=e535]: Aktif
+                    - cell "Lihat Edit Hapus" [ref=e536]:
+                      - generic [ref=e537]:
+                        - link "Lihat" [ref=e538] [cursor=pointer]:
+                          - /url: /employees/2
+                          - img
+                          - text: Lihat
+                        - link "Edit" [ref=e539] [cursor=pointer]:
+                          - /url: /employees/2/edit
+                          - img
+                          - text: Edit
+                        - button "Hapus" [ref=e540]:
+                          - img
+                          - text: Hapus
+              - generic [ref=e541]:
+                - paragraph [ref=e542]: Menampilkan 1–15 dari 21
+                - generic [ref=e543]:
+                  - button "Sebelumnya" [disabled]:
+                    - img
+                    - text: Sebelumnya
+                  - button "Berikutnya" [ref=e544]:
+                    - text: Berikutnya
+                    - img
+  - region "Notifications alt+T"

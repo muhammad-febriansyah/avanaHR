@@ -1,0 +1,180 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+            - listitem [ref=e37]:
+              - button "Absensi" [ref=e38]:
+                - img [ref=e39]
+                - generic [ref=e48]: Absensi
+                - img [ref=e49]
+            - listitem [ref=e51]:
+              - button "Cuti & Lembur" [ref=e52]:
+                - img [ref=e53]
+                - generic [ref=e55]: Cuti & Lembur
+                - img [ref=e56]
+            - listitem [ref=e58]:
+              - button "Payroll" [ref=e59]:
+                - img [ref=e60]
+                - generic [ref=e63]: Payroll
+                - img [ref=e64]
+        - generic [ref=e66]:
+          - generic [ref=e67]: Personal
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - button "Self-Service" [ref=e70]:
+                - img [ref=e71]
+                - generic [ref=e75]: Self-Service
+                - img [ref=e76]
+            - listitem [ref=e78]:
+              - button "Persetujuan" [ref=e79]:
+                - img [ref=e80]
+                - generic [ref=e84]: Persetujuan
+                - img [ref=e85]
+        - generic [ref=e87]:
+          - generic [ref=e88]: Sistem
+          - list [ref=e89]:
+            - listitem [ref=e90]:
+              - button "Laporan" [ref=e91]:
+                - img [ref=e92]
+                - generic [ref=e94]: Laporan
+                - img [ref=e95]
+            - listitem [ref=e97]:
+              - button "Pengaturan" [expanded] [ref=e98]:
+                - img [ref=e99]
+                - generic [ref=e102]: Pengaturan
+                - img [ref=e103]
+              - list [ref=e106]:
+                - listitem [ref=e107]:
+                  - link "Perusahaan" [ref=e108] [cursor=pointer]:
+                    - /url: /companies
+                    - generic [ref=e109]: Perusahaan
+                - listitem [ref=e110]:
+                  - link "Pengguna" [ref=e111] [cursor=pointer]:
+                    - /url: /users
+                    - generic [ref=e112]: Pengguna
+                - listitem [ref=e113]:
+                  - link "Hak Akses (Role)" [ref=e114] [cursor=pointer]:
+                    - /url: /roles
+                    - generic [ref=e115]: Hak Akses (Role)
+                - listitem [ref=e116]:
+                  - link "Permission" [ref=e117] [cursor=pointer]:
+                    - /url: /permissions
+                    - generic [ref=e118]: Permission
+                - listitem [ref=e119]:
+                  - link "Workflow Approval" [ref=e120] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e121]: Workflow Approval
+                - listitem [ref=e122]:
+                  - link "Custom Field" [ref=e123] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e124]: Custom Field
+                - listitem [ref=e125]:
+                  - link "Keamanan" [ref=e126] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e127]: Keamanan
+                - listitem [ref=e128]:
+                  - link "Integrasi" [ref=e129] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e130]: Integrasi
+                - listitem [ref=e131]:
+                  - link "Langganan" [ref=e132] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e133]: Langganan
+      - generic [ref=e136]:
+        - generic [ref=e137]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e138] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e139]
+          - generic [ref=e142]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e143] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e144]
+          - generic [ref=e146]: (021) 5099-9000
+    - main [ref=e147]:
+      - generic [ref=e148]:
+        - button "Toggle sidebar" [ref=e149]:
+          - img
+          - generic [ref=e150]: Toggle sidebar
+        - generic [ref=e151]:
+          - img
+          - searchbox "Cari" [ref=e152]
+        - button "Notifikasi" [ref=e153]:
+          - img [ref=e154]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e159]:
+          - generic [ref=e160]: AA
+          - generic [ref=e161]:
+            - generic [ref=e162]: Admin Avana
+            - generic [ref=e163]: PT Nusantara Jaya
+          - img [ref=e164]
+      - generic [ref=e166]:
+        - generic [ref=e168]:
+          - navigation "Breadcrumb" [ref=e169]:
+            - link "Dashboard" [ref=e170] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/dashboard
+            - img [ref=e171]
+            - link "Pengguna" [ref=e173] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/users
+            - img [ref=e174]
+            - generic [ref=e176]: Carla Puspita
+          - heading "Atur Role Pengguna" [level=1] [ref=e177]
+          - paragraph [ref=e178]: Tentukan role untuk Carla Puspita (carla.puspita@avanahr.id).
+        - generic [ref=e180]:
+          - generic [ref=e182]:
+            - generic [ref=e183]:
+              - checkbox "auditor" [ref=e184]
+              - checkbox
+              - generic [ref=e185]: auditor
+            - generic [ref=e186]:
+              - checkbox "employee" [checked] [ref=e187]:
+                - generic:
+                  - img
+              - checkbox [checked]
+              - generic [ref=e188]: employee
+            - generic [ref=e189]:
+              - checkbox "finance" [ref=e190]
+              - checkbox
+              - generic [ref=e191]: finance
+            - generic [ref=e192]:
+              - checkbox "hr-admin" [ref=e193]
+              - checkbox
+              - generic [ref=e194]: hr-admin
+            - generic [ref=e195]:
+              - checkbox "manager" [ref=e196]
+              - checkbox
+              - generic [ref=e197]: manager
+            - generic [ref=e198]:
+              - checkbox "payroll-officer" [ref=e199]
+              - checkbox
+              - generic [ref=e200]: payroll-officer
+            - generic [ref=e201]:
+              - checkbox "tenant-admin" [ref=e202]
+              - checkbox
+              - generic [ref=e203]: tenant-admin
+          - generic [ref=e204]:
+            - link "Batal" [ref=e205] [cursor=pointer]:
+              - /url: /users
+              - img
+              - text: Batal
+            - button "Simpan" [ref=e206]:
+              - img
+              - text: Simpan
+  - region "Notifications alt+T"

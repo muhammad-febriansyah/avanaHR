@@ -1,0 +1,169 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [expanded] [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+              - list [ref=e38]:
+                - listitem [ref=e39]:
+                  - link "Data Karyawan" [ref=e40] [cursor=pointer]:
+                    - /url: /employees
+                    - generic [ref=e41]: Data Karyawan
+                - listitem [ref=e42]:
+                  - link "Struktur Organisasi" [ref=e43] [cursor=pointer]:
+                    - /url: /organization/structure
+                    - generic [ref=e44]: Struktur Organisasi
+                - listitem [ref=e45]:
+                  - link "Departemen & Posisi" [ref=e46] [cursor=pointer]:
+                    - /url: /departments
+                    - generic [ref=e47]: Departemen & Posisi
+                - listitem [ref=e48]:
+                  - link "Cost Center" [ref=e49] [cursor=pointer]:
+                    - /url: /cost-centers
+                    - generic [ref=e50]: Cost Center
+                - listitem [ref=e51]:
+                  - link "Kalender Kerja" [ref=e52] [cursor=pointer]:
+                    - /url: /work-calendars
+                    - generic [ref=e53]: Kalender Kerja
+                - listitem [ref=e54]:
+                  - link "Lifecycle" [ref=e55] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e56]: Lifecycle
+                - listitem [ref=e57]:
+                  - link "Dokumen" [ref=e58] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e59]: Dokumen
+                - listitem [ref=e60]:
+                  - link "Tiket HR" [ref=e61] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e62]: Tiket HR
+            - listitem [ref=e63]:
+              - button "Absensi" [ref=e64]:
+                - img [ref=e65]
+                - generic [ref=e74]: Absensi
+                - img [ref=e75]
+            - listitem [ref=e77]:
+              - button "Cuti & Lembur" [ref=e78]:
+                - img [ref=e79]
+                - generic [ref=e81]: Cuti & Lembur
+                - img [ref=e82]
+            - listitem [ref=e84]:
+              - button "Payroll" [ref=e85]:
+                - img [ref=e86]
+                - generic [ref=e89]: Payroll
+                - img [ref=e90]
+        - generic [ref=e92]:
+          - generic [ref=e93]: Personal
+          - list [ref=e94]:
+            - listitem [ref=e95]:
+              - button "Self-Service" [ref=e96]:
+                - img [ref=e97]
+                - generic [ref=e101]: Self-Service
+                - img [ref=e102]
+            - listitem [ref=e104]:
+              - button "Persetujuan" [ref=e105]:
+                - img [ref=e106]
+                - generic [ref=e110]: Persetujuan
+                - img [ref=e111]
+        - generic [ref=e113]:
+          - generic [ref=e114]: Sistem
+          - list [ref=e115]:
+            - listitem [ref=e116]:
+              - button "Laporan" [ref=e117]:
+                - img [ref=e118]
+                - generic [ref=e120]: Laporan
+                - img [ref=e121]
+            - listitem [ref=e123]:
+              - button "Pengaturan" [ref=e124]:
+                - img [ref=e125]
+                - generic [ref=e128]: Pengaturan
+                - img [ref=e129]
+      - generic [ref=e133]:
+        - generic [ref=e134]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e135] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e136]
+          - generic [ref=e139]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e140] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e141]
+          - generic [ref=e143]: (021) 5099-9000
+    - main [ref=e144]:
+      - generic [ref=e145]:
+        - button "Toggle sidebar" [ref=e146]:
+          - img
+          - generic [ref=e147]: Toggle sidebar
+        - generic [ref=e148]:
+          - img
+          - searchbox "Cari" [ref=e149]
+        - button "Notifikasi" [ref=e150]:
+          - img [ref=e151]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e156]:
+          - generic [ref=e157]: AA
+          - generic [ref=e158]:
+            - generic [ref=e159]: Admin Avana
+            - generic [ref=e160]: PT Nusantara Jaya
+          - img [ref=e161]
+      - generic [ref=e163]:
+        - generic [ref=e164]:
+          - generic [ref=e165]:
+            - navigation "Breadcrumb" [ref=e166]:
+              - link "Dashboard" [ref=e167] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/dashboard
+              - img [ref=e168]
+              - generic [ref=e170]: Cost Center
+            - heading "Cost Center" [level=1] [ref=e171]
+            - paragraph [ref=e172]: Kelola pusat biaya untuk alokasi anggaran.
+          - link "Tambah Cost Center" [ref=e174] [cursor=pointer]:
+            - /url: /cost-centers/create
+            - img
+            - text: Tambah Cost Center
+        - table [ref=e179]:
+          - rowgroup [ref=e180]:
+            - row "Kode Nama Aksi" [ref=e181]:
+              - columnheader "Kode" [ref=e182]
+              - columnheader "Nama" [ref=e183]
+              - columnheader "Aksi" [ref=e184]
+          - rowgroup [ref=e185]:
+            - row "CC192 Cost Center RND Edit Hapus" [ref=e186]:
+              - cell "CC192" [ref=e187]
+              - cell "Cost Center RND" [ref=e188]
+              - cell "Edit Hapus" [ref=e189]:
+                - generic [ref=e190]:
+                  - link "Edit" [ref=e191] [cursor=pointer]:
+                    - /url: /cost-centers/1/edit
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e192]:
+                    - img
+                    - text: Hapus
+            - row "CC836 Cost Center RND Edit Hapus" [ref=e193]:
+              - cell "CC836" [ref=e194]
+              - cell "Cost Center RND" [ref=e195]
+              - cell "Edit Hapus" [ref=e196]:
+                - generic [ref=e197]:
+                  - link "Edit" [ref=e198] [cursor=pointer]:
+                    - /url: /cost-centers/2/edit
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e199]:
+                    - img
+                    - text: Hapus
+  - region "Notifications alt+T"

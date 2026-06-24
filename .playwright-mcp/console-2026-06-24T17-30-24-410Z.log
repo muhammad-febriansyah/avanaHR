@@ -1,0 +1,42 @@
+[      52ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/login:157
+[     171ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8000/login:216
+[   49170ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/dashboard:0
+[   49195ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/employees:0
+[   49210ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/employees/create:0
+[   49226ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/organization/structure:0
+[   49240ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/companies:0
+[   49254ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/companies/create:0
+[   49272ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/departments:0
+[   49278ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/org-units:0
+[   49292ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/cost-centers:0
+[   49306ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/job-levels:0
+[   49319ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/job-grades:0
+[   49331ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/shifts:0
+[   49347ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/work-calendars:0
+[   49351ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8000/calendars:0
+[   49363ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/leave-types:0
+[   49377ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/leave-balances:0
+[   49392ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/leave-requests:0
+[   49405ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/overtime-requests:0
+[   49418ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/payroll-components:0
+[   49434ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/payroll-periods:0
+[   49447ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/payroll-runs:0
+[   49462ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/payslips:0
+[   49476ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/thr-bonus-runs:0
+[   49491ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/bank-files:0
+[   49506ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/reimbursements:0
+[   49522ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/employee-loans:0
+[   49535ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/roles:0
+[   49548ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/roles/create:0
+[   49562ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/users:0
+[   49575ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/permissions:0
+[   49586ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/settings/profile:0
+[   49597ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/settings/security:0
+[   49607ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://localhost:8000/platform/tenants:0
+[   68859ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://localhost:8000/platform/tenants:0
+[   71913ms] [WARNING] The resource http://[::1]:5173/__laravel_vite_plugin__/fonts/80f987c2d3b3512b.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:8000/dashboard:0
+[   71913ms] [WARNING] The resource http://[::1]:5173/__laravel_vite_plugin__/fonts/89680a0685e07f90.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:8000/dashboard:0
+[   71913ms] [WARNING] The resource http://[::1]:5173/__laravel_vite_plugin__/fonts/b43e76b53add8c61.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:8000/dashboard:0
+[   71913ms] [WARNING] The resource http://[::1]:5173/__laravel_vite_plugin__/fonts/ab0c099f45d93664.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:8000/dashboard:0
+[   71913ms] [WARNING] The resource http://[::1]:5173/__laravel_vite_plugin__/fonts/6e158890c47ee005.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:8000/dashboard:0
+[   71913ms] [WARNING] The resource http://[::1]:5173/__laravel_vite_plugin__/fonts/58d6b9508df884fd.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:8000/dashboard:0

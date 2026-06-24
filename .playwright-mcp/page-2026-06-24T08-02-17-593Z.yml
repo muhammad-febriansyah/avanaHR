@@ -1,0 +1,319 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /dashboard
+                    - img
+            - generic:
+              - generic:
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: /dashboard
+                      - img
+                      - generic: Dashboard
+              - generic:
+                - generic: Manajemen
+                - list:
+                  - listitem:
+                    - button [expanded]:
+                      - img
+                      - generic: Karyawan
+                      - img
+                    - generic:
+                      - list:
+                        - listitem:
+                          - link:
+                            - /url: /employees
+                            - generic: Data Karyawan
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Struktur Organisasi
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Departemen & Posisi
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Kalender Kerja
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Lifecycle
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Dokumen
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Tiket HR
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Absensi
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Cuti & Lembur
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Payroll
+                      - img
+              - generic:
+                - generic: Personal
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Self-Service
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Persetujuan
+                      - img
+              - generic:
+                - generic: Sistem
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Laporan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Pengaturan
+                      - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Butuh Bantuan?
+                  - link:
+                    - /url: mailto:support@avanahr.co.id
+                    - img
+                    - generic: support@avanahr.co.id
+                  - link:
+                    - /url: tel:+622150999000
+                    - img
+                    - generic: (021) 5099-9000
+      - main:
+        - generic:
+          - button:
+            - img
+            - generic: Toggle sidebar
+          - generic:
+            - img
+            - searchbox
+          - button:
+            - img
+          - button:
+            - generic: AA
+            - generic:
+              - generic: Admin Avana
+              - generic: PT Nusantara Jaya
+            - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /dashboard
+                        - img
+                - generic:
+                  - generic:
+                    - list:
+                      - listitem:
+                        - link:
+                          - /url: /dashboard
+                          - img
+                          - generic: Dashboard
+                  - generic:
+                    - generic: Manajemen
+                    - list:
+                      - listitem:
+                        - button:
+                          - img
+                          - generic: Karyawan
+                          - img
+                      - listitem:
+                        - button:
+                          - img
+                          - generic: Absensi
+                          - img
+                      - listitem:
+                        - button:
+                          - img
+                          - generic: Cuti & Lembur
+                          - img
+                      - listitem:
+                        - button:
+                          - img
+                          - generic: Payroll
+                          - img
+                  - generic:
+                    - generic: Personal
+                    - list:
+                      - listitem:
+                        - button:
+                          - img
+                          - generic: Self-Service
+                          - img
+                      - listitem:
+                        - button:
+                          - img
+                          - generic: Persetujuan
+                          - img
+                  - generic:
+                    - generic: Sistem
+                    - list:
+                      - listitem:
+                        - button:
+                          - img
+                          - generic: Laporan
+                          - img
+                      - listitem:
+                        - button:
+                          - img
+                          - generic: Pengaturan
+                          - img
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: Butuh Bantuan?
+                      - link:
+                        - /url: mailto:support@avanahr.co.id
+                        - img
+                        - generic: support@avanahr.co.id
+                      - link:
+                        - /url: tel:+622150999000
+                        - img
+                        - generic: (021) 5099-9000
+          - main:
+            - generic:
+              - button:
+                - img
+                - generic: Toggle sidebar
+              - generic:
+                - img
+                - searchbox
+              - button:
+                - img
+              - button:
+                - generic: AA
+                - generic:
+                  - generic: Admin Avana
+                  - generic: PT Nusantara Jaya
+                - img
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=1]: Tambah Karyawan
+                  - paragraph: Lengkapi data karyawan baru.
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: Tambah Karyawan
+                  - generic:
+                    - generic:
+                      - generic: No. Karyawan *
+                      - textbox:
+                        - /placeholder: EMP-0001
+                        - text: EMP-PW01
+                    - generic:
+                      - generic: Nama Depan *
+                      - textbox:
+                        - /placeholder: Budi
+                        - text: Playwright
+                    - generic:
+                      - generic: Nama Belakang
+                      - textbox:
+                        - /placeholder: Santoso
+                        - text: Tester
+                    - generic:
+                      - generic: Status *
+                      - combobox [expanded]:
+                        - generic: Pilih status
+                        - img
+                      - combobox
+                    - generic:
+                      - generic: Jenis Kelamin
+                      - combobox:
+                        - generic: Pilih jenis kelamin
+                        - img
+                      - combobox
+                    - generic:
+                      - generic: Tempat Lahir
+                      - textbox:
+                        - /placeholder: Jakarta
+                    - generic:
+                      - generic: Tanggal Lahir
+                      - textbox
+                    - generic:
+                      - generic: Tanggal Bergabung
+                      - textbox
+                    - generic:
+                      - generic: Agama
+                      - textbox:
+                        - /placeholder: Islam
+                    - generic:
+                      - generic: Status Pernikahan
+                      - textbox:
+                        - /placeholder: Menikah
+                    - generic:
+                      - generic: NIK KTP
+                      - textbox:
+                        - /placeholder: 3171xxxxxxxxxxxx
+                    - generic:
+                      - generic: NPWP
+                      - textbox:
+                        - /placeholder: 00.000.000.0-000.000
+                    - generic:
+                      - generic: Email
+                      - textbox:
+                        - /placeholder: budi@perusahaan.com
+                    - generic:
+                      - generic: Telepon
+                      - textbox:
+                        - /placeholder: 0812xxxxxxxx
+                    - generic:
+                      - generic: Alamat
+                      - textbox:
+                        - /placeholder: Alamat lengkap
+                  - generic:
+                    - link:
+                      - /url: /employees
+                      - img
+                      - text: Batal
+                    - button:
+                      - img
+                      - text: Simpan
+    - region "Notifications alt+T"
+  - listbox [ref=e739]:
+    - option "Probation" [active] [ref=e740]:
+      - generic [ref=e742]: Probation
+    - option "Active" [ref=e743]:
+      - generic [ref=e745]: Active
+    - option "On Leave" [ref=e746]:
+      - generic [ref=e748]: On Leave
+    - option "Suspended" [ref=e749]:
+      - generic [ref=e751]: Suspended
+    - option "Resigned" [ref=e752]:
+      - generic [ref=e754]: Resigned
+    - option "Terminated" [ref=e755]:
+      - generic [ref=e757]: Terminated

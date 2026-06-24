@@ -1,0 +1,186 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /dashboard
+                    - img
+            - generic:
+              - generic:
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: /dashboard
+                      - img
+                      - generic: Dashboard
+              - generic:
+                - generic: Manajemen
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Karyawan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Absensi
+                      - img
+                  - listitem:
+                    - button [expanded]:
+                      - img
+                      - generic: Cuti & Lembur
+                      - img
+                    - generic:
+                      - list:
+                        - listitem:
+                          - link:
+                            - /url: /leave-requests
+                            - generic: Pengajuan Cuti
+                        - listitem:
+                          - link:
+                            - /url: /leave-balances
+                            - generic: Saldo Cuti
+                        - listitem:
+                          - link:
+                            - /url: /leave-types
+                            - generic: Jenis Cuti
+                        - listitem:
+                          - link:
+                            - /url: /overtime-requests
+                            - generic: Lembur
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Payroll
+                      - img
+              - generic:
+                - generic: Personal
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Self-Service
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Persetujuan
+                      - img
+              - generic:
+                - generic: Sistem
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Laporan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Pengaturan
+                      - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Butuh Bantuan?
+                  - link:
+                    - /url: mailto:support@avanahr.co.id
+                    - img
+                    - generic: support@avanahr.co.id
+                  - link:
+                    - /url: tel:+622150999000
+                    - img
+                    - generic: (021) 5099-9000
+      - main:
+        - generic:
+          - button:
+            - img
+            - generic: Toggle sidebar
+          - generic:
+            - img
+            - searchbox
+          - button:
+            - img
+          - button [expanded]:
+            - generic: AA
+            - generic:
+              - generic: Admin Avana
+              - generic: PT Nusantara Jaya
+            - img
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=1]: Pengajuan Cuti
+              - paragraph: Kelola dan setujui pengajuan cuti karyawan.
+            - generic:
+              - button:
+                - img
+                - text: Ajukan Cuti
+          - generic:
+            - generic:
+              - generic:
+                - textbox:
+                  - /placeholder: Cari nama / NIP karyawan
+                - combobox:
+                  - generic: Semua Jenis Cuti
+                  - img
+                - combobox:
+                  - generic: Semua Status
+                  - img
+              - generic:
+                - generic:
+                  - table:
+                    - rowgroup:
+                      - row:
+                        - columnheader: Karyawan
+                        - columnheader: Jenis Cuti
+                        - columnheader: Periode
+                        - columnheader: Hari
+                        - columnheader: Status
+                        - columnheader: Aksi
+                    - rowgroup:
+                      - row:
+                        - cell:
+                          - generic: Gasti Nasyiah
+                          - generic: EMP65080
+                        - cell: Cuti Tahunan
+                        - cell: 1 Jul 2026 – 3 Jul 2026
+                        - cell: "3"
+                        - cell:
+                          - generic: Disetujui
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Hapus
+              - generic:
+                - paragraph: 1 pengajuan
+                - generic:
+                  - button [disabled]:
+                    - img
+                    - text: Sebelumnya
+                  - button [disabled]:
+                    - text: Berikutnya
+                    - img
+    - region "Notifications alt+T"
+  - menu "AA Admin Avana PT Nusantara Jaya" [active] [ref=e331]:
+    - generic [ref=e333]:
+      - generic [ref=e335]: AA
+      - generic [ref=e336]:
+        - generic [ref=e337]: Admin Avana
+        - generic [ref=e338]: admin@avanahr.id
+    - separator [ref=e339]
+    - group [ref=e340]:
+      - menuitem "Settings" [ref=e341] [cursor=pointer]:
+        - img
+        - text: Settings
+    - separator [ref=e342]
+    - menuitem "Log out" [ref=e343] [cursor=pointer]:
+      - img
+      - text: Log out

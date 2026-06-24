@@ -1,0 +1,243 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /dashboard
+                    - img
+            - generic:
+              - generic:
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: /dashboard
+                      - img
+                      - generic: Dashboard
+              - generic:
+                - generic: Manajemen
+                - list:
+                  - listitem:
+                    - button [expanded]:
+                      - img
+                      - generic: Karyawan
+                      - img
+                    - generic:
+                      - list:
+                        - listitem:
+                          - link:
+                            - /url: /employees
+                            - generic: Data Karyawan
+                        - listitem:
+                          - link:
+                            - /url: /organization/structure
+                            - generic: Struktur Organisasi
+                        - listitem:
+                          - link:
+                            - /url: /departments
+                            - generic: Departemen & Posisi
+                        - listitem:
+                          - link:
+                            - /url: /work-calendars
+                            - generic: Kalender Kerja
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Lifecycle
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Dokumen
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Tiket HR
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Absensi
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Cuti & Lembur
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Payroll
+                      - img
+              - generic:
+                - generic: Personal
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Self-Service
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Persetujuan
+                      - img
+              - generic:
+                - generic: Sistem
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Laporan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Pengaturan
+                      - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Butuh Bantuan?
+                  - link:
+                    - /url: mailto:support@avanahr.co.id
+                    - img
+                    - generic: support@avanahr.co.id
+                  - link:
+                    - /url: tel:+622150999000
+                    - img
+                    - generic: (021) 5099-9000
+      - main:
+        - generic:
+          - button:
+            - img
+            - generic: Toggle sidebar
+          - generic:
+            - img
+            - searchbox
+          - button:
+            - img
+          - button:
+            - generic: AA
+            - generic:
+              - generic: Admin Avana
+              - generic: PT Nusantara Jaya
+            - img
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=1]: Kalender Kerja
+              - paragraph: Kelola kalender kerja dan hari libur perusahaan.
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=2]: Kalender
+                  - button:
+                    - img
+                    - text: Tambah
+                - generic:
+                  - button:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: Kalender Nasional
+                          - generic: Default
+                        - paragraph: 4 hari libur
+                    - generic:
+                      - button:
+                        - img
+                        - text: Edit
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=2]:
+                    - text: Hari Libur
+                    - generic: · Kalender Nasional
+                  - button:
+                    - img
+                    - text: Tambah Hari Libur
+                - generic:
+                  - generic:
+                    - table:
+                      - rowgroup:
+                        - row:
+                          - columnheader: Tanggal
+                          - columnheader: Nama
+                          - columnheader: Nasional
+                          - columnheader: Aksi
+                      - rowgroup:
+                        - row:
+                          - cell: 1 Januari 2026
+                          - cell: Tahun Baru
+                          - cell:
+                            - img
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                                - text: Edit
+                              - button:
+                                - img
+                                - text: Hapus
+                        - row:
+                          - cell: 1 Mei 2026
+                          - cell: Hari Buruh
+                          - cell:
+                            - img
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                                - text: Edit
+                              - button:
+                                - img
+                                - text: Hapus
+                        - row:
+                          - cell: 17 Agustus 2026
+                          - cell: Hari Kemerdekaan
+                          - cell:
+                            - img
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                                - text: Edit
+                              - button:
+                                - img
+                                - text: Hapus
+                        - row:
+                          - cell: 25 Desember 2026
+                          - cell: Hari Natal
+                          - cell:
+                            - img
+                          - cell:
+                            - generic:
+                              - button:
+                                - img
+                                - text: Edit
+                              - button:
+                                - img
+                                - text: Hapus
+    - region "Notifications alt+T"
+  - dialog "Tambah Kalender" [ref=e238]:
+    - heading "Tambah Kalender" [level=2] [ref=e240]
+    - generic [ref=e241]:
+      - generic [ref=e242]:
+        - generic [ref=e243]: Nama
+        - textbox "Nama" [active] [ref=e244]:
+          - /placeholder: Mis. Kalender Nasional
+      - generic [ref=e245]:
+        - checkbox "Jadikan kalender default" [ref=e246]
+        - checkbox
+        - text: Jadikan kalender default
+    - generic [ref=e247]:
+      - button "Batal" [ref=e248]:
+        - img
+        - text: Batal
+      - button "Simpan" [ref=e249]
+    - button "Close" [ref=e250]:
+      - img
+      - generic [ref=e251]: Close

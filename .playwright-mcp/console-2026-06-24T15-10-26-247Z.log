@@ -1,0 +1,30 @@
+[     120ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[     139ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[  215149ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[  215164ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[  560345ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:8000/platform/tenants:0
+[  560426ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[  560672ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[  732670ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[  732825ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[  743812ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[  743821ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[  751080ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[  751085ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[  759669ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[  759677ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[  772620ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[  772627ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[  779810ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[  779815ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[  787263ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[  787271ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[  806266ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://127.0.0.1:8000/platform/tenants:0
+[  812555ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[  812563ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[  821390ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[  821397ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[ 1006363ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[ 1006432ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216
+[ 1043865ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/platform/tenants:157
+[ 1043895ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/platform/tenants:216

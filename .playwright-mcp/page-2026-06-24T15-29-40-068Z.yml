@@ -1,0 +1,195 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Platform
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - link "Tenant" [ref=e28] [cursor=pointer]:
+                - /url: /platform/tenants
+                - img [ref=e29]
+                - generic [ref=e33]: Tenant
+            - listitem [ref=e34]:
+              - link "Langganan & Paket" [ref=e35] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e36]
+                - generic [ref=e38]: Langganan & Paket
+            - listitem [ref=e39]:
+              - link "Provisioning" [ref=e40] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e41]
+                - generic [ref=e46]: Provisioning
+        - generic [ref=e47]:
+          - generic [ref=e48]: Keamanan & Audit
+          - list [ref=e49]:
+            - listitem [ref=e50]:
+              - link "Audit Log" [ref=e51] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e52]
+                - generic [ref=e55]: Audit Log
+            - listitem [ref=e56]:
+              - link "Security Events" [ref=e57] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e58]
+                - generic [ref=e60]: Security Events
+            - listitem [ref=e61]:
+              - link "Backup & Restore" [ref=e62] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e63]
+                - generic [ref=e69]: Backup & Restore
+      - generic [ref=e72]:
+        - generic [ref=e73]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e74] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e75]
+          - generic [ref=e78]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e79] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e80]
+          - generic [ref=e82]: (021) 5099-9000
+    - main [ref=e83]:
+      - generic [ref=e84]:
+        - button "Toggle sidebar" [ref=e85]:
+          - img
+          - generic [ref=e86]: Toggle sidebar
+        - generic [ref=e87]:
+          - img
+          - searchbox "Cari" [ref=e88]
+        - button "Notifikasi" [ref=e89]:
+          - img [ref=e90]
+        - button "SA Super Admin PT Nusantara Jaya" [ref=e95]:
+          - generic [ref=e96]: SA
+          - generic [ref=e97]:
+            - generic [ref=e98]: Super Admin
+            - generic [ref=e99]: PT Nusantara Jaya
+          - img [ref=e100]
+      - generic [ref=e102]:
+        - generic [ref=e104]:
+          - navigation "Breadcrumb" [ref=e105]:
+            - link "Dashboard" [ref=e106] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/dashboard
+            - img [ref=e107]
+            - link "Tenant" [ref=e109] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/platform/tenants
+            - img [ref=e110]
+            - link "Avana Demo" [ref=e112] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/platform/tenants/1
+            - img [ref=e113]
+            - generic [ref=e115]: Edit
+          - heading "Edit Tenant" [level=1] [ref=e116]
+          - paragraph [ref=e117]: Perbarui data tenant.
+        - generic [ref=e119]:
+          - generic [ref=e120]:
+            - generic [ref=e121]:
+              - generic [ref=e122]: Nama *
+              - textbox "Nama" [ref=e123]:
+                - /placeholder: PT Avana Sejahtera
+                - text: Avana Demo
+            - generic [ref=e124]:
+              - generic [ref=e125]: Slug *
+              - textbox "Slug" [ref=e126]:
+                - /placeholder: avana
+                - text: avana-demo
+            - generic [ref=e127]:
+              - generic [ref=e128]: Domain
+              - textbox "Domain" [ref=e129]:
+                - /placeholder: avana.example.com
+            - generic [ref=e130]:
+              - generic [ref=e131]: Locale
+              - textbox "Locale" [ref=e132]:
+                - /placeholder: id
+                - text: id
+            - generic [ref=e133]:
+              - generic [ref=e134]: Timezone
+              - textbox "Timezone" [ref=e135]:
+                - /placeholder: Asia/Jakarta
+                - text: Asia/Jakarta
+            - generic [ref=e136]:
+              - generic [ref=e137]: Currency
+              - textbox "Currency" [ref=e138]:
+                - /placeholder: IDR
+                - text: IDR
+            - generic [ref=e139]:
+              - generic [ref=e140]: Status *
+              - combobox "Status" [ref=e141]:
+                - generic: Aktif
+                - img
+              - combobox [ref=e142]
+            - generic [ref=e143]:
+              - generic [ref=e144]: Paket Langganan *
+              - combobox "Paket Langganan" [ref=e145]:
+                - generic: Enterprise
+                - img
+              - combobox [ref=e146]
+            - generic [ref=e147]:
+              - generic [ref=e148]:
+                - text: Fitur / Modul Aktif
+                - paragraph [ref=e149]: Pilih modul yang aktif untuk tenant ini. Modul yang nonaktif disembunyikan dari menu penggunanya.
+              - generic [ref=e150]:
+                - generic [ref=e151]:
+                  - checkbox "HR Core & Karyawan" [checked] [ref=e152]:
+                    - generic:
+                      - img
+                  - checkbox [checked]
+                  - generic [ref=e153]: HR Core & Karyawan
+                - generic [ref=e154]:
+                  - checkbox "Absensi" [checked] [ref=e155]:
+                    - generic:
+                      - img
+                  - checkbox [checked]
+                  - generic [ref=e156]: Absensi
+                - generic [ref=e157]:
+                  - checkbox "Cuti & Lembur" [checked] [ref=e158]:
+                    - generic:
+                      - img
+                  - checkbox [checked]
+                  - generic [ref=e159]: Cuti & Lembur
+                - generic [ref=e160]:
+                  - checkbox "Payroll" [active] [ref=e161]
+                  - checkbox
+                  - generic [ref=e162]: Payroll
+                - generic [ref=e163]:
+                  - checkbox "Self-Service (ESS)" [checked] [ref=e164]:
+                    - generic:
+                      - img
+                  - checkbox [checked]
+                  - generic [ref=e165]: Self-Service (ESS)
+                - generic [ref=e166]:
+                  - checkbox "Persetujuan" [checked] [ref=e167]:
+                    - generic:
+                      - img
+                  - checkbox [checked]
+                  - generic [ref=e168]: Persetujuan
+                - generic [ref=e169]:
+                  - checkbox "Laporan & Analitik" [checked] [ref=e170]:
+                    - generic:
+                      - img
+                  - checkbox [checked]
+                  - generic [ref=e171]: Laporan & Analitik
+                - generic [ref=e172]:
+                  - checkbox "Pengaturan" [checked] [ref=e173]:
+                    - generic:
+                      - img
+                  - checkbox [checked]
+                  - generic [ref=e174]: Pengaturan
+          - generic [ref=e175]:
+            - link "Batal" [ref=e176] [cursor=pointer]:
+              - /url: /platform/tenants
+              - img
+              - text: Batal
+            - button "Simpan" [ref=e177]:
+              - img
+              - text: Simpan
+  - region "Notifications alt+T"

@@ -1,0 +1,183 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+            - listitem [ref=e37]:
+              - button "Absensi" [ref=e38]:
+                - img [ref=e39]
+                - generic [ref=e48]: Absensi
+                - img [ref=e49]
+            - listitem [ref=e51]:
+              - button "Cuti & Lembur" [ref=e52]:
+                - img [ref=e53]
+                - generic [ref=e55]: Cuti & Lembur
+                - img [ref=e56]
+            - listitem [ref=e58]:
+              - button "Payroll" [ref=e59]:
+                - img [ref=e60]
+                - generic [ref=e63]: Payroll
+                - img [ref=e64]
+        - generic [ref=e66]:
+          - generic [ref=e67]: Personal
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - button "Self-Service" [ref=e70]:
+                - img [ref=e71]
+                - generic [ref=e75]: Self-Service
+                - img [ref=e76]
+            - listitem [ref=e78]:
+              - button "Persetujuan" [ref=e79]:
+                - img [ref=e80]
+                - generic [ref=e84]: Persetujuan
+                - img [ref=e85]
+        - generic [ref=e87]:
+          - generic [ref=e88]: Sistem
+          - list [ref=e89]:
+            - listitem [ref=e90]:
+              - button "Laporan" [ref=e91]:
+                - img [ref=e92]
+                - generic [ref=e94]: Laporan
+                - img [ref=e95]
+            - listitem [ref=e97]:
+              - button "Pengaturan" [ref=e98]:
+                - img [ref=e99]
+                - generic [ref=e102]: Pengaturan
+                - img [ref=e103]
+      - generic [ref=e107]:
+        - generic [ref=e108]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e109] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e110]
+          - generic [ref=e113]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e114] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e115]
+          - generic [ref=e117]: (021) 5099-9000
+    - main [ref=e118]:
+      - generic [ref=e119]:
+        - button "Toggle sidebar" [ref=e120]:
+          - img
+          - generic [ref=e121]: Toggle sidebar
+        - navigation "breadcrumb" [ref=e123]:
+          - list [ref=e124]:
+            - listitem [ref=e125]:
+              - link "Dashboard" [ref=e126] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/dashboard
+            - listitem [ref=e127]:
+              - img [ref=e128]
+            - listitem [ref=e130]:
+              - link "Karyawan" [ref=e131] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/employees
+            - listitem [ref=e132]:
+              - img [ref=e133]
+            - listitem [ref=e135]:
+              - link "Nadine Saptono" [disabled] [ref=e136]
+        - generic [ref=e137]:
+          - img
+          - searchbox "Cari" [ref=e138]
+        - button "Notifikasi" [ref=e139]:
+          - img [ref=e140]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e145]:
+          - generic [ref=e146]: AA
+          - generic [ref=e147]:
+            - generic [ref=e148]: Admin Avana
+            - generic [ref=e149]: PT Nusantara Jaya
+          - img [ref=e150]
+      - generic [ref=e152]:
+        - generic [ref=e153]:
+          - generic [ref=e154]:
+            - heading "Nadine Saptono" [level=1] [ref=e155]
+            - paragraph [ref=e156]: "No. Karyawan: EMP04148"
+          - generic [ref=e157]:
+            - link "Kembali" [ref=e158] [cursor=pointer]:
+              - /url: /employees
+              - img
+              - text: Kembali
+            - link "Edit" [ref=e159] [cursor=pointer]:
+              - /url: /employees/9/edit
+              - img
+              - text: Edit
+        - generic [ref=e160]:
+          - generic [ref=e161]:
+            - generic [ref=e163]: Data Pribadi
+            - generic [ref=e164]:
+              - generic [ref=e165]:
+                - generic [ref=e166]: Nama Lengkap
+                - generic [ref=e167]: Nadine Saptono
+              - generic [ref=e168]:
+                - generic [ref=e169]: Status
+                - generic [ref=e171]: Aktif
+              - generic [ref=e172]:
+                - generic [ref=e173]: Jenis Kelamin
+                - generic [ref=e174]: female
+              - generic [ref=e175]:
+                - generic [ref=e176]: Tempat Lahir
+                - generic [ref=e177]: Tanjungbalai
+              - generic [ref=e178]:
+                - generic [ref=e179]: Tanggal Lahir
+                - generic [ref=e180]: 1980-03-19T00:00:00.000000Z
+              - generic [ref=e181]:
+                - generic [ref=e182]: Agama
+                - generic [ref=e183]: hindu
+              - generic [ref=e184]:
+                - generic [ref=e185]: Status Pernikahan
+                - generic [ref=e186]: single
+              - generic [ref=e187]:
+                - generic [ref=e188]: NIK KTP
+                - generic [ref=e189]: "1041025423760456"
+              - generic [ref=e190]:
+                - generic [ref=e191]: NPWP
+                - generic [ref=e192]: 91.412.543.9-861.743
+              - generic [ref=e193]:
+                - generic [ref=e194]: Email
+                - generic [ref=e195]: octavia.romaguera@example.com
+              - generic [ref=e196]:
+                - generic [ref=e197]: Telepon
+                - generic [ref=e198]: 0925 6742 378
+              - generic [ref=e199]:
+                - generic [ref=e200]: Alamat
+                - generic [ref=e201]: Gg. Bakit No. 499, Semarang 28149, Jabar
+          - generic [ref=e202]:
+            - generic [ref=e204]: Kepegawaian
+            - generic [ref=e205]:
+              - generic [ref=e206]:
+                - generic [ref=e207]: Posisi
+                - generic [ref=e208]: Mail Clerk
+              - generic [ref=e209]:
+                - generic [ref=e210]: Departemen
+                - generic [ref=e211]: Human Resources
+              - generic [ref=e212]:
+                - generic [ref=e213]: Cabang
+                - generic [ref=e214]: Cabang Banda Aceh
+              - generic [ref=e215]:
+                - generic [ref=e216]: Job Grade
+                - generic [ref=e217]: Grade p
+              - generic [ref=e218]:
+                - generic [ref=e219]: Tanggal Bergabung
+                - generic [ref=e220]: 2020-07-10T00:00:00.000000Z
+          - generic [ref=e221]:
+            - generic [ref=e223]: Rekening Bank
+            - paragraph [ref=e225]: Belum ada rekening bank.
+          - generic [ref=e226]:
+            - generic [ref=e228]: Tanggungan
+            - paragraph [ref=e230]: Belum ada data tanggungan.
+  - region "Notifications alt+T"

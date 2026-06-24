@@ -1,0 +1,234 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+            - listitem [ref=e37]:
+              - button "Absensi" [ref=e38]:
+                - img [ref=e39]
+                - generic [ref=e48]: Absensi
+                - img [ref=e49]
+            - listitem [ref=e51]:
+              - button "Cuti & Lembur" [ref=e52]:
+                - img [ref=e53]
+                - generic [ref=e55]: Cuti & Lembur
+                - img [ref=e56]
+            - listitem [ref=e58]:
+              - button "Payroll" [ref=e59]:
+                - img [ref=e60]
+                - generic [ref=e63]: Payroll
+                - img [ref=e64]
+        - generic [ref=e66]:
+          - generic [ref=e67]: Personal
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - button "Self-Service" [ref=e70]:
+                - img [ref=e71]
+                - generic [ref=e75]: Self-Service
+                - img [ref=e76]
+            - listitem [ref=e78]:
+              - button "Persetujuan" [ref=e79]:
+                - img [ref=e80]
+                - generic [ref=e84]: Persetujuan
+                - img [ref=e85]
+        - generic [ref=e87]:
+          - generic [ref=e88]: Sistem
+          - list [ref=e89]:
+            - listitem [ref=e90]:
+              - button "Laporan" [ref=e91]:
+                - img [ref=e92]
+                - generic [ref=e94]: Laporan
+                - img [ref=e95]
+            - listitem [ref=e97]:
+              - button "Pengaturan" [ref=e98]:
+                - img [ref=e99]
+                - generic [ref=e102]: Pengaturan
+                - img [ref=e103]
+      - generic [ref=e107]:
+        - generic [ref=e108]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e109] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e110]
+          - generic [ref=e113]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e114] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e115]
+          - generic [ref=e117]: (021) 5099-9000
+    - main [ref=e118]:
+      - generic [ref=e119]:
+        - button "Toggle sidebar" [ref=e120]:
+          - img
+          - generic [ref=e121]: Toggle sidebar
+        - generic [ref=e122]:
+          - img
+          - searchbox "Cari" [ref=e123]
+        - button "Notifikasi" [ref=e124]:
+          - img [ref=e125]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e130]:
+          - generic [ref=e131]: AA
+          - generic [ref=e132]:
+            - generic [ref=e133]: Admin Avana
+            - generic [ref=e134]: PT Nusantara Jaya
+          - img [ref=e135]
+      - generic [ref=e137]:
+        - generic [ref=e139]:
+          - navigation "Breadcrumb" [ref=e140]:
+            - link "Dashboard" [ref=e141] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/dashboard
+            - img [ref=e142]
+            - link "Hak Akses (Role)" [ref=e144] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/roles
+            - img [ref=e145]
+            - generic [ref=e147]: Tambah
+          - heading "Tambah Role" [level=1] [ref=e148]
+          - paragraph [ref=e149]: Buat role baru dan tentukan hak aksesnya.
+        - generic [ref=e151]:
+          - generic [ref=e152]:
+            - generic [ref=e153]:
+              - generic [ref=e154]: Nama Role *
+              - textbox "Nama Role" [ref=e155]:
+                - /placeholder: mis. supervisor-cabang
+                - text: supervisor-cabang
+            - generic [ref=e156]:
+              - generic [ref=e157]: Hak Akses
+              - paragraph [ref=e158]: Pilih izin yang dimiliki role ini. Menu & tombol akan menyesuaikan otomatis.
+              - generic [ref=e159]:
+                - generic [ref=e160]:
+                  - generic [ref=e161]:
+                    - checkbox "Karyawan" [ref=e162]
+                    - checkbox
+                    - text: Karyawan
+                  - generic [ref=e163]:
+                    - generic [ref=e164]:
+                      - checkbox "Lihat employee.view" [checked] [active] [ref=e165]:
+                        - generic:
+                          - img
+                      - checkbox [checked]
+                      - generic [ref=e166]: Lihat
+                      - generic [ref=e167]: employee.view
+                    - generic [ref=e168]:
+                      - checkbox "Tambah employee.create" [ref=e169]
+                      - checkbox
+                      - generic [ref=e170]: Tambah
+                      - generic [ref=e171]: employee.create
+                    - generic [ref=e172]:
+                      - checkbox "Ubah employee.update" [ref=e173]
+                      - checkbox
+                      - generic [ref=e174]: Ubah
+                      - generic [ref=e175]: employee.update
+                    - generic [ref=e176]:
+                      - checkbox "Hapus employee.delete" [ref=e177]
+                      - checkbox
+                      - generic [ref=e178]: Hapus
+                      - generic [ref=e179]: employee.delete
+                    - generic [ref=e180]:
+                      - checkbox "Lihat Data Sensitif employee.view_sensitive" [ref=e181]
+                      - checkbox
+                      - generic [ref=e182]: Lihat Data Sensitif
+                      - generic [ref=e183]: employee.view_sensitive
+                - generic [ref=e184]:
+                  - generic [ref=e185]:
+                    - checkbox "Absensi" [ref=e186]
+                    - checkbox
+                    - text: Absensi
+                  - generic [ref=e187]:
+                    - generic [ref=e188]:
+                      - checkbox "Lihat attendance.view" [ref=e189]
+                      - checkbox
+                      - generic [ref=e190]: Lihat
+                      - generic [ref=e191]: attendance.view
+                    - generic [ref=e192]:
+                      - checkbox "Kelola attendance.manage" [ref=e193]
+                      - checkbox
+                      - generic [ref=e194]: Kelola
+                      - generic [ref=e195]: attendance.manage
+                - generic [ref=e196]:
+                  - generic [ref=e197]:
+                    - checkbox "Cuti & Lembur" [ref=e198]
+                    - checkbox
+                    - text: Cuti & Lembur
+                  - generic [ref=e199]:
+                    - generic [ref=e200]:
+                      - checkbox "Lihat leave.view" [ref=e201]
+                      - checkbox
+                      - generic [ref=e202]: Lihat
+                      - generic [ref=e203]: leave.view
+                    - generic [ref=e204]:
+                      - checkbox "Setujui leave.approve" [ref=e205]
+                      - checkbox
+                      - generic [ref=e206]: Setujui
+                      - generic [ref=e207]: leave.approve
+                - generic [ref=e208]:
+                  - generic [ref=e209]:
+                    - checkbox "Payroll" [ref=e210]
+                    - checkbox
+                    - text: Payroll
+                  - generic [ref=e211]:
+                    - generic [ref=e212]:
+                      - checkbox "Lihat payroll.view" [ref=e213]
+                      - checkbox
+                      - generic [ref=e214]: Lihat
+                      - generic [ref=e215]: payroll.view
+                    - generic [ref=e216]:
+                      - checkbox "Proses payroll.run" [ref=e217]
+                      - checkbox
+                      - generic [ref=e218]: Proses
+                      - generic [ref=e219]: payroll.run
+                    - generic [ref=e220]:
+                      - checkbox "Setujui payroll.approve" [ref=e221]
+                      - checkbox
+                      - generic [ref=e222]: Setujui
+                      - generic [ref=e223]: payroll.approve
+                - generic [ref=e224]:
+                  - generic [ref=e225]:
+                    - checkbox "Laporan" [ref=e226]
+                    - checkbox
+                    - text: Laporan
+                  - generic [ref=e227]:
+                    - generic [ref=e228]:
+                      - checkbox "Lihat report.view" [ref=e229]
+                      - checkbox
+                      - generic [ref=e230]: Lihat
+                      - generic [ref=e231]: report.view
+                    - generic [ref=e232]:
+                      - checkbox "Ekspor report.export" [ref=e233]
+                      - checkbox
+                      - generic [ref=e234]: Ekspor
+                      - generic [ref=e235]: report.export
+                - generic [ref=e236]:
+                  - generic [ref=e237]:
+                    - checkbox "Pengaturan" [ref=e238]
+                    - checkbox
+                    - text: Pengaturan
+                  - generic [ref=e240]:
+                    - checkbox "Kelola setting.manage" [ref=e241]
+                    - checkbox
+                    - generic [ref=e242]: Kelola
+                    - generic [ref=e243]: setting.manage
+          - generic [ref=e244]:
+            - link "Batal" [ref=e245] [cursor=pointer]:
+              - /url: /roles
+              - img
+              - text: Batal
+            - button "Simpan" [ref=e246]:
+              - img
+              - text: Simpan
+  - region "Notifications alt+T"

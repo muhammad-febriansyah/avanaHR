@@ -1,0 +1,209 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+            - listitem [ref=e37]:
+              - button "Absensi" [ref=e38]:
+                - img [ref=e39]
+                - generic [ref=e48]: Absensi
+                - img [ref=e49]
+            - listitem [ref=e51]:
+              - button "Cuti & Lembur" [ref=e52]:
+                - img [ref=e53]
+                - generic [ref=e55]: Cuti & Lembur
+                - img [ref=e56]
+            - listitem [ref=e58]:
+              - button "Payroll" [ref=e59]:
+                - img [ref=e60]
+                - generic [ref=e63]: Payroll
+                - img [ref=e64]
+        - generic [ref=e66]:
+          - generic [ref=e67]: Personal
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - button "Self-Service" [ref=e70]:
+                - img [ref=e71]
+                - generic [ref=e75]: Self-Service
+                - img [ref=e76]
+            - listitem [ref=e78]:
+              - button "Persetujuan" [ref=e79]:
+                - img [ref=e80]
+                - generic [ref=e84]: Persetujuan
+                - img [ref=e85]
+        - generic [ref=e87]:
+          - generic [ref=e88]: Sistem
+          - list [ref=e89]:
+            - listitem [ref=e90]:
+              - button "Laporan" [ref=e91]:
+                - img [ref=e92]
+                - generic [ref=e94]: Laporan
+                - img [ref=e95]
+            - listitem [ref=e97]:
+              - button "Pengaturan" [expanded] [ref=e98]:
+                - img [ref=e99]
+                - generic [ref=e102]: Pengaturan
+                - img [ref=e103]
+              - list [ref=e106]:
+                - listitem [ref=e107]:
+                  - link "Perusahaan" [ref=e108] [cursor=pointer]:
+                    - /url: /companies
+                    - generic [ref=e109]: Perusahaan
+                - listitem [ref=e110]:
+                  - link "Hak Akses (Role)" [ref=e111] [cursor=pointer]:
+                    - /url: /roles
+                    - generic [ref=e112]: Hak Akses (Role)
+                - listitem [ref=e113]:
+                  - link "Permission" [ref=e114] [cursor=pointer]:
+                    - /url: /permissions
+                    - generic [ref=e115]: Permission
+                - listitem [ref=e116]:
+                  - link "Workflow Approval" [ref=e117] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e118]: Workflow Approval
+                - listitem [ref=e119]:
+                  - link "Custom Field" [ref=e120] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e121]: Custom Field
+                - listitem [ref=e122]:
+                  - link "Keamanan" [ref=e123] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e124]: Keamanan
+                - listitem [ref=e125]:
+                  - link "Integrasi" [ref=e126] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e127]: Integrasi
+                - listitem [ref=e128]:
+                  - link "Langganan" [ref=e129] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e130]: Langganan
+      - generic [ref=e133]:
+        - generic [ref=e134]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e135] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e136]
+          - generic [ref=e139]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e140] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e141]
+          - generic [ref=e143]: (021) 5099-9000
+    - main [ref=e144]:
+      - generic [ref=e145]:
+        - button "Toggle sidebar" [ref=e146]:
+          - img
+          - generic [ref=e147]: Toggle sidebar
+        - generic [ref=e148]:
+          - img
+          - searchbox "Cari" [ref=e149]
+        - button "Notifikasi" [ref=e150]:
+          - img [ref=e151]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e156]:
+          - generic [ref=e157]: AA
+          - generic [ref=e158]:
+            - generic [ref=e159]: Admin Avana
+            - generic [ref=e160]: PT Nusantara Jaya
+          - img [ref=e161]
+      - generic [ref=e163]:
+        - generic [ref=e165]:
+          - navigation "Breadcrumb" [ref=e166]:
+            - link "Dashboard" [ref=e167] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/dashboard
+            - img [ref=e168]
+            - generic [ref=e170]: Permission
+          - heading "Permission" [level=1] [ref=e171]
+          - paragraph [ref=e172]: Daftar seluruh izin sistem yang dapat ditetapkan ke role.
+        - generic [ref=e173]:
+          - generic [ref=e175]:
+            - generic [ref=e176]:
+              - img [ref=e177]
+              - text: Karyawan
+            - list [ref=e180]:
+              - listitem [ref=e181]:
+                - generic [ref=e182]: Lihat
+                - code [ref=e183]: employee.view
+              - listitem [ref=e184]:
+                - generic [ref=e185]: Tambah
+                - code [ref=e186]: employee.create
+              - listitem [ref=e187]:
+                - generic [ref=e188]: Ubah
+                - code [ref=e189]: employee.update
+              - listitem [ref=e190]:
+                - generic [ref=e191]: Hapus
+                - code [ref=e192]: employee.delete
+              - listitem [ref=e193]:
+                - generic [ref=e194]: Lihat Data Sensitif
+                - code [ref=e195]: employee.view_sensitive
+          - generic [ref=e197]:
+            - generic [ref=e198]:
+              - img [ref=e199]
+              - text: Absensi
+            - list [ref=e202]:
+              - listitem [ref=e203]:
+                - generic [ref=e204]: Lihat
+                - code [ref=e205]: attendance.view
+              - listitem [ref=e206]:
+                - generic [ref=e207]: Kelola
+                - code [ref=e208]: attendance.manage
+          - generic [ref=e210]:
+            - generic [ref=e211]:
+              - img [ref=e212]
+              - text: Cuti & Lembur
+            - list [ref=e215]:
+              - listitem [ref=e216]:
+                - generic [ref=e217]: Lihat
+                - code [ref=e218]: leave.view
+              - listitem [ref=e219]:
+                - generic [ref=e220]: Setujui
+                - code [ref=e221]: leave.approve
+          - generic [ref=e223]:
+            - generic [ref=e224]:
+              - img [ref=e225]
+              - text: Payroll
+            - list [ref=e228]:
+              - listitem [ref=e229]:
+                - generic [ref=e230]: Lihat
+                - code [ref=e231]: payroll.view
+              - listitem [ref=e232]:
+                - generic [ref=e233]: Proses
+                - code [ref=e234]: payroll.run
+              - listitem [ref=e235]:
+                - generic [ref=e236]: Setujui
+                - code [ref=e237]: payroll.approve
+          - generic [ref=e239]:
+            - generic [ref=e240]:
+              - img [ref=e241]
+              - text: Laporan
+            - list [ref=e244]:
+              - listitem [ref=e245]:
+                - generic [ref=e246]: Lihat
+                - code [ref=e247]: report.view
+              - listitem [ref=e248]:
+                - generic [ref=e249]: Ekspor
+                - code [ref=e250]: report.export
+          - generic [ref=e252]:
+            - generic [ref=e253]:
+              - img [ref=e254]
+              - text: Pengaturan
+            - list [ref=e257]:
+              - listitem [ref=e258]:
+                - generic [ref=e259]: Kelola
+                - code [ref=e260]: setting.manage
+  - region "Notifications alt+T"

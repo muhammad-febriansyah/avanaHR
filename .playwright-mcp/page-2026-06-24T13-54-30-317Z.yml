@@ -1,0 +1,178 @@
+- generic [ref=e2]:
+  - generic [ref=e75]:
+    - generic [ref=e79]:
+      - list [ref=e81]:
+        - listitem [ref=e82]:
+          - link "AvanaHR" [ref=e83] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e84]
+      - generic [ref=e85]:
+        - list [ref=e87]:
+          - listitem [ref=e88]:
+            - link "Dashboard" [ref=e89] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e90]
+              - generic [ref=e95]: Dashboard
+        - generic [ref=e96]:
+          - generic [ref=e97]: Manajemen
+          - list [ref=e98]:
+            - listitem [ref=e99]:
+              - button "Karyawan" [expanded] [ref=e100]:
+                - img [ref=e101]
+                - generic [ref=e106]: Karyawan
+                - img [ref=e107]
+              - list [ref=e110]:
+                - listitem [ref=e111]:
+                  - link "Data Karyawan" [ref=e112] [cursor=pointer]:
+                    - /url: /employees
+                    - generic [ref=e113]: Data Karyawan
+                - listitem [ref=e114]:
+                  - link "Struktur Organisasi" [ref=e115] [cursor=pointer]:
+                    - /url: /organization/structure
+                    - generic [ref=e116]: Struktur Organisasi
+                - listitem [ref=e117]:
+                  - link "Departemen & Posisi" [ref=e118] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e119]: Departemen & Posisi
+                - listitem [ref=e120]:
+                  - link "Kalender Kerja" [ref=e121] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e122]: Kalender Kerja
+                - listitem [ref=e123]:
+                  - link "Lifecycle" [ref=e124] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e125]: Lifecycle
+                - listitem [ref=e126]:
+                  - link "Dokumen" [ref=e127] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e128]: Dokumen
+                - listitem [ref=e129]:
+                  - link "Tiket HR" [ref=e130] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e131]: Tiket HR
+            - listitem [ref=e132]:
+              - button "Absensi" [ref=e133]:
+                - img [ref=e134]
+                - generic [ref=e143]: Absensi
+                - img [ref=e144]
+            - listitem [ref=e146]:
+              - button "Cuti & Lembur" [ref=e147]:
+                - img [ref=e148]
+                - generic [ref=e150]: Cuti & Lembur
+                - img [ref=e151]
+            - listitem [ref=e153]:
+              - button "Payroll" [ref=e154]:
+                - img [ref=e155]
+                - generic [ref=e158]: Payroll
+                - img [ref=e159]
+        - generic [ref=e161]:
+          - generic [ref=e162]: Personal
+          - list [ref=e163]:
+            - listitem [ref=e164]:
+              - button "Self-Service" [ref=e165]:
+                - img [ref=e166]
+                - generic [ref=e170]: Self-Service
+                - img [ref=e171]
+            - listitem [ref=e173]:
+              - button "Persetujuan" [ref=e174]:
+                - img [ref=e175]
+                - generic [ref=e179]: Persetujuan
+                - img [ref=e180]
+        - generic [ref=e182]:
+          - generic [ref=e183]: Sistem
+          - list [ref=e184]:
+            - listitem [ref=e185]:
+              - button "Laporan" [ref=e186]:
+                - img [ref=e187]
+                - generic [ref=e189]: Laporan
+                - img [ref=e190]
+            - listitem [ref=e192]:
+              - button "Pengaturan" [ref=e193]:
+                - img [ref=e194]
+                - generic [ref=e197]: Pengaturan
+                - img [ref=e198]
+      - generic [ref=e202]:
+        - generic [ref=e203]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e204] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e205]
+          - generic [ref=e208]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e209] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e210]
+          - generic [ref=e212]: (021) 5099-9000
+    - main [ref=e213]:
+      - generic [ref=e214]:
+        - button "Toggle sidebar" [ref=e215]:
+          - img
+          - generic [ref=e216]: Toggle sidebar
+        - generic [ref=e217]:
+          - img
+          - searchbox "Cari" [ref=e218]
+        - button "Notifikasi" [ref=e219]:
+          - img [ref=e220]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e225]:
+          - generic [ref=e226]: AA
+          - generic [ref=e227]:
+            - generic [ref=e228]: Admin Avana
+            - generic [ref=e229]: PT Nusantara Jaya
+          - img [ref=e230]
+      - generic [ref=e232]:
+        - generic [ref=e234]:
+          - navigation "Breadcrumb" [ref=e235]:
+            - link "Dashboard" [ref=e236] [cursor=pointer]:
+              - /url: http://127.0.0.1:8000/dashboard
+            - img [ref=e237]
+            - generic [ref=e239]: Struktur Organisasi
+          - heading "Struktur Organisasi" [level=1] [ref=e240]
+          - paragraph [ref=e241]: Hierarki perusahaan, departemen, dan jumlah karyawan aktif.
+        - list [ref=e244]:
+          - listitem [ref=e245]:
+            - generic [ref=e246]:
+              - button "Tutup" [ref=e247]:
+                - img [ref=e248]
+              - img [ref=e251]
+              - generic [ref=e255]:
+                - paragraph [ref=e256]: PT Avana Indonesia
+                - paragraph [ref=e257]: CMP001
+              - generic [ref=e258]:
+                - img [ref=e259]
+                - generic [ref=e264]: "20"
+            - list [ref=e265]:
+              - listitem [ref=e266]:
+                - generic [ref=e267]:
+                  - img [ref=e269]
+                  - generic [ref=e274]:
+                    - paragraph [ref=e275]: Engineering
+                    - paragraph [ref=e276]: DEP003
+                  - generic [ref=e277]:
+                    - img [ref=e278]
+                    - generic [ref=e283]: "8"
+              - listitem [ref=e284]:
+                - generic [ref=e285]:
+                  - img [ref=e287]
+                  - generic [ref=e292]:
+                    - paragraph [ref=e293]: Finance
+                    - paragraph [ref=e294]: DEP002
+                  - generic [ref=e295]:
+                    - img [ref=e296]
+                    - generic [ref=e301]: "3"
+              - listitem [ref=e302]:
+                - generic [ref=e303]:
+                  - img [ref=e305]
+                  - generic [ref=e310]:
+                    - paragraph [ref=e311]: Human Resources
+                    - paragraph [ref=e312]: DEP001
+                  - generic [ref=e313]:
+                    - img [ref=e314]
+                    - generic [ref=e319]: "7"
+              - listitem [ref=e320]:
+                - generic [ref=e321]:
+                  - img [ref=e323]
+                  - generic [ref=e328]:
+                    - paragraph [ref=e329]: Sales
+                    - paragraph [ref=e330]: DEP004
+                  - generic [ref=e331]:
+                    - img [ref=e332]
+                    - generic [ref=e337]: "2"
+  - region "Notifications alt+T"

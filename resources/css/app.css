@@ -1,0 +1,125 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+/*
+ * AvanaHR is light mode only. The `.dark` class is never applied, so any
+ * leftover `dark:` utilities (e.g. from shadcn/ui primitives) stay inert.
+ * Keep this variant pointing at `.dark` — removing it would re-enable
+ * Tailwind's default `prefers-color-scheme` dark behaviour.
+ */
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans:
+        'Poppins', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    --color-navy: var(--navy);
+    --color-sky: var(--sky);
+    --color-success: var(--success);
+    --color-warning: var(--warning);
+}
+
+:root {
+    /* AvanaHR brand tokens — light mode only. See docs/CLAUDE.md §4. */
+    --background: #f5f6fb;
+    --foreground: #1a2333;
+    --card: #ffffff;
+    --card-foreground: #1a2333;
+    --popover: #ffffff;
+    --popover-foreground: #1a2333;
+    --primary: #2f54c9; /* royal blue */
+    --primary-foreground: #ffffff;
+    --secondary: #f4f6fb;
+    --secondary-foreground: #1a2333;
+    --muted: #f4f6fb;
+    --muted-foreground: #6b7280;
+    --accent: #edf1fc; /* subtle royal tint (hover/active surface) */
+    --accent-foreground: #2f54c9;
+    --destructive: #dc2626;
+    --destructive-foreground: #ffffff;
+    --border: #e5e9f2;
+    --input: #e5e9f2;
+    --ring: #2f54c9;
+    --chart-1: #2f54c9;
+    --chart-2: #6e9be6;
+    --chart-3: #0e1a3a;
+    --chart-4: #16a34a;
+    --chart-5: #d97706;
+    --radius: 0.625rem;
+    --sidebar: #ffffff;
+    --sidebar-foreground: #5b6472;
+    --sidebar-primary: #2f54c9;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #edf1fc;
+    --sidebar-accent-foreground: #2f54c9;
+    --sidebar-border: #e5e9f2;
+    --sidebar-ring: #2f54c9;
+
+    /* Extra brand semantics */
+    --navy: #0e1a3a; /* deep navy — strong headings */
+    --sky: #6e9be6; /* swoosh accent */
+    --success: #16a34a;
+    --warning: #d97706;
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}

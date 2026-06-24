@@ -1,0 +1,209 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /dashboard
+                    - img
+            - generic:
+              - generic:
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: /dashboard
+                      - img
+                      - generic: Dashboard
+              - generic:
+                - generic: Manajemen
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Karyawan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Absensi
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Cuti & Lembur
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Payroll
+                      - img
+              - generic:
+                - generic: Personal
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Self-Service
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Persetujuan
+                      - img
+              - generic:
+                - generic: Sistem
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Laporan
+                      - img
+                  - listitem:
+                    - button [expanded]:
+                      - img
+                      - generic: Pengaturan
+                      - img
+                    - generic:
+                      - list:
+                        - listitem:
+                          - link:
+                            - /url: /companies
+                            - generic: Perusahaan
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Hak Akses (Role)
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Permission
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Workflow Approval
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Custom Field
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Keamanan
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Integrasi
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Langganan
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Butuh Bantuan?
+                  - link:
+                    - /url: mailto:support@avanahr.co.id
+                    - img
+                    - generic: support@avanahr.co.id
+                  - link:
+                    - /url: tel:+622150999000
+                    - img
+                    - generic: (021) 5099-9000
+      - main:
+        - generic:
+          - button:
+            - img
+            - generic: Toggle sidebar
+          - generic:
+            - img
+            - searchbox
+          - button:
+            - img
+          - button:
+            - generic: AA
+            - generic:
+              - generic: Admin Avana
+              - generic: PT Nusantara Jaya
+            - img
+        - generic:
+          - generic:
+            - generic:
+              - navigation:
+                - link:
+                  - /url: http://127.0.0.1:8000/dashboard
+                  - text: Dashboard
+                - img
+                - generic: Perusahaan
+              - heading [level=1]: Perusahaan
+              - paragraph: Kelola data badan usaha pada tenant Anda.
+            - generic:
+              - link:
+                - /url: /companies/create
+                - img
+                - text: Tambah Perusahaan
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - table:
+                    - rowgroup:
+                      - row:
+                        - columnheader: Kode
+                        - columnheader: Nama
+                        - columnheader: NPWP
+                        - columnheader: Telepon
+                        - columnheader: Cabang
+                        - columnheader: Departemen
+                        - columnheader: Aksi
+                    - rowgroup:
+                      - row:
+                        - cell: CMP001
+                        - cell: PT Avana Indonesia
+                        - cell: 10.980.947.9-418.745
+                        - cell: (+62) 286 7848 819
+                        - cell: "2"
+                        - cell: "4"
+                        - cell:
+                          - generic:
+                            - link:
+                              - /url: /companies/1/edit
+                              - img
+                              - text: Edit
+                            - button:
+                              - img
+                              - text: Hapus
+                      - row:
+                        - cell: CMP777
+                        - cell: PT Playwright Test
+                        - cell: "-"
+                        - cell: "-"
+                        - cell: "0"
+                        - cell: "0"
+                        - cell:
+                          - generic:
+                            - link:
+                              - /url: /companies/2/edit
+                              - img
+                              - text: Edit
+                            - button [expanded]:
+                              - img
+                              - text: Hapus
+    - region "Notifications alt+T"
+  - dialog "Hapus Perusahaan" [ref=e213]:
+    - generic [ref=e214]:
+      - heading "Hapus Perusahaan" [level=2] [ref=e215]
+      - paragraph [ref=e216]: Yakin ingin menghapus "PT Playwright Test"? Tindakan ini tidak dapat dibatalkan.
+    - generic [ref=e217]:
+      - button "Batal" [active] [ref=e218]:
+        - img
+        - text: Batal
+      - button "Hapus" [ref=e219]:
+        - img
+        - text: Hapus
+    - button "Close" [ref=e220]:
+      - img
+      - generic [ref=e221]: Close

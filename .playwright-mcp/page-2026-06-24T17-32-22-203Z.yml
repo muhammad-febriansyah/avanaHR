@@ -1,0 +1,181 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /dashboard
+                    - img
+            - generic:
+              - generic:
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: /dashboard
+                      - img
+                      - generic: Dashboard
+              - generic:
+                - generic: Manajemen
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Karyawan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Absensi
+                      - img
+                  - listitem:
+                    - button [expanded]:
+                      - img
+                      - generic: Cuti & Lembur
+                      - img
+                    - generic:
+                      - list:
+                        - listitem:
+                          - link:
+                            - /url: /leave-requests
+                            - generic: Pengajuan Cuti
+                        - listitem:
+                          - link:
+                            - /url: /leave-balances
+                            - generic: Saldo Cuti
+                        - listitem:
+                          - link:
+                            - /url: /leave-types
+                            - generic: Jenis Cuti
+                        - listitem:
+                          - link:
+                            - /url: /overtime-requests
+                            - generic: Lembur
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Payroll
+                      - img
+              - generic:
+                - generic: Personal
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Self-Service
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Persetujuan
+                      - img
+              - generic:
+                - generic: Sistem
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Laporan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Pengaturan
+                      - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Butuh Bantuan?
+                  - link:
+                    - /url: mailto:support@avanahr.co.id
+                    - img
+                    - generic: support@avanahr.co.id
+                  - link:
+                    - /url: tel:+622150999000
+                    - img
+                    - generic: (021) 5099-9000
+      - main:
+        - generic:
+          - button:
+            - img
+            - generic: Toggle sidebar
+          - generic:
+            - img
+            - searchbox
+          - button:
+            - img
+          - button:
+            - generic: AA
+            - generic:
+              - generic: Admin Avana
+              - generic: PT Nusantara Jaya
+            - img
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=1]: Jenis Cuti
+              - paragraph: Kelola kategori cuti yang berlaku di perusahaan.
+            - generic:
+              - button:
+                - img
+                - text: Tambah Jenis Cuti
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - table:
+                    - rowgroup:
+                      - row:
+                        - columnheader: Kode
+                        - columnheader: Nama
+                        - columnheader: Dibayar
+                        - columnheader: Maks. Hari/Tahun
+                        - columnheader: Saldo Minus
+                        - columnheader: Aksi
+                    - rowgroup:
+                      - row:
+                        - cell: CS
+                        - cell: Cuti Sakit
+                        - cell: Ya
+                        - cell: "14"
+                        - cell: Tidak
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Edit
+                            - button [expanded]:
+                              - img
+                              - text: Hapus
+                      - row:
+                        - cell: CT
+                        - cell: Cuti Tahunan
+                        - cell: Ya
+                        - cell: "12"
+                        - cell: Tidak
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Edit
+                            - button:
+                              - img
+                              - text: Hapus
+    - region "Notifications alt+T"
+  - dialog "Hapus Jenis Cuti" [ref=e222]:
+    - generic [ref=e223]:
+      - heading "Hapus Jenis Cuti" [level=2] [ref=e224]
+      - paragraph [ref=e225]: Yakin ingin menghapus "Cuti Sakit"? Tindakan ini tidak dapat dibatalkan.
+    - generic [ref=e226]:
+      - button "Batal" [active] [ref=e227]:
+        - img
+        - text: Batal
+      - button "Hapus" [ref=e228]:
+        - img
+        - text: Hapus
+    - button "Close" [ref=e229]:
+      - img
+      - generic [ref=e230]: Close

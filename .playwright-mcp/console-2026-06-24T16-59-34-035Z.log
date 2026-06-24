@@ -1,0 +1,18 @@
+[      41ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/login:157
+[      74ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/login:216
+[      84ms] TypeError: store.form is not a function
+    at Login (http://[::1]:5173/resources/js/pages/auth/login.tsx?t=1782320237713:40:14)
+    at Object.react_stack_bottom_frame (http://[::1]:5173/node_modules/.vite/deps/@inertiajs_react.js?v=66b95dfc:19466:12)
+    at renderWithHooks (http://[::1]:5173/node_modules/.vite/deps/@inertiajs_react.js?v=66b95dfc:10813:19)
+    at updateFunctionComponent (http://[::1]:5173/node_modules/.vite/deps/@inertiajs_react.js?v=66b95dfc:12169:16)
+    at beginWork (http://[::1]:5173/node_modules/.vite/deps/@inertiajs_react.js?v=66b95dfc:12740:20)
+    at runWithFiberInDEV (http://[::1]:5173/node_modules/.vite/deps/@inertiajs_react.js?v=66b95dfc:7451:66)
+    at performUnitOfWork (http://[::1]:5173/node_modules/.vite/deps/@inertiajs_react.js?v=66b95dfc:15029:92)
+    at workLoopSync (http://[::1]:5173/node_modules/.vite/deps/@inertiajs_react.js?v=66b95dfc:14925:37)
+    at renderRootSync (http://[::1]:5173/node_modules/.vite/deps/@inertiajs_react.js?v=66b95dfc:14909:6)
+    at performWorkOnRoot (http://[::1]:5173/node_modules/.vite/deps/@inertiajs_react.js?v=66b95dfc:14594:27)
+[      84ms] [WARNING] %s
+
+%s
+ An error occurred in the <Login> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:8000/login:216

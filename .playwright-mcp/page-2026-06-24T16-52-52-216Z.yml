@@ -1,0 +1,66 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e5]:
+      - img "AvanaHR" [ref=e6]
+      - heading "Masuk ke akun Anda" [level=1] [ref=e7]
+      - paragraph [ref=e8]: Kelola karyawan, absensi, dan payroll dalam satu platform.
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - generic [ref=e11]: Email *
+          - generic [ref=e12]:
+            - img
+            - textbox "Email" [active] [ref=e13]:
+              - /placeholder: nama@perusahaan.co.id
+        - generic [ref=e14]:
+          - generic [ref=e15]:
+            - generic [ref=e16]: Kata Sandi *
+            - link "Lupa sandi?" [ref=e17] [cursor=pointer]:
+              - /url: /forgot-password
+          - generic [ref=e18]:
+            - img
+            - generic [ref=e19]:
+              - textbox "Kata Sandi" [ref=e20]:
+                - /placeholder: Masukkan kata sandi
+              - button "Show password" [ref=e21]:
+                - img [ref=e22]
+        - generic [ref=e25]:
+          - checkbox "Ingat saya" [ref=e26]
+          - checkbox
+          - generic [ref=e27]: Ingat saya
+        - button "Masuk" [ref=e28]:
+          - img
+          - text: Masuk
+        - paragraph [ref=e29]:
+          - img [ref=e30]
+          - text: Koneksi aman & terenkripsi
+      - paragraph [ref=e34]: © 2026 AvanaHR · Advancing People, Empowering Growth
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - img [ref=e41]
+        - text: Platform HRIS / HCM Multi-tenant
+      - heading "Satu platform untuk seluruh siklus karyawan Anda." [level=2] [ref=e43]
+      - paragraph [ref=e44]: Dari rekrutmen, absensi berbasis GPS, pengajuan cuti, hingga payroll & slip gaji — semua terintegrasi dan sesuai regulasi Indonesia.
+      - list [ref=e45]:
+        - listitem [ref=e46]:
+          - img [ref=e47]
+          - generic [ref=e50]: Absensi berbasis GPS, face recognition & kiosk
+        - listitem [ref=e51]:
+          - img [ref=e52]
+          - generic [ref=e55]: Payroll, PPh 21 & BPJS sesuai regulasi Indonesia
+        - listitem [ref=e56]:
+          - img [ref=e57]
+          - generic [ref=e60]: ESS/MSS mobile — cuti, lembur & slip gaji
+      - generic [ref=e61]:
+        - generic [ref=e62]:
+          - generic [ref=e63]: 12.400+
+          - generic [ref=e64]: Karyawan dikelola
+        - generic [ref=e65]:
+          - generic [ref=e66]: 98,7%
+          - generic [ref=e67]: Akurasi payroll
+        - generic [ref=e68]:
+          - generic [ref=e69]: 320+
+          - generic [ref=e70]: Perusahaan
+      - generic [ref=e71]:
+        - img [ref=e72]
+        - text: Keamanan setara enterprise · enkripsi end-to-end
+  - region "Notifications alt+T"

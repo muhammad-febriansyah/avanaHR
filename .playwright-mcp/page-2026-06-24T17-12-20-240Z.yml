@@ -1,0 +1,211 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [expanded] [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+              - list [ref=e38]:
+                - listitem [ref=e39]:
+                  - link "Data Karyawan" [ref=e40] [cursor=pointer]:
+                    - /url: /employees
+                    - generic [ref=e41]: Data Karyawan
+                - listitem [ref=e42]:
+                  - link "Struktur Organisasi" [ref=e43] [cursor=pointer]:
+                    - /url: /organization/structure
+                    - generic [ref=e44]: Struktur Organisasi
+                - listitem [ref=e45]:
+                  - link "Departemen & Posisi" [ref=e46] [cursor=pointer]:
+                    - /url: /departments
+                    - generic [ref=e47]: Departemen & Posisi
+                - listitem [ref=e48]:
+                  - link "Cost Center" [ref=e49] [cursor=pointer]:
+                    - /url: /cost-centers
+                    - generic [ref=e50]: Cost Center
+                - listitem [ref=e51]:
+                  - link "Jenjang Jabatan" [ref=e52] [cursor=pointer]:
+                    - /url: /job-levels
+                    - generic [ref=e53]: Jenjang Jabatan
+                - listitem [ref=e54]:
+                  - link "Grade Jabatan" [ref=e55] [cursor=pointer]:
+                    - /url: /job-grades
+                    - generic [ref=e56]: Grade Jabatan
+                - listitem [ref=e57]:
+                  - link "Kalender Kerja" [ref=e58] [cursor=pointer]:
+                    - /url: /work-calendars
+                    - generic [ref=e59]: Kalender Kerja
+                - listitem [ref=e60]:
+                  - link "Lifecycle" [ref=e61] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e62]: Lifecycle
+                - listitem [ref=e63]:
+                  - link "Dokumen" [ref=e64] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e65]: Dokumen
+                - listitem [ref=e66]:
+                  - link "Tiket HR" [ref=e67] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e68]: Tiket HR
+            - listitem [ref=e69]:
+              - button "Absensi" [ref=e70]:
+                - img [ref=e71]
+                - generic [ref=e80]: Absensi
+                - img [ref=e81]
+            - listitem [ref=e83]:
+              - button "Cuti & Lembur" [ref=e84]:
+                - img [ref=e85]
+                - generic [ref=e87]: Cuti & Lembur
+                - img [ref=e88]
+            - listitem [ref=e90]:
+              - button "Payroll" [ref=e91]:
+                - img [ref=e92]
+                - generic [ref=e95]: Payroll
+                - img [ref=e96]
+        - generic [ref=e98]:
+          - generic [ref=e99]: Personal
+          - list [ref=e100]:
+            - listitem [ref=e101]:
+              - button "Self-Service" [ref=e102]:
+                - img [ref=e103]
+                - generic [ref=e107]: Self-Service
+                - img [ref=e108]
+            - listitem [ref=e110]:
+              - button "Persetujuan" [ref=e111]:
+                - img [ref=e112]
+                - generic [ref=e116]: Persetujuan
+                - img [ref=e117]
+        - generic [ref=e119]:
+          - generic [ref=e120]: Sistem
+          - list [ref=e121]:
+            - listitem [ref=e122]:
+              - button "Laporan" [ref=e123]:
+                - img [ref=e124]
+                - generic [ref=e126]: Laporan
+                - img [ref=e127]
+            - listitem [ref=e129]:
+              - button "Pengaturan" [ref=e130]:
+                - img [ref=e131]
+                - generic [ref=e134]: Pengaturan
+                - img [ref=e135]
+      - generic [ref=e139]:
+        - generic [ref=e140]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e141] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e142]
+          - generic [ref=e145]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e146] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e147]
+          - generic [ref=e149]: (021) 5099-9000
+    - main [ref=e150]:
+      - generic [ref=e151]:
+        - button "Toggle sidebar" [ref=e152]:
+          - img
+          - generic [ref=e153]: Toggle sidebar
+        - generic [ref=e154]:
+          - img
+          - searchbox "Cari" [ref=e155]
+        - button "Notifikasi" [ref=e156]:
+          - img [ref=e157]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e162]:
+          - generic [ref=e163]: AA
+          - generic [ref=e164]:
+            - generic [ref=e165]: Admin Avana
+            - generic [ref=e166]: PT Nusantara Jaya
+          - img [ref=e167]
+      - generic [ref=e169]:
+        - generic [ref=e170]:
+          - generic [ref=e171]:
+            - navigation "Breadcrumb" [ref=e172]:
+              - link "Dashboard" [ref=e173] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/dashboard
+              - img [ref=e174]
+              - generic [ref=e176]: Grade Jabatan
+            - heading "Grade Jabatan" [level=1] [ref=e177]
+            - paragraph [ref=e178]: Kelola grade jabatan beserta rentang gajinya.
+          - link "Tambah Grade" [ref=e180] [cursor=pointer]:
+            - /url: /job-grades/create
+            - img
+            - text: Tambah Grade
+        - table [ref=e185]:
+          - rowgroup [ref=e186]:
+            - row "Kode Nama Batas Bawah Batas Atas Aksi" [ref=e187]:
+              - columnheader "Kode" [ref=e188]
+              - columnheader "Nama" [ref=e189]
+              - columnheader "Batas Bawah" [ref=e190]
+              - columnheader "Batas Atas" [ref=e191]
+              - columnheader "Aksi" [ref=e192]
+          - rowgroup [ref=e193]:
+            - row "GR18 Grade p Rp 7.000.000 Rp 16.000.000 Edit Hapus" [ref=e194]:
+              - cell "GR18" [ref=e195]
+              - cell "Grade p" [ref=e196]
+              - cell "Rp 7.000.000" [ref=e197]
+              - cell "Rp 16.000.000" [ref=e198]
+              - cell "Edit Hapus" [ref=e199]:
+                - generic [ref=e200]:
+                  - link "Edit" [ref=e201] [cursor=pointer]:
+                    - /url: /job-grades/1/edit
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e202]:
+                    - img
+                    - text: Hapus
+            - row "GR4 Grade j Rp 26.000.000 Rp 32.000.000 Edit Hapus" [ref=e203]:
+              - cell "GR4" [ref=e204]
+              - cell "Grade j" [ref=e205]
+              - cell "Rp 26.000.000" [ref=e206]
+              - cell "Rp 32.000.000" [ref=e207]
+              - cell "Edit Hapus" [ref=e208]:
+                - generic [ref=e209]:
+                  - link "Edit" [ref=e210] [cursor=pointer]:
+                    - /url: /job-grades/3/edit
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e211]:
+                    - img
+                    - text: Hapus
+            - row "GR6 Grade g Rp 30.000.000 Rp 35.000.000 Edit Hapus" [ref=e212]:
+              - cell "GR6" [ref=e213]
+              - cell "Grade g" [ref=e214]
+              - cell "Rp 30.000.000" [ref=e215]
+              - cell "Rp 35.000.000" [ref=e216]
+              - cell "Edit Hapus" [ref=e217]:
+                - generic [ref=e218]:
+                  - link "Edit" [ref=e219] [cursor=pointer]:
+                    - /url: /job-grades/4/edit
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e220]:
+                    - img
+                    - text: Hapus
+            - row "GR75 Grade p Rp 9.000.000 Rp 28.000.000 Edit Hapus" [ref=e221]:
+              - cell "GR75" [ref=e222]
+              - cell "Grade p" [ref=e223]
+              - cell "Rp 9.000.000" [ref=e224]
+              - cell "Rp 28.000.000" [ref=e225]
+              - cell "Edit Hapus" [ref=e226]:
+                - generic [ref=e227]:
+                  - link "Edit" [ref=e228] [cursor=pointer]:
+                    - /url: /job-grades/2/edit
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e229]:
+                    - img
+                    - text: Hapus
+  - region "Notifications alt+T"

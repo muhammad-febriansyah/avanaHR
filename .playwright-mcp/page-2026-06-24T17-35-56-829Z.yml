@@ -1,0 +1,164 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+            - listitem [ref=e37]:
+              - button "Absensi" [ref=e38]:
+                - img [ref=e39]
+                - generic [ref=e48]: Absensi
+                - img [ref=e49]
+            - listitem [ref=e51]:
+              - button "Cuti & Lembur" [expanded] [ref=e52]:
+                - img [ref=e53]
+                - generic [ref=e55]: Cuti & Lembur
+                - img [ref=e56]
+              - list [ref=e59]:
+                - listitem [ref=e60]:
+                  - link "Pengajuan Cuti" [ref=e61] [cursor=pointer]:
+                    - /url: /leave-requests
+                    - generic [ref=e62]: Pengajuan Cuti
+                - listitem [ref=e63]:
+                  - link "Saldo Cuti" [ref=e64] [cursor=pointer]:
+                    - /url: /leave-balances
+                    - generic [ref=e65]: Saldo Cuti
+                - listitem [ref=e66]:
+                  - link "Jenis Cuti" [ref=e67] [cursor=pointer]:
+                    - /url: /leave-types
+                    - generic [ref=e68]: Jenis Cuti
+                - listitem [ref=e69]:
+                  - link "Lembur" [ref=e70] [cursor=pointer]:
+                    - /url: /overtime-requests
+                    - generic [ref=e71]: Lembur
+            - listitem [ref=e72]:
+              - button "Payroll" [ref=e73]:
+                - img [ref=e74]
+                - generic [ref=e77]: Payroll
+                - img [ref=e78]
+        - generic [ref=e80]:
+          - generic [ref=e81]: Personal
+          - list [ref=e82]:
+            - listitem [ref=e83]:
+              - button "Self-Service" [ref=e84]:
+                - img [ref=e85]
+                - generic [ref=e89]: Self-Service
+                - img [ref=e90]
+            - listitem [ref=e92]:
+              - button "Persetujuan" [ref=e93]:
+                - img [ref=e94]
+                - generic [ref=e98]: Persetujuan
+                - img [ref=e99]
+        - generic [ref=e101]:
+          - generic [ref=e102]: Sistem
+          - list [ref=e103]:
+            - listitem [ref=e104]:
+              - button "Laporan" [ref=e105]:
+                - img [ref=e106]
+                - generic [ref=e108]: Laporan
+                - img [ref=e109]
+            - listitem [ref=e111]:
+              - button "Pengaturan" [ref=e112]:
+                - img [ref=e113]
+                - generic [ref=e116]: Pengaturan
+                - img [ref=e117]
+      - generic [ref=e121]:
+        - generic [ref=e122]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e123] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e124]
+          - generic [ref=e127]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e128] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e129]
+          - generic [ref=e131]: (021) 5099-9000
+    - main [ref=e132]:
+      - generic [ref=e133]:
+        - button "Toggle sidebar" [ref=e134]:
+          - img
+          - generic [ref=e135]: Toggle sidebar
+        - generic [ref=e136]:
+          - img
+          - searchbox "Cari" [ref=e137]
+        - button "Notifikasi" [ref=e138]:
+          - img [ref=e139]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e144]:
+          - generic [ref=e145]: AA
+          - generic [ref=e146]:
+            - generic [ref=e147]: Admin Avana
+            - generic [ref=e148]: PT Nusantara Jaya
+          - img [ref=e149]
+      - generic [ref=e151]:
+        - generic [ref=e152]:
+          - generic [ref=e153]:
+            - heading "Pengajuan Cuti" [level=1] [ref=e154]
+            - paragraph [ref=e155]: Kelola dan setujui pengajuan cuti karyawan.
+          - button "Ajukan Cuti" [ref=e157]:
+            - img
+            - text: Ajukan Cuti
+        - generic [ref=e159]:
+          - generic [ref=e160]:
+            - textbox "Cari nama / NIP karyawan" [ref=e161]
+            - combobox [ref=e162]:
+              - generic: Semua Jenis Cuti
+              - img
+            - combobox [ref=e163]:
+              - generic: Semua Status
+              - img
+          - table [ref=e166]:
+            - rowgroup [ref=e167]:
+              - row "Karyawan Jenis Cuti Periode Hari Status Aksi" [ref=e168]:
+                - columnheader "Karyawan" [ref=e169]
+                - columnheader "Jenis Cuti" [ref=e170]
+                - columnheader "Periode" [ref=e171]
+                - columnheader "Hari" [ref=e172]
+                - columnheader "Status" [ref=e173]
+                - columnheader "Aksi" [ref=e174]
+            - rowgroup [ref=e175]:
+              - row "Gasti Nasyiah EMP65080 Cuti Tahunan 1 Jul 2026 – 3 Jul 2026 3 Disetujui Hapus" [ref=e316]:
+                - cell "Gasti Nasyiah EMP65080" [ref=e290]:
+                  - generic [ref=e291]: Gasti Nasyiah
+                  - generic [ref=e292]: EMP65080
+                - cell "Cuti Tahunan" [ref=e293]
+                - cell "1 Jul 2026 – 3 Jul 2026" [ref=e294]
+                - cell "3" [ref=e295]
+                - cell "Disetujui" [ref=e317]:
+                  - generic [ref=e297]: Disetujui
+                - cell "Hapus" [ref=e318]:
+                  - button "Hapus" [ref=e303]:
+                    - img
+                    - text: Hapus
+          - generic [ref=e183]:
+            - paragraph [ref=e184]: 1 pengajuan
+            - generic [ref=e185]:
+              - button "Sebelumnya" [disabled]:
+                - img
+                - text: Sebelumnya
+              - button "Berikutnya" [disabled]:
+                - text: Berikutnya
+                - img
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=e319]:
+        - img [ref=e321]
+        - generic [ref=e324]: Pengajuan cuti disetujui.
+      - listitem [ref=e325]:
+        - img [ref=e327]
+        - generic [ref=e330]: Pengajuan cuti disetujui.

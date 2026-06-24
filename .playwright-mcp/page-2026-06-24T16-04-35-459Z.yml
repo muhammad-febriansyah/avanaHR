@@ -1,0 +1,224 @@
+- generic [active]:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /dashboard
+                    - img
+            - generic:
+              - generic:
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: /dashboard
+                      - img
+                      - generic: Dashboard
+              - generic:
+                - generic: Manajemen
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Karyawan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Absensi
+                      - img
+                  - listitem:
+                    - button [expanded]:
+                      - img
+                      - generic: Cuti & Lembur
+                      - img
+                    - generic:
+                      - list:
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Pengajuan Cuti
+                        - listitem:
+                          - link:
+                            - /url: /leave-balances
+                            - generic: Saldo Cuti
+                        - listitem:
+                          - link:
+                            - /url: /leave-types
+                            - generic: Jenis Cuti
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Lembur
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Payroll
+                      - img
+              - generic:
+                - generic: Personal
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Self-Service
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Persetujuan
+                      - img
+              - generic:
+                - generic: Sistem
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Laporan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Pengaturan
+                      - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Butuh Bantuan?
+                  - link:
+                    - /url: mailto:support@avanahr.co.id
+                    - img
+                    - generic: support@avanahr.co.id
+                  - link:
+                    - /url: tel:+622150999000
+                    - img
+                    - generic: (021) 5099-9000
+      - main:
+        - generic:
+          - button:
+            - img
+            - generic: Toggle sidebar
+          - generic:
+            - img
+            - searchbox
+          - button:
+            - img
+          - button:
+            - generic: AA
+            - generic:
+              - generic: Admin Avana
+              - generic: PT Nusantara Jaya
+            - img
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=1]: Saldo Cuti
+              - paragraph: Kelola hak dan sisa saldo cuti karyawan per tahun.
+            - generic:
+              - button:
+                - img
+                - text: Tambah Saldo
+          - generic:
+            - generic:
+              - generic:
+                - textbox:
+                  - /placeholder: Cari nama / NIP karyawan
+                - combobox:
+                  - generic: "2026"
+                  - img
+                - combobox:
+                  - generic: Semua Jenis Cuti
+                  - img
+              - generic:
+                - generic:
+                  - table:
+                    - rowgroup:
+                      - row:
+                        - columnheader: Karyawan
+                        - columnheader: Jenis Cuti
+                        - columnheader: Hak
+                        - columnheader: Terpakai
+                        - columnheader: Pending
+                        - columnheader: Hangus
+                        - columnheader: Sisa
+                        - columnheader: Aksi
+                    - rowgroup:
+                      - row:
+                        - cell:
+                          - generic: Agnes Nashiruddin
+                          - generic: EMP97739
+                        - cell: Cuti Tahunan
+                        - cell: "12"
+                        - cell: "2"
+                        - cell: "1"
+                        - cell: "0"
+                        - cell: "9"
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Edit
+                            - button:
+                              - img
+                              - text: Hapus
+              - generic:
+                - paragraph: 1 saldo · Tahun 2026
+                - generic:
+                  - button [disabled]:
+                    - img
+                    - text: Sebelumnya
+                  - button [disabled]:
+                    - text: Berikutnya
+                    - img
+    - region "Notifications alt+T"
+  - dialog "Tambah Saldo Cuti" [ref=e326]:
+    - heading "Tambah Saldo Cuti" [level=2] [ref=e328]
+    - generic [ref=e329]:
+      - generic [ref=e330]:
+        - generic [ref=e331]: Karyawan
+        - combobox "Karyawan" [ref=e332]:
+          - generic: Agnes Nashiruddin (EMP97739)
+          - img
+        - combobox [ref=e333]
+        - paragraph [ref=e437]: Saldo untuk karyawan, jenis cuti, dan tahun ini sudah ada.
+      - generic [ref=e334]:
+        - generic [ref=e335]:
+          - generic [ref=e336]: Jenis Cuti
+          - combobox "Jenis Cuti" [ref=e337]:
+            - generic: Cuti Tahunan
+            - img
+          - combobox [ref=e338]
+        - generic [ref=e339]:
+          - generic [ref=e340]: Tahun
+          - combobox "Tahun" [ref=e341]:
+            - generic: "2026"
+            - img
+          - combobox [ref=e342]
+      - generic [ref=e343]:
+        - generic [ref=e344]:
+          - generic [ref=e345]: Hak Cuti
+          - spinbutton "Hak Cuti" [ref=e346]: "10"
+        - generic [ref=e347]:
+          - generic [ref=e348]: Terpakai
+          - spinbutton "Terpakai" [ref=e349]: "2"
+        - generic [ref=e350]:
+          - generic [ref=e351]: Pending
+          - spinbutton "Pending" [ref=e352]: "1"
+        - generic [ref=e353]:
+          - generic [ref=e354]: Hangus
+          - spinbutton "Hangus" [ref=e355]: "0"
+      - generic [ref=e356]:
+        - generic [ref=e357]: Sisa saldo
+        - generic [ref=e358]: "7"
+    - generic [ref=e359]:
+      - button "Batal" [ref=e360]:
+        - img
+        - text: Batal
+      - button "Simpan" [ref=e361]
+    - button "Close" [ref=e362]:
+      - img
+      - generic [ref=e363]: Close

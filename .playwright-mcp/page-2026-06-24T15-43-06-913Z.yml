@@ -1,0 +1,629 @@
+- generic:
+  - dialog [active]:
+    - iframe [ref=e340]:
+      - generic [ref=f1e2]:
+        - generic [ref=f1e4]:
+          - generic [ref=f1e5]:
+            - img [ref=f1e7]
+            - generic [ref=f1e10]: Internal Server Error
+          - button "Copy as Markdown" [ref=f1e11] [cursor=pointer]:
+            - img [ref=f1e12]
+            - generic [ref=f1e15]: Copy as Markdown
+        - generic [ref=f1e18]:
+          - generic [ref=f1e19]:
+            - heading "Illuminate\\Database\\QueryException" [level=1] [ref=f1e20]
+            - generic [ref=f1e22]: vendor/laravel/framework/src/Illuminate/Database/Connection.php:843
+            - paragraph [ref=f1e23]: "SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'tenant_id' cannot be null (Connection: mysql, Host: 127.0.0.1, Port: 3306, Database: avanahr, SQL: insert into `departments` (`code`, `name`, `parent_id`, `company_id`, `tenant_id`, `updated_at`, `created_at`) values (DEP010, IT Operations, ?, 1, ?, 2026-06-24 22:43:05, 2026-06-24 22:43:05))"
+          - generic [ref=f1e24]:
+            - generic [ref=f1e25]:
+              - generic [ref=f1e26]:
+                - generic [ref=f1e27]: LARAVEL
+                - generic [ref=f1e28]: 13.16.1
+              - generic [ref=f1e29]:
+                - generic [ref=f1e30]: PHP
+                - generic [ref=f1e31]: 8.4.20
+            - generic [ref=f1e32]:
+              - img [ref=f1e33]
+              - text: UNHANDLED
+            - generic [ref=f1e36]: CODE 23000
+          - generic [ref=f1e38]:
+            - generic [ref=f1e39]:
+              - img [ref=f1e40]
+              - text: "500"
+            - generic [ref=f1e43]:
+              - img [ref=f1e44]
+              - text: POST
+            - generic [ref=f1e47]: http://127.0.0.1:8000/departments
+            - button [ref=f1e48] [cursor=pointer]:
+              - img [ref=f1e49]
+        - generic [ref=f1e53]:
+          - generic [ref=f1e54]:
+            - generic [ref=f1e55]:
+              - img [ref=f1e57]
+              - heading "Exception trace" [level=3] [ref=f1e60]
+              - link "1 previous exception" [ref=f1e61] [cursor=pointer]:
+                - /url: "#previous-exceptions"
+            - generic [ref=f1e62]:
+              - generic [ref=f1e64] [cursor=pointer]:
+                - img [ref=f1e65]
+                - generic [ref=f1e69]: 15 vendor frames
+                - button [ref=f1e70]:
+                  - img [ref=f1e71]
+              - generic [ref=f1e75]:
+                - generic [ref=f1e76] [cursor=pointer]:
+                  - generic [ref=f1e79]:
+                    - code [ref=f1e83]:
+                      - generic [ref=f1e84]: Illuminate\Database\Eloquent\Model::__callStatic(string, array)
+                    - generic [ref=f1e86]: app/Http/Controllers/DepartmentController.php:68
+                  - button [ref=f1e88]:
+                    - img [ref=f1e89]
+                - code [ref=f1e97]:
+                  - generic [ref=f1e98]: 63 ]);
+                  - generic [ref=f1e99]: "64 }"
+                  - generic [ref=f1e100]: "65"
+                  - generic [ref=f1e101]: "66 public function store(StoreDepartmentRequest $request): RedirectResponse"
+                  - generic [ref=f1e102]: "67 {"
+                  - generic [ref=f1e103]: 68 Department::create([
+                  - generic [ref=f1e104]: 69 ...$request->validated(),
+                  - generic [ref=f1e105]: 70 'company_id' => Company::query()->value('id'),
+                  - generic [ref=f1e106]: 71 ]);
+                  - generic [ref=f1e107]: "72"
+                  - generic [ref=f1e108]: 73 Inertia::flash('toast', ['type' => 'success', 'message' => 'Departemen berhasil ditambahkan.']);
+                  - generic [ref=f1e109]: "74"
+                  - generic [ref=f1e110]: 75 return back();
+                  - generic [ref=f1e111]: "76 }"
+                  - generic [ref=f1e112]: "77"
+                  - generic [ref=f1e113]: "78 public function update(UpdateDepartmentRequest $request, Department $department): RedirectResponse"
+                  - generic [ref=f1e114]: "79 {"
+                  - generic [ref=f1e115]: "80"
+              - generic [ref=f1e117] [cursor=pointer]:
+                - img [ref=f1e118]
+                - generic [ref=f1e122]: 13 vendor frames
+                - button [ref=f1e123]:
+                  - img [ref=f1e124]
+              - generic [ref=f1e129] [cursor=pointer]:
+                - generic [ref=f1e132]:
+                  - code [ref=f1e136]:
+                    - generic [ref=f1e137]: "Illuminate\\Pipeline\\Pipeline->{closure:{closure:Illuminate\\Pipeline\\Pipeline::carry():194}:195}(object(Illuminate\\Http\\Request))"
+                  - generic [ref=f1e139]: app/Http/Middleware/SetCurrentTenant.php:32
+                - button [ref=f1e141]:
+                  - img [ref=f1e142]
+              - generic [ref=f1e147] [cursor=pointer]:
+                - img [ref=f1e148]
+                - generic [ref=f1e152]: 47 vendor frames
+                - button [ref=f1e153]:
+                  - img [ref=f1e154]
+              - generic [ref=f1e159] [cursor=pointer]:
+                - generic [ref=f1e162]:
+                  - code [ref=f1e166]:
+                    - generic [ref=f1e167]: Illuminate\Foundation\Application->handleRequest(object(Illuminate\Http\Request))
+                  - generic [ref=f1e169]: public/index.php:20
+                - button [ref=f1e171]:
+                  - img [ref=f1e172]
+              - generic [ref=f1e177] [cursor=pointer]:
+                - img [ref=f1e178]
+                - generic [ref=f1e182]: 1 vendor frame
+                - button [ref=f1e183]:
+                  - img [ref=f1e184]
+          - generic [ref=f1e188]:
+            - generic [ref=f1e189]:
+              - img [ref=f1e191]
+              - heading "Previous exception" [level=3] [ref=f1e194]
+            - generic [ref=f1e198] [cursor=pointer]:
+              - generic [ref=f1e199]:
+                - heading "PDOException" [level=4] [ref=f1e200]
+                - paragraph [ref=f1e201]: "SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'tenant_id' cannot be null"
+              - button [ref=f1e202]:
+                - img [ref=f1e203]
+          - generic [ref=f1e207]:
+            - generic [ref=f1e208]:
+              - generic [ref=f1e209]:
+                - img [ref=f1e211]
+                - heading "Queries" [level=3] [ref=f1e213]
+              - generic [ref=f1e215]: 1-9 of 9
+            - generic [ref=f1e216]:
+              - generic [ref=f1e217]:
+                - generic [ref=f1e218]:
+                  - generic [ref=f1e219]:
+                    - img [ref=f1e220]
+                    - generic [ref=f1e222]: mysql
+                  - code [ref=f1e226]:
+                    - generic [ref=f1e227]: "select * from `sessions` where `id` = 'CimR0DiBQNjHNZOxpKWTS60bukXjDAnpPk1swix3' limit 1"
+                - generic [ref=f1e228]: 1.02ms
+              - generic [ref=f1e229]:
+                - generic [ref=f1e230]:
+                  - generic [ref=f1e231]:
+                    - img [ref=f1e232]
+                    - generic [ref=f1e234]: mysql
+                  - code [ref=f1e238]:
+                    - generic [ref=f1e239]: "select * from `users` where `id` = 23 limit 1"
+                - generic [ref=f1e240]: 0.21ms
+              - generic [ref=f1e241]:
+                - generic [ref=f1e242]:
+                  - generic [ref=f1e243]:
+                    - img [ref=f1e244]
+                    - generic [ref=f1e246]: mysql
+                  - code [ref=f1e250]:
+                    - generic [ref=f1e251]: "select `name` from `permissions`"
+                - generic [ref=f1e252]: 0.2ms
+              - generic [ref=f1e253]:
+                - generic [ref=f1e254]:
+                  - generic [ref=f1e255]:
+                    - img [ref=f1e256]
+                    - generic [ref=f1e258]: mysql
+                  - code [ref=f1e262]:
+                    - generic [ref=f1e263]: "select * from `cache` where `key` in ('avanahr-cache-spatie.permission.cache')"
+                - generic [ref=f1e264]: 0.32ms
+              - generic [ref=f1e265]:
+                - generic [ref=f1e266]:
+                  - generic [ref=f1e267]:
+                    - img [ref=f1e268]
+                    - generic [ref=f1e270]: mysql
+                  - code [ref=f1e274]:
+                    - generic [ref=f1e275]: "select `permissions`.*, `model_has_permissions`.`model_id` as `pivot_model_id`, `model_has_permissions`.`permission_id` as `pivot_permission_id`, `model_has_permissions`.`model_type` as `pivot_model_type`, `model_has_permissions`.`team_id` as `pivot_team_id` from `permissions` inner join `model_has_permissions` on `permissions`.`id` = `model_has_permissions`.`permission_id` where `model_has_permissions`.`team_id` is null and `model_has_permissions`.`model_id` in (23) and `model_has_permissions`.`model_type` = 'App\\Models\\User'"
+                - generic [ref=f1e276]: 0.21ms
+              - generic [ref=f1e277]:
+                - generic [ref=f1e278]:
+                  - generic [ref=f1e279]:
+                    - img [ref=f1e280]
+                    - generic [ref=f1e282]: mysql
+                  - code [ref=f1e286]:
+                    - generic [ref=f1e287]: "select `roles`.*, `model_has_roles`.`model_id` as `pivot_model_id`, `model_has_roles`.`role_id` as `pivot_role_id`, `model_has_roles`.`model_type` as `pivot_model_type`, `model_has_roles`.`team_id` as `pivot_team_id` from `roles` inner join `model_has_roles` on `roles`.`id` = `model_has_roles`.`role_id` where `model_has_roles`.`team_id` is null and (`roles`.`team_id` is null or `roles`.`team_id` is null) and `model_has_roles`.`model_id` in (23) and `model_has_roles`.`model_type` = 'App\\Models\\User'"
+                - generic [ref=f1e288]: 0.17ms
+              - generic [ref=f1e289]:
+                - generic [ref=f1e290]:
+                  - generic [ref=f1e291]:
+                    - img [ref=f1e292]
+                    - generic [ref=f1e294]: mysql
+                  - code [ref=f1e298]:
+                    - generic [ref=f1e299]: "select count(*) as `aggregate` from `departments` where `code` = 'DEP010' and `tenant_id` is null"
+                - generic [ref=f1e300]: 0.3ms
+              - generic [ref=f1e301]:
+                - generic [ref=f1e302]:
+                  - generic [ref=f1e303]:
+                    - img [ref=f1e304]
+                    - generic [ref=f1e306]: mysql
+                  - code [ref=f1e310]:
+                    - generic [ref=f1e311]: "select `id` from `companies` where `companies`.`deleted_at` is null limit 1"
+                - generic [ref=f1e312]: 0.31ms
+              - generic [ref=f1e313]:
+                - generic [ref=f1e314]:
+                  - generic [ref=f1e315]:
+                    - img [ref=f1e316]
+                    - generic [ref=f1e318]: mysql
+                  - code [ref=f1e322]:
+                    - generic [ref=f1e323]: "select column_name as `name`, data_type as `type_name`, column_type as `type`, collation_name as `collation`, is_nullable as `nullable`, column_default as `default`, column_comment as `comment`, generation_expression as `expression`, extra as `extra` from information_schema.columns where table_schema = schema() and table_name = 'departments' order by ordinal_position asc"
+                - generic [ref=f1e324]: 0.69ms
+        - generic [ref=f1e326]:
+          - generic [ref=f1e327]:
+            - heading "Headers" [level=2] [ref=f1e328]
+            - generic [ref=f1e329]:
+              - generic [ref=f1e330]:
+                - generic [ref=f1e331]: host
+                - generic [ref=f1e333]: 127.0.0.1:8000
+              - generic [ref=f1e334]:
+                - generic [ref=f1e335]: connection
+                - generic [ref=f1e337]: keep-alive
+              - generic [ref=f1e338]:
+                - generic [ref=f1e339]: content-length
+                - generic [ref=f1e341]: "57"
+              - generic [ref=f1e342]:
+                - generic [ref=f1e343]: sec-ch-ua-platform
+                - generic [ref=f1e345]: "\"macOS\""
+              - generic [ref=f1e346]:
+                - generic [ref=f1e347]: x-xsrf-token
+                - generic [ref=f1e349]: eyJpdiI6IkNFajNHd2ljS09ORTk3WkhwUnFURHc9PSIsInZhbHVlIjoidXEwbEp4Q1BYc3o3YW14NFFQbGJ5NGdncmNGeEhCdUo5NnZrY3Bwbk5WblhxU1o5TDlxb1gzN0JldXlIVWxTUmRhQ3JtMFl3bW44UWRyTk5NTS9URm1qK0lDaHdobUNsVlI0b1hDdWtXSVZlblFjdDZSblFySG16czd1OWpTZmQiLCJtYWMiOiIzMzA3MzE4NzRiZmJkNGJjNGMzMTg2OGY0ZDJkZjdiNGQzMzMwYWI1ZjQ0ODcyYzFjNDg2ZWFmZTgzNWQ5ZTE2IiwidGFnIjoiIn0=
+              - generic [ref=f1e350]:
+                - generic [ref=f1e351]: x-inertia-version
+                - generic [ref=f1e353]: 156800a85420a1927943f5962f3f45b3
+              - generic [ref=f1e354]:
+                - generic [ref=f1e355]: sec-ch-ua
+                - generic [ref=f1e357]: "\"Google Chrome\";v=\"149\", \"Chromium\";v=\"149\", \"Not)A;Brand\";v=\"24\""
+              - generic [ref=f1e358]:
+                - generic [ref=f1e359]: x-inertia
+                - generic [ref=f1e361]: "true"
+              - generic [ref=f1e362]:
+                - generic [ref=f1e363]: sec-ch-ua-mobile
+                - generic [ref=f1e365]: "?0"
+              - generic [ref=f1e366]:
+                - generic [ref=f1e367]: x-requested-with
+                - generic [ref=f1e369]: XMLHttpRequest
+              - generic [ref=f1e370]:
+                - generic [ref=f1e371]: user-agent
+                - generic [ref=f1e373]: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36
+              - generic [ref=f1e374]:
+                - generic [ref=f1e375]: accept
+                - generic [ref=f1e377]: text/html, application/xhtml+xml
+              - generic [ref=f1e378]:
+                - generic [ref=f1e379]: content-type
+                - generic [ref=f1e381]: application/json
+              - generic [ref=f1e382]:
+                - generic [ref=f1e383]: origin
+                - generic [ref=f1e385]: http://127.0.0.1:8000
+              - generic [ref=f1e386]:
+                - generic [ref=f1e387]: sec-fetch-site
+                - generic [ref=f1e389]: same-origin
+              - generic [ref=f1e390]:
+                - generic [ref=f1e391]: sec-fetch-mode
+                - generic [ref=f1e393]: cors
+              - generic [ref=f1e394]:
+                - generic [ref=f1e395]: sec-fetch-dest
+                - generic [ref=f1e397]: empty
+              - generic [ref=f1e398]:
+                - generic [ref=f1e399]: referer
+                - generic [ref=f1e401]: http://127.0.0.1:8000/departments
+              - generic [ref=f1e402]:
+                - generic [ref=f1e403]: accept-encoding
+                - generic [ref=f1e405]: gzip, deflate, br, zstd
+              - generic [ref=f1e406]:
+                - generic [ref=f1e407]: accept-language
+                - generic [ref=f1e409]: en-US,en;q=0.9
+              - generic [ref=f1e410]:
+                - generic [ref=f1e411]: cookie
+                - generic [ref=f1e413]: XSRF-TOKEN=eyJpdiI6IkNFajNHd2ljS09ORTk3WkhwUnFURHc9PSIsInZhbHVlIjoidXEwbEp4Q1BYc3o3YW14NFFQbGJ5NGdncmNGeEhCdUo5NnZrY3Bwbk5WblhxU1o5TDlxb1gzN0JldXlIVWxTUmRhQ3JtMFl3bW44UWRyTk5NTS9URm1qK0lDaHdobUNsVlI0b1hDdWtXSVZlblFjdDZSblFySG16czd1OWpTZmQiLCJtYWMiOiIzMzA3MzE4NzRiZmJkNGJjNGMzMTg2OGY0ZDJkZjdiNGQzMzMwYWI1ZjQ0ODcyYzFjNDg2ZWFmZTgzNWQ5ZTE2IiwidGFnIjoiIn0%3D; avanahr-session=eyJpdiI6IlVXQ0F3djVQQitrMGJlS3RKUXBWT0E9PSIsInZhbHVlIjoidXFmYmUxakRWNG1XNXNVN3ZsMDBpaGEyckJ2U3hLY2dVMWRpcm5nNlF1NkxlWVBNU1BrRCtaRWpqcmk3R1ovN0grZzliTGlQWUJhMXQrWndpc2xVTDNZb1VhWDBBTDMvd0prQXJZQVJ1WEZKL1JMZE82NDBXYzhMS29reVhJVnEiLCJtYWMiOiJiOGZiNTE2MTU1ZmM0MTIzMjA3ZWM3OWNmYzE3NjViMGQ2NjE0NTA0MjVkYTYzZjRhODhjNWM2ZDQ4NTVhZTlkIiwidGFnIjoiIn0%3D
+          - generic [ref=f1e414]:
+            - heading "Body" [level=2] [ref=f1e415]
+            - code [ref=f1e420]:
+              - generic [ref=f1e421]: "{"
+              - generic [ref=f1e422]: "\"code\": \"DEP010\","
+              - generic [ref=f1e423]: "\"name\": \"IT Operations\","
+              - generic [ref=f1e424]: "\"parent_id\": null"
+              - generic [ref=f1e425]: "}"
+          - generic [ref=f1e426]:
+            - heading "Routing" [level=2] [ref=f1e427]
+            - generic [ref=f1e428]:
+              - generic [ref=f1e429]:
+                - generic [ref=f1e430]: controller
+                - generic [ref=f1e432]: App\Http\Controllers\DepartmentController@store
+              - generic [ref=f1e433]:
+                - generic [ref=f1e434]: route name
+                - generic [ref=f1e436]: departments.store
+              - generic [ref=f1e437]:
+                - generic [ref=f1e438]: middleware
+                - generic [ref=f1e440]: web, auth, verified
+          - generic [ref=f1e441]:
+            - heading "Routing parameters" [level=2] [ref=f1e442]
+            - generic [ref=f1e443]: // No routing parameters
+        - generic [ref=f1e446]:
+          - img [ref=f1e448]
+          - img [ref=f1e3486]
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /dashboard
+                    - img
+            - generic:
+              - generic:
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: /dashboard
+                      - img
+                      - generic: Dashboard
+              - generic:
+                - generic: Platform
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: /platform/tenants
+                      - img
+                      - generic: Tenant
+                  - listitem:
+                    - link:
+                      - /url: ""
+                      - img
+                      - generic: Langganan & Paket
+                  - listitem:
+                    - link:
+                      - /url: ""
+                      - img
+                      - generic: Provisioning
+              - generic:
+                - generic: Keamanan & Audit
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: ""
+                      - img
+                      - generic: Audit Log
+                  - listitem:
+                    - link:
+                      - /url: ""
+                      - img
+                      - generic: Security Events
+                  - listitem:
+                    - link:
+                      - /url: ""
+                      - img
+                      - generic: Backup & Restore
+              - generic:
+                - generic: Manajemen
+                - list:
+                  - listitem:
+                    - button [expanded]:
+                      - img
+                      - generic: Karyawan
+                      - img
+                    - generic:
+                      - list:
+                        - listitem:
+                          - link:
+                            - /url: /employees
+                            - generic: Data Karyawan
+                        - listitem:
+                          - link:
+                            - /url: /organization/structure
+                            - generic: Struktur Organisasi
+                        - listitem:
+                          - link:
+                            - /url: /departments
+                            - generic: Departemen & Posisi
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Kalender Kerja
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Lifecycle
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Dokumen
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Tiket HR
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Absensi
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Cuti & Lembur
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Payroll
+                      - img
+              - generic:
+                - generic: Personal
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Self-Service
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Persetujuan
+                      - img
+              - generic:
+                - generic: Sistem
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Laporan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Pengaturan
+                      - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Butuh Bantuan?
+                  - link:
+                    - /url: mailto:support@avanahr.co.id
+                    - img
+                    - generic: support@avanahr.co.id
+                  - link:
+                    - /url: tel:+622150999000
+                    - img
+                    - generic: (021) 5099-9000
+      - main:
+        - generic:
+          - button:
+            - img
+            - generic: Toggle sidebar
+          - generic:
+            - img
+            - searchbox
+          - button:
+            - img
+          - button:
+            - generic: SA
+            - generic:
+              - generic: Super Admin
+              - generic: PT Nusantara Jaya
+            - img
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=1]: Departemen & Posisi
+              - paragraph: "Kelola struktur unit organisasi: departemen dan posisi jabatan."
+          - generic:
+            - generic:
+              - generic:
+                - heading [level=2]: Departemen
+                - button:
+                  - img
+                  - text: Tambah Departemen
+              - generic:
+                - generic:
+                  - table:
+                    - rowgroup:
+                      - row:
+                        - columnheader: Kode
+                        - columnheader: Nama
+                        - columnheader: Induk
+                        - columnheader: Posisi
+                        - columnheader: Aksi
+                    - rowgroup:
+                      - row:
+                        - cell: DEP001
+                        - cell: Human Resources
+                        - cell: "-"
+                        - cell: "1"
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Edit
+                            - button:
+                              - img
+                              - text: Hapus
+                      - row:
+                        - cell: DEP002
+                        - cell: Finance
+                        - cell: "-"
+                        - cell: "1"
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Edit
+                            - button:
+                              - img
+                              - text: Hapus
+                      - row:
+                        - cell: DEP003
+                        - cell: Engineering
+                        - cell: "-"
+                        - cell: "1"
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Edit
+                            - button:
+                              - img
+                              - text: Hapus
+                      - row:
+                        - cell: DEP004
+                        - cell: Sales
+                        - cell: "-"
+                        - cell: "1"
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Edit
+                            - button:
+                              - img
+                              - text: Hapus
+          - generic:
+            - generic:
+              - generic:
+                - heading [level=2]: Posisi
+                - button:
+                  - img
+                  - text: Tambah Posisi
+              - generic:
+                - generic:
+                  - table:
+                    - rowgroup:
+                      - row:
+                        - columnheader: Kode
+                        - columnheader: Nama
+                        - columnheader: Departemen
+                        - columnheader: Level
+                        - columnheader: Grade
+                        - columnheader: Aksi
+                    - rowgroup:
+                      - row:
+                        - cell: POS491
+                        - cell: Account Manager
+                        - cell: Sales
+                        - cell: Director
+                        - cell: Grade p
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Edit
+                            - button:
+                              - img
+                              - text: Hapus
+                      - row:
+                        - cell: POS606
+                        - cell: Social Worker
+                        - cell: Engineering
+                        - cell: Director
+                        - cell: Grade g
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Edit
+                            - button:
+                              - img
+                              - text: Hapus
+                      - row:
+                        - cell: POS646
+                        - cell: Potter
+                        - cell: Finance
+                        - cell: Staff
+                        - cell: Grade p
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Edit
+                            - button:
+                              - img
+                              - text: Hapus
+                      - row:
+                        - cell: POS976
+                        - cell: Mail Clerk
+                        - cell: Human Resources
+                        - cell: Director
+                        - cell: Grade p
+                        - cell:
+                          - generic:
+                            - button:
+                              - img
+                              - text: Edit
+                            - button:
+                              - img
+                              - text: Hapus
+    - region "Notifications alt+T"
+  - dialog "Tambah Departemen" [ref=e321]:
+    - heading "Tambah Departemen" [level=2] [ref=e323]
+    - generic [ref=e324]:
+      - generic [ref=e325]:
+        - generic [ref=e326]: Kode
+        - textbox "Kode" [ref=e327]:
+          - /placeholder: Mis. DEP001
+          - text: DEP010
+      - generic [ref=e328]:
+        - generic [ref=e329]: Nama
+        - textbox "Nama" [ref=e330]:
+          - /placeholder: Mis. Human Resources
+          - text: IT Operations
+      - generic [ref=e331]:
+        - generic [ref=e332]: Departemen Induk
+        - combobox "Departemen Induk" [ref=e333]:
+          - generic: Tanpa induk
+          - img
+        - combobox [ref=e334]
+    - generic [ref=e335]:
+      - button "Batal" [ref=e336]:
+        - img
+        - text: Batal
+      - button "Simpan" [ref=e337]
+    - button "Close" [ref=e338]:
+      - img
+      - generic [ref=e339]: Close

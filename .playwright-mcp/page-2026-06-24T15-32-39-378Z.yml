@@ -1,0 +1,292 @@
+- generic [ref=e2]:
+  - generic [ref=e75]:
+    - generic [ref=e79]:
+      - list [ref=e81]:
+        - listitem [ref=e82]:
+          - link "AvanaHR" [ref=e83] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e84]
+      - generic [ref=e85]:
+        - list [ref=e87]:
+          - listitem [ref=e88]:
+            - link "Dashboard" [ref=e89] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e90]
+              - generic [ref=e95]: Dashboard
+        - generic [ref=e96]:
+          - generic [ref=e97]: Platform
+          - list [ref=e98]:
+            - listitem [ref=e99]:
+              - link "Tenant" [ref=e100] [cursor=pointer]:
+                - /url: /platform/tenants
+                - img [ref=e101]
+                - generic [ref=e105]: Tenant
+            - listitem [ref=e106]:
+              - link "Langganan & Paket" [ref=e107] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e108]
+                - generic [ref=e110]: Langganan & Paket
+            - listitem [ref=e111]:
+              - link "Provisioning" [ref=e112] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e113]
+                - generic [ref=e118]: Provisioning
+        - generic [ref=e119]:
+          - generic [ref=e120]: Keamanan & Audit
+          - list [ref=e121]:
+            - listitem [ref=e122]:
+              - link "Audit Log" [ref=e123] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e124]
+                - generic [ref=e127]: Audit Log
+            - listitem [ref=e128]:
+              - link "Security Events" [ref=e129] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e130]
+                - generic [ref=e132]: Security Events
+            - listitem [ref=e133]:
+              - link "Backup & Restore" [ref=e134] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e135]
+                - generic [ref=e141]: Backup & Restore
+        - list [ref=e143]:
+          - listitem [ref=e144]:
+            - link "Dashboard" [ref=e145] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e146]
+              - generic [ref=e151]: Dashboard
+        - generic [ref=e152]:
+          - generic [ref=e153]: Manajemen
+          - list [ref=e154]:
+            - listitem [ref=e155]:
+              - button "Karyawan" [ref=e156]:
+                - img [ref=e157]
+                - generic [ref=e162]: Karyawan
+                - img [ref=e163]
+            - listitem [ref=e165]:
+              - button "Absensi" [ref=e166]:
+                - img [ref=e167]
+                - generic [ref=e176]: Absensi
+                - img [ref=e177]
+            - listitem [ref=e179]:
+              - button "Cuti & Lembur" [ref=e180]:
+                - img [ref=e181]
+                - generic [ref=e183]: Cuti & Lembur
+                - img [ref=e184]
+            - listitem [ref=e186]:
+              - button "Payroll" [ref=e187]:
+                - img [ref=e188]
+                - generic [ref=e191]: Payroll
+                - img [ref=e192]
+        - generic [ref=e194]:
+          - generic [ref=e195]: Personal
+          - list [ref=e196]:
+            - listitem [ref=e197]:
+              - button "Self-Service" [ref=e198]:
+                - img [ref=e199]
+                - generic [ref=e203]: Self-Service
+                - img [ref=e204]
+            - listitem [ref=e206]:
+              - button "Persetujuan" [ref=e207]:
+                - img [ref=e208]
+                - generic [ref=e212]: Persetujuan
+                - img [ref=e213]
+        - generic [ref=e215]:
+          - generic [ref=e216]: Sistem
+          - list [ref=e217]:
+            - listitem [ref=e218]:
+              - button "Laporan" [ref=e219]:
+                - img [ref=e220]
+                - generic [ref=e222]: Laporan
+                - img [ref=e223]
+            - listitem [ref=e225]:
+              - button "Pengaturan" [ref=e226]:
+                - img [ref=e227]
+                - generic [ref=e230]: Pengaturan
+                - img [ref=e231]
+      - generic [ref=e235]:
+        - generic [ref=e236]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e237] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e238]
+          - generic [ref=e241]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e242] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e243]
+          - generic [ref=e245]: (021) 5099-9000
+    - main [ref=e246]:
+      - generic [ref=e247]:
+        - button "Toggle sidebar" [ref=e248]:
+          - img
+          - generic [ref=e249]: Toggle sidebar
+        - generic [ref=e250]:
+          - img
+          - searchbox "Cari" [ref=e251]
+        - button "Notifikasi" [ref=e252]:
+          - img [ref=e253]
+        - button "SA Super Admin PT Nusantara Jaya" [ref=e258]:
+          - generic [ref=e259]: SA
+          - generic [ref=e260]:
+            - generic [ref=e261]: Super Admin
+            - generic [ref=e262]: PT Nusantara Jaya
+          - img [ref=e263]
+      - generic [ref=e265]:
+        - generic [ref=e266]:
+          - generic [ref=e267]:
+            - navigation "Breadcrumb" [ref=e268]:
+              - generic [ref=e269]: Beranda
+              - img [ref=e270]
+              - generic [ref=e272]: Dashboard
+            - heading "Selamat datang kembali, Rina 👋" [level=1] [ref=e273]
+            - paragraph [ref=e274]: Ringkasan aktivitas HR — Selasa, 23 Jun 2026
+          - generic [ref=e275]:
+            - button "Export" [ref=e276]:
+              - img
+              - text: Export
+            - button "Tambah Karyawan" [ref=e277]:
+              - img
+              - text: Tambah Karyawan
+        - generic [ref=e278]:
+          - generic [ref=e280]:
+            - generic [ref=e281]:
+              - img [ref=e283]
+              - generic [ref=e288]:
+                - img [ref=e289]
+                - text: "+24"
+            - generic [ref=e292]: "1.248"
+            - generic [ref=e293]: Total Karyawan
+          - generic [ref=e295]:
+            - generic [ref=e296]:
+              - img [ref=e298]
+              - generic [ref=e302]:
+                - img [ref=e303]
+                - text: 92,6%
+            - generic [ref=e306]: "1.156"
+            - generic [ref=e307]: Hadir Hari Ini
+          - generic [ref=e309]:
+            - generic [ref=e310]:
+              - img [ref=e312]
+              - generic [ref=e315]:
+                - img [ref=e316]
+                - text: 4 baru
+            - generic [ref=e319]: "18"
+            - generic [ref=e320]: Pending Approval
+          - generic [ref=e322]:
+            - generic [ref=e323]:
+              - img [ref=e325]
+              - generic [ref=e328]:
+                - img [ref=e329]
+                - text: Draft
+            - generic [ref=e332]: Rp 4,82 M
+            - generic [ref=e333]: Payroll Juni
+        - generic [ref=e334]:
+          - generic [ref=e335]:
+            - generic [ref=e336]:
+              - generic [ref=e337]:
+                - generic [ref=e338]: Tren Headcount
+                - paragraph [ref=e339]: 6 bulan terakhir
+              - generic [ref=e340]: Total
+            - img "Tren headcount 6 bulan terakhir" [ref=e343]:
+              - generic [ref=e352]: Jan
+              - generic [ref=e353]: Feb
+              - generic [ref=e354]: Mar
+              - generic [ref=e355]: Apr
+              - generic [ref=e356]: Mei
+              - generic [ref=e357]: Jun
+          - generic [ref=e358]:
+            - generic [ref=e359]:
+              - generic [ref=e360]: Kehadiran Minggu Ini
+              - paragraph [ref=e361]: Persentase hadir per hari
+            - generic [ref=e363]:
+              - generic [ref=e364]:
+                - generic [ref=e365]: 96%
+                - generic [ref=e367]: Sen
+              - generic [ref=e368]:
+                - generic [ref=e369]: 94%
+                - generic [ref=e371]: Sel
+              - generic [ref=e372]:
+                - generic [ref=e373]: 97%
+                - generic [ref=e375]: Rab
+              - generic [ref=e376]:
+                - generic [ref=e377]: 93%
+                - generic [ref=e379]: Kam
+              - generic [ref=e380]:
+                - generic [ref=e381]: 89%
+                - generic [ref=e383]: Jum
+        - generic [ref=e384]:
+          - generic [ref=e385]:
+            - generic [ref=e386]:
+              - generic [ref=e387]: Aktivitas Terbaru
+              - button "Lihat semua" [ref=e388]
+            - generic [ref=e389]:
+              - generic [ref=e390]:
+                - img [ref=e392]
+                - generic [ref=e395]:
+                  - generic [ref=e396]: Bagus Pratama ditambahkan sebagai Software Engineer
+                  - generic [ref=e397]: 5 menit lalu
+              - generic [ref=e398]:
+                - img [ref=e400]
+                - generic [ref=e403]:
+                  - generic [ref=e404]: Cuti tahunan Dewi Lestari disetujui
+                  - generic [ref=e405]: 48 menit lalu
+              - generic [ref=e406]:
+                - img [ref=e408]
+                - generic [ref=e411]:
+                  - generic [ref=e412]: Payroll periode Mei 2026 telah dikunci
+                  - generic [ref=e413]: 2 jam lalu
+              - generic [ref=e414]:
+                - img [ref=e416]
+                - generic [ref=e419]:
+                  - generic [ref=e420]: Andi Wijaya mengunggah dokumen kontrak baru
+                  - generic [ref=e421]: 4 jam lalu
+              - generic [ref=e422]:
+                - img [ref=e424]
+                - generic [ref=e433]:
+                  - generic [ref=e434]: 12 karyawan tercatat terlambat hari ini
+                  - generic [ref=e435]: Hari ini, 09:14
+          - generic [ref=e436]:
+            - generic [ref=e437]:
+              - generic [ref=e438]: Menunggu Persetujuan
+              - generic [ref=e439]: 4 baru
+            - generic [ref=e440]:
+              - generic [ref=e441]:
+                - generic [ref=e442]: SN
+                - generic [ref=e443]:
+                  - generic [ref=e444]: Siti Nurhaliza
+                  - generic [ref=e445]: Cuti Tahunan · 3 hari
+                - generic [ref=e446]:
+                  - button "Setujui pengajuan Siti Nurhaliza" [ref=e447]:
+                    - img [ref=e448]
+                  - button "Tolak pengajuan Siti Nurhaliza" [ref=e450]:
+                    - img [ref=e451]
+              - generic [ref=e454]:
+                - generic [ref=e455]: RM
+                - generic [ref=e456]:
+                  - generic [ref=e457]: Rizki Maulana
+                  - generic [ref=e458]: Lembur · 4 jam
+                - generic [ref=e459]:
+                  - button "Setujui pengajuan Rizki Maulana" [ref=e460]:
+                    - img [ref=e461]
+                  - button "Tolak pengajuan Rizki Maulana" [ref=e463]:
+                    - img [ref=e464]
+              - generic [ref=e467]:
+                - generic [ref=e468]: FN
+                - generic [ref=e469]:
+                  - generic [ref=e470]: Fajar Nugroho
+                  - generic [ref=e471]: Reimbursement · Rp 850.000
+                - generic [ref=e472]:
+                  - button "Setujui pengajuan Fajar Nugroho" [ref=e473]:
+                    - img [ref=e474]
+                  - button "Tolak pengajuan Fajar Nugroho" [ref=e476]:
+                    - img [ref=e477]
+              - generic [ref=e480]:
+                - generic [ref=e481]: IP
+                - generic [ref=e482]:
+                  - generic [ref=e483]: Intan Permata
+                  - generic [ref=e484]: Koreksi Absen
+                - generic [ref=e485]:
+                  - button "Setujui pengajuan Intan Permata" [ref=e486]:
+                    - img [ref=e487]
+                  - button "Tolak pengajuan Intan Permata" [ref=e489]:
+                    - img [ref=e490]
+  - region "Notifications alt+T"

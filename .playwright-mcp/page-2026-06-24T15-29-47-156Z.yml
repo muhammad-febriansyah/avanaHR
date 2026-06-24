@@ -1,0 +1,167 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Platform
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - link "Tenant" [ref=e28] [cursor=pointer]:
+                - /url: /platform/tenants
+                - img [ref=e29]
+                - generic [ref=e33]: Tenant
+            - listitem [ref=e34]:
+              - link "Langganan & Paket" [ref=e35] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e36]
+                - generic [ref=e38]: Langganan & Paket
+            - listitem [ref=e39]:
+              - link "Provisioning" [ref=e40] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e41]
+                - generic [ref=e46]: Provisioning
+        - generic [ref=e47]:
+          - generic [ref=e48]: Keamanan & Audit
+          - list [ref=e49]:
+            - listitem [ref=e50]:
+              - link "Audit Log" [ref=e51] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e52]
+                - generic [ref=e55]: Audit Log
+            - listitem [ref=e56]:
+              - link "Security Events" [ref=e57] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e58]
+                - generic [ref=e60]: Security Events
+            - listitem [ref=e61]:
+              - link "Backup & Restore" [ref=e62] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e63]
+                - generic [ref=e69]: Backup & Restore
+      - generic [ref=e72]:
+        - generic [ref=e73]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e74] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e75]
+          - generic [ref=e78]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e79] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e80]
+          - generic [ref=e82]: (021) 5099-9000
+    - main [ref=e83]:
+      - generic [ref=e84]:
+        - button "Toggle sidebar" [ref=e85]:
+          - img
+          - generic [ref=e86]: Toggle sidebar
+        - generic [ref=e87]:
+          - img
+          - searchbox "Cari" [ref=e88]
+        - button "Notifikasi" [ref=e89]:
+          - img [ref=e90]
+        - button "SA Super Admin PT Nusantara Jaya" [ref=e95]:
+          - generic [ref=e96]: SA
+          - generic [ref=e97]:
+            - generic [ref=e98]: Super Admin
+            - generic [ref=e99]: PT Nusantara Jaya
+          - img [ref=e100]
+      - generic [ref=e178]:
+        - generic [ref=e179]:
+          - generic [ref=e180]:
+            - navigation "Breadcrumb" [ref=e181]:
+              - link "Dashboard" [ref=e182] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/dashboard
+              - img [ref=e183]
+              - generic [ref=e185]: Tenant
+            - heading "Tenant" [level=1] [ref=e186]
+            - paragraph [ref=e187]: Kelola seluruh tenant pada platform.
+          - link "Tambah Tenant" [ref=e189] [cursor=pointer]:
+            - /url: /platform/tenants/create
+            - img
+            - text: Tambah Tenant
+        - generic [ref=e191]:
+          - text: Total
+          - generic [ref=e192]: "1"
+        - generic [ref=e194]:
+          - generic [ref=e195]:
+            - generic [ref=e196]:
+              - img [ref=e197]
+              - searchbox "Cari nama, slug, atau domain..." [ref=e200]
+            - combobox [ref=e201]:
+              - generic: Semua Status
+              - img
+          - table [ref=e204]:
+            - rowgroup [ref=e205]:
+              - row "Nama Domain Paket Karyawan Status Dibuat Aksi" [ref=e206]:
+                - columnheader "Nama" [ref=e207]:
+                  - button "Nama" [ref=e208]:
+                    - text: Nama
+                    - img [ref=e209]
+                - columnheader "Domain" [ref=e212]
+                - columnheader "Paket" [ref=e213]
+                - columnheader "Karyawan" [ref=e214]
+                - columnheader "Status" [ref=e215]:
+                  - button "Status" [ref=e216]:
+                    - text: Status
+                    - img [ref=e217]
+                - columnheader "Dibuat" [ref=e220]:
+                  - button "Dibuat" [ref=e221]:
+                    - text: Dibuat
+                    - img [ref=e222]
+                - columnheader "Aksi" [ref=e225]
+            - rowgroup [ref=e226]:
+              - row "Avana Demo avana-demo - Enterprise 21 Aktif 24 Jun 2026 Lihat Edit Hapus" [ref=e227]:
+                - cell "Avana Demo avana-demo" [ref=e228]:
+                  - generic [ref=e229]:
+                    - generic [ref=e230]: Avana Demo
+                    - generic [ref=e231]: avana-demo
+                - cell "-" [ref=e232]
+                - cell "Enterprise" [ref=e233]
+                - cell "21" [ref=e234]
+                - cell "Aktif" [ref=e235]:
+                  - generic [ref=e236]: Aktif
+                - cell "24 Jun 2026" [ref=e237]
+                - cell "Lihat Edit Hapus" [ref=e238]:
+                  - generic [ref=e239]:
+                    - link "Lihat" [ref=e240] [cursor=pointer]:
+                      - /url: /platform/tenants/1
+                      - img
+                      - text: Lihat
+                    - link "Edit" [ref=e241] [cursor=pointer]:
+                      - /url: /platform/tenants/1/edit
+                      - img
+                      - text: Edit
+                    - button "Hapus" [ref=e242]:
+                      - img
+                      - text: Hapus
+          - generic [ref=e243]:
+            - generic [ref=e244]:
+              - paragraph [ref=e245]: Menampilkan 1–1 dari 1
+              - combobox [ref=e246]:
+                - generic: 15 / hal
+                - img
+            - generic [ref=e247]:
+              - button "Sebelumnya" [disabled]:
+                - img
+                - text: Sebelumnya
+              - button "Berikutnya" [disabled]:
+                - text: Berikutnya
+                - img
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=e248]:
+        - img [ref=e250]
+        - generic [ref=e253]: Tenant berhasil diperbarui.
+      - listitem [ref=e254]:
+        - img [ref=e256]
+        - generic [ref=e259]: Tenant berhasil diperbarui.

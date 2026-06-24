@@ -1,0 +1,246 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /dashboard
+                    - img
+            - generic:
+              - generic:
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: /dashboard
+                      - img
+                      - generic: Dashboard
+              - generic:
+                - generic: Manajemen
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Karyawan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Absensi
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Cuti & Lembur
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Payroll
+                      - img
+              - generic:
+                - generic: Personal
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Self-Service
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Persetujuan
+                      - img
+              - generic:
+                - generic: Sistem
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Laporan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Pengaturan
+                      - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Butuh Bantuan?
+                  - link:
+                    - /url: mailto:support@avanahr.co.id
+                    - img
+                    - generic: support@avanahr.co.id
+                  - link:
+                    - /url: tel:+622150999000
+                    - img
+                    - generic: (021) 5099-9000
+      - main:
+        - generic:
+          - button:
+            - img
+            - generic: Toggle sidebar
+          - generic:
+            - img
+            - searchbox
+          - button:
+            - img
+          - button [expanded]:
+            - generic: AA
+            - generic:
+              - generic: Admin Avana
+              - generic: PT Nusantara Jaya
+            - img
+        - generic:
+          - generic:
+            - generic:
+              - navigation:
+                - link:
+                  - /url: http://127.0.0.1:8000/dashboard
+                  - text: Dashboard
+                - img
+                - generic: Hak Akses (Role)
+              - heading [level=1]: Hak Akses (Role)
+              - paragraph: Kelola role dan hak akses pengguna pada tenant Anda.
+            - generic:
+              - link:
+                - /url: /roles/create
+                - img
+                - text: Tambah Role
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - table:
+                    - rowgroup:
+                      - row:
+                        - columnheader: Role
+                        - columnheader: Hak Akses
+                        - columnheader: Pengguna
+                        - columnheader: Aksi
+                    - rowgroup:
+                      - row:
+                        - cell:
+                          - generic:
+                            - text: auditor
+                            - generic:
+                              - img
+                              - text: Sistem
+                        - cell: "3"
+                        - cell: "0"
+                        - cell:
+                          - generic:
+                            - link:
+                              - /url: /roles/8/edit
+                              - img
+                              - text: Edit
+                      - row:
+                        - cell:
+                          - generic:
+                            - text: employee
+                            - generic:
+                              - img
+                              - text: Sistem
+                        - cell: "1"
+                        - cell: "16"
+                        - cell:
+                          - generic:
+                            - link:
+                              - /url: /roles/7/edit
+                              - img
+                              - text: Edit
+                      - row:
+                        - cell:
+                          - generic:
+                            - text: finance
+                            - generic:
+                              - img
+                              - text: Sistem
+                        - cell: "4"
+                        - cell: "0"
+                        - cell:
+                          - generic:
+                            - link:
+                              - /url: /roles/5/edit
+                              - img
+                              - text: Edit
+                      - row:
+                        - cell:
+                          - generic:
+                            - text: hr-admin
+                            - generic:
+                              - img
+                              - text: Sistem
+                        - cell: "15"
+                        - cell: "1"
+                        - cell:
+                          - generic:
+                            - link:
+                              - /url: /roles/3/edit
+                              - img
+                              - text: Edit
+                      - row:
+                        - cell:
+                          - generic:
+                            - text: manager
+                            - generic:
+                              - img
+                              - text: Sistem
+                        - cell: "5"
+                        - cell: "4"
+                        - cell:
+                          - generic:
+                            - link:
+                              - /url: /roles/6/edit
+                              - img
+                              - text: Edit
+                      - row:
+                        - cell:
+                          - generic:
+                            - text: payroll-officer
+                            - generic:
+                              - img
+                              - text: Sistem
+                        - cell: "4"
+                        - cell: "0"
+                        - cell:
+                          - generic:
+                            - link:
+                              - /url: /roles/4/edit
+                              - img
+                              - text: Edit
+                      - row:
+                        - cell:
+                          - generic:
+                            - text: tenant-admin
+                            - generic:
+                              - img
+                              - text: Sistem
+                        - cell: "3"
+                        - cell: "1"
+                        - cell:
+                          - generic:
+                            - link:
+                              - /url: /roles/2/edit
+                              - img
+                              - text: Edit
+    - region "Notifications alt+T"
+  - menu "AA Admin Avana PT Nusantara Jaya" [active] [ref=e371]:
+    - generic [ref=e373]:
+      - generic [ref=e375]: AA
+      - generic [ref=e376]:
+        - generic [ref=e377]: Admin Avana
+        - generic [ref=e378]: admin@avanahr.id
+    - separator [ref=e379]
+    - group [ref=e380]:
+      - menuitem "Settings" [ref=e381] [cursor=pointer]:
+        - img
+        - text: Settings
+    - separator [ref=e382]
+    - menuitem "Log out" [ref=e383] [cursor=pointer]:
+      - img
+      - text: Log out

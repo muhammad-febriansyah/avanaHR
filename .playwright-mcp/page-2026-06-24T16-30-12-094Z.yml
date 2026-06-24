@@ -1,0 +1,185 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+            - listitem [ref=e37]:
+              - button "Absensi" [ref=e38]:
+                - img [ref=e39]
+                - generic [ref=e48]: Absensi
+                - img [ref=e49]
+            - listitem [ref=e51]:
+              - button "Cuti & Lembur" [ref=e52]:
+                - img [ref=e53]
+                - generic [ref=e55]: Cuti & Lembur
+                - img [ref=e56]
+            - listitem [ref=e58]:
+              - button "Payroll" [ref=e59]:
+                - img [ref=e60]
+                - generic [ref=e63]: Payroll
+                - img [ref=e64]
+        - generic [ref=e66]:
+          - generic [ref=e67]: Personal
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - button "Self-Service" [ref=e70]:
+                - img [ref=e71]
+                - generic [ref=e75]: Self-Service
+                - img [ref=e76]
+            - listitem [ref=e78]:
+              - button "Persetujuan" [ref=e79]:
+                - img [ref=e80]
+                - generic [ref=e84]: Persetujuan
+                - img [ref=e85]
+        - generic [ref=e87]:
+          - generic [ref=e88]: Sistem
+          - list [ref=e89]:
+            - listitem [ref=e90]:
+              - button "Laporan" [ref=e91]:
+                - img [ref=e92]
+                - generic [ref=e94]: Laporan
+                - img [ref=e95]
+            - listitem [ref=e97]:
+              - button "Pengaturan" [ref=e98]:
+                - img [ref=e99]
+                - generic [ref=e102]: Pengaturan
+                - img [ref=e103]
+      - generic [ref=e107]:
+        - generic [ref=e108]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e109] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e110]
+          - generic [ref=e113]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e114] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e115]
+          - generic [ref=e117]: (021) 5099-9000
+    - main [ref=e118]:
+      - generic [ref=e119]:
+        - button "Toggle sidebar" [ref=e120]:
+          - img
+          - generic [ref=e121]: Toggle sidebar
+        - generic [ref=e122]:
+          - img
+          - searchbox "Cari" [ref=e123]
+        - button "Notifikasi" [ref=e124]:
+          - img [ref=e125]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e130]:
+          - generic [ref=e131]: AA
+          - generic [ref=e132]:
+            - generic [ref=e133]: Admin Avana
+            - generic [ref=e134]: PT Nusantara Jaya
+          - img [ref=e135]
+      - generic [ref=e165]:
+        - generic [ref=e166]:
+          - generic [ref=e167]:
+            - navigation "Breadcrumb" [ref=e168]:
+              - link "Dashboard" [ref=e169] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/dashboard
+              - img [ref=e170]
+              - generic [ref=e172]: Jenjang Jabatan
+            - heading "Jenjang Jabatan" [level=1] [ref=e173]
+            - paragraph [ref=e174]: Kelola jenjang/level jabatan untuk posisi.
+          - link "Tambah Jenjang" [ref=e176] [cursor=pointer]:
+            - /url: /job-levels/create
+            - img
+            - text: Tambah Jenjang
+        - table [ref=e181]:
+          - rowgroup [ref=e182]:
+            - row "Urutan Kode Nama Aksi" [ref=e183]:
+              - columnheader "Urutan" [ref=e184]
+              - columnheader "Kode" [ref=e185]
+              - columnheader "Nama" [ref=e186]
+              - columnheader "Aksi" [ref=e187]
+          - rowgroup [ref=e188]:
+            - row "1 LV5 Director Edit Hapus" [ref=e189]:
+              - cell "1" [ref=e190]
+              - cell "LV5" [ref=e191]
+              - cell "Director" [ref=e192]
+              - cell "Edit Hapus" [ref=e193]:
+                - generic [ref=e194]:
+                  - link "Edit" [ref=e195] [cursor=pointer]:
+                    - /url: /job-levels/3/edit
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e196]:
+                    - img
+                    - text: Hapus
+            - row "1 LV7 Supervisor Edit Hapus" [ref=e197]:
+              - cell "1" [ref=e198]
+              - cell "LV7" [ref=e199]
+              - cell "Supervisor" [ref=e200]
+              - cell "Edit Hapus" [ref=e201]:
+                - generic [ref=e202]:
+                  - link "Edit" [ref=e203] [cursor=pointer]:
+                    - /url: /job-levels/1/edit
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e204]:
+                    - img
+                    - text: Hapus
+            - row "3 LV77 Lead Engineer Edit Hapus" [ref=e205]:
+              - cell "3" [ref=e206]
+              - cell "LV77" [ref=e207]
+              - cell "Lead Engineer" [ref=e208]
+              - cell "Edit Hapus" [ref=e209]:
+                - generic [ref=e210]:
+                  - link "Edit" [ref=e211] [cursor=pointer]:
+                    - /url: /job-levels/5/edit
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e212]:
+                    - img
+                    - text: Hapus
+            - row "4 LV23 Director Edit Hapus" [ref=e213]:
+              - cell "4" [ref=e214]
+              - cell "LV23" [ref=e215]
+              - cell "Director" [ref=e216]
+              - cell "Edit Hapus" [ref=e217]:
+                - generic [ref=e218]:
+                  - link "Edit" [ref=e219] [cursor=pointer]:
+                    - /url: /job-levels/2/edit
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e220]:
+                    - img
+                    - text: Hapus
+            - row "5 LV57 Staff Edit Hapus" [ref=e221]:
+              - cell "5" [ref=e222]
+              - cell "LV57" [ref=e223]
+              - cell "Staff" [ref=e224]
+              - cell "Edit Hapus" [ref=e225]:
+                - generic [ref=e226]:
+                  - link "Edit" [ref=e227] [cursor=pointer]:
+                    - /url: /job-levels/4/edit
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e228]:
+                    - img
+                    - text: Hapus
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=e229]:
+        - img [ref=e231]
+        - generic [ref=e234]: Jenjang jabatan berhasil ditambahkan.
+      - listitem [ref=e235]:
+        - img [ref=e237]
+        - generic [ref=e240]: Jenjang jabatan berhasil ditambahkan.

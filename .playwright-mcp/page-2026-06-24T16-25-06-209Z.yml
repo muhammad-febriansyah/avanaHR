@@ -1,0 +1,160 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+            - listitem [ref=e37]:
+              - button "Absensi" [expanded] [ref=e38]:
+                - img [ref=e39]
+                - generic [ref=e48]: Absensi
+                - img [ref=e49]
+              - list [ref=e52]:
+                - listitem [ref=e53]:
+                  - link "Absen Hari Ini" [ref=e54] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e55]: Absen Hari Ini
+                - listitem [ref=e56]:
+                  - link "Rekap Absensi" [ref=e57] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e58]: Rekap Absensi
+                - listitem [ref=e59]:
+                  - link "Koreksi Absensi" [ref=e60] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e61]: Koreksi Absensi
+                - listitem [ref=e62]:
+                  - link "Jadwal & Shift" [ref=e63] [cursor=pointer]:
+                    - /url: /shifts
+                    - generic [ref=e64]: Jadwal & Shift
+                - listitem [ref=e65]:
+                  - link "Timesheet" [ref=e66] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e67]: Timesheet
+                - listitem [ref=e68]:
+                  - link "Import Biometrik" [ref=e69] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e70]: Import Biometrik
+            - listitem [ref=e71]:
+              - button "Cuti & Lembur" [ref=e72]:
+                - img [ref=e73]
+                - generic [ref=e75]: Cuti & Lembur
+                - img [ref=e76]
+            - listitem [ref=e78]:
+              - button "Payroll" [ref=e79]:
+                - img [ref=e80]
+                - generic [ref=e83]: Payroll
+                - img [ref=e84]
+        - generic [ref=e86]:
+          - generic [ref=e87]: Personal
+          - list [ref=e88]:
+            - listitem [ref=e89]:
+              - button "Self-Service" [ref=e90]:
+                - img [ref=e91]
+                - generic [ref=e95]: Self-Service
+                - img [ref=e96]
+            - listitem [ref=e98]:
+              - button "Persetujuan" [ref=e99]:
+                - img [ref=e100]
+                - generic [ref=e104]: Persetujuan
+                - img [ref=e105]
+        - generic [ref=e107]:
+          - generic [ref=e108]: Sistem
+          - list [ref=e109]:
+            - listitem [ref=e110]:
+              - button "Laporan" [ref=e111]:
+                - img [ref=e112]
+                - generic [ref=e114]: Laporan
+                - img [ref=e115]
+            - listitem [ref=e117]:
+              - button "Pengaturan" [ref=e118]:
+                - img [ref=e119]
+                - generic [ref=e122]: Pengaturan
+                - img [ref=e123]
+      - generic [ref=e127]:
+        - generic [ref=e128]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e129] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e130]
+          - generic [ref=e133]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e134] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e135]
+          - generic [ref=e137]: (021) 5099-9000
+    - main [ref=e138]:
+      - generic [ref=e139]:
+        - button "Toggle sidebar" [ref=e140]:
+          - img
+          - generic [ref=e141]: Toggle sidebar
+        - generic [ref=e142]:
+          - img
+          - searchbox "Cari" [ref=e143]
+        - button "Notifikasi" [ref=e144]:
+          - img [ref=e145]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e150]:
+          - generic [ref=e151]: AA
+          - generic [ref=e152]:
+            - generic [ref=e153]: Admin Avana
+            - generic [ref=e154]: PT Nusantara Jaya
+          - img [ref=e155]
+      - generic [ref=e157]:
+        - generic [ref=e158]:
+          - generic [ref=e159]:
+            - heading "Jadwal & Shift" [level=1] [ref=e160]
+            - paragraph [ref=e161]: Kelola pola jam kerja dan toleransi keterlambatan.
+          - button "Tambah Shift" [ref=e163]:
+            - img
+            - text: Tambah Shift
+        - table [ref=e168]:
+          - rowgroup [ref=e169]:
+            - row "Kode Nama Jam Kerja Istirahat Toleransi Aksi" [ref=e170]:
+              - columnheader "Kode" [ref=e171]
+              - columnheader "Nama" [ref=e172]
+              - columnheader "Jam Kerja" [ref=e173]
+              - columnheader "Istirahat" [ref=e174]
+              - columnheader "Toleransi" [ref=e175]
+              - columnheader "Aksi" [ref=e176]
+          - rowgroup [ref=e177]:
+            - row "SH-NIGHT Shift Malam Lintas hari 22:00 – 06:00 45 mnt 15 mnt Edit Hapus" [ref=e222]:
+              - cell "SH-NIGHT" [ref=e223]
+              - cell "Shift Malam Lintas hari" [ref=e224]:
+                - generic [ref=e225]:
+                  - text: Shift Malam
+                  - generic [ref=e226]:
+                    - img
+                    - text: Lintas hari
+              - cell "22:00 – 06:00" [ref=e227]
+              - cell "45 mnt" [ref=e228]
+              - cell "15 mnt" [ref=e229]
+              - cell "Edit Hapus" [ref=e230]:
+                - generic [ref=e231]:
+                  - button "Edit" [ref=e232]:
+                    - img
+                    - text: Edit
+                  - button "Hapus" [ref=e233]:
+                    - img
+                    - text: Hapus
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=e234]:
+        - img [ref=e236]
+        - generic [ref=e239]: Shift berhasil ditambahkan.
+      - listitem [ref=e240]:
+        - img [ref=e242]
+        - generic [ref=e245]: Shift berhasil ditambahkan.

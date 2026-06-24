@@ -1,0 +1,156 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+            - listitem [ref=e37]:
+              - button "Absensi" [ref=e38]:
+                - img [ref=e39]
+                - generic [ref=e48]: Absensi
+                - img [ref=e49]
+            - listitem [ref=e51]:
+              - button "Cuti & Lembur" [ref=e52]:
+                - img [ref=e53]
+                - generic [ref=e55]: Cuti & Lembur
+                - img [ref=e56]
+            - listitem [ref=e58]:
+              - button "Payroll" [expanded] [ref=e59]:
+                - img [ref=e60]
+                - generic [ref=e63]: Payroll
+                - img [ref=e64]
+              - list [ref=e67]:
+                - listitem [ref=e68]:
+                  - link "Periode Payroll" [ref=e69] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e70]: Periode Payroll
+                - listitem [ref=e71]:
+                  - link "Proses Payroll" [ref=e72] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e73]: Proses Payroll
+                - listitem [ref=e74]:
+                  - link "Slip Gaji" [ref=e75] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e76]: Slip Gaji
+                - listitem [ref=e77]:
+                  - link "Komponen Gaji" [ref=e78] [cursor=pointer]:
+                    - /url: /payroll-components
+                    - generic [ref=e79]: Komponen Gaji
+                - listitem [ref=e80]:
+                  - link "Parameter PPh21" [ref=e81] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e82]: Parameter PPh21
+                - listitem [ref=e83]:
+                  - link "Parameter BPJS" [ref=e84] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e85]: Parameter BPJS
+                - listitem [ref=e86]:
+                  - link "Reimbursement" [ref=e87] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e88]: Reimbursement
+                - listitem [ref=e89]:
+                  - link "Pinjaman" [ref=e90] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e91]: Pinjaman
+                - listitem [ref=e92]:
+                  - link "THR & Bonus" [ref=e93] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e94]: THR & Bonus
+                - listitem [ref=e95]:
+                  - link "File Bank" [ref=e96] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e97]: File Bank
+        - generic [ref=e98]:
+          - generic [ref=e99]: Personal
+          - list [ref=e100]:
+            - listitem [ref=e101]:
+              - button "Self-Service" [ref=e102]:
+                - img [ref=e103]
+                - generic [ref=e107]: Self-Service
+                - img [ref=e108]
+            - listitem [ref=e110]:
+              - button "Persetujuan" [ref=e111]:
+                - img [ref=e112]
+                - generic [ref=e116]: Persetujuan
+                - img [ref=e117]
+        - generic [ref=e119]:
+          - generic [ref=e120]: Sistem
+          - list [ref=e121]:
+            - listitem [ref=e122]:
+              - button "Laporan" [ref=e123]:
+                - img [ref=e124]
+                - generic [ref=e126]: Laporan
+                - img [ref=e127]
+            - listitem [ref=e129]:
+              - button "Pengaturan" [ref=e130]:
+                - img [ref=e131]
+                - generic [ref=e134]: Pengaturan
+                - img [ref=e135]
+      - generic [ref=e139]:
+        - generic [ref=e140]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e141] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e142]
+          - generic [ref=e145]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e146] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e147]
+          - generic [ref=e149]: (021) 5099-9000
+    - main [ref=e150]:
+      - generic [ref=e151]:
+        - button "Toggle sidebar" [ref=e152]:
+          - img
+          - generic [ref=e153]: Toggle sidebar
+        - generic [ref=e154]:
+          - img
+          - searchbox "Cari" [ref=e155]
+        - button "Notifikasi" [ref=e156]:
+          - img [ref=e157]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e162]:
+          - generic [ref=e163]: AA
+          - generic [ref=e164]:
+            - generic [ref=e165]: Admin Avana
+            - generic [ref=e166]: PT Nusantara Jaya
+          - img [ref=e167]
+      - generic [ref=e169]:
+        - generic [ref=e170]:
+          - generic [ref=e171]:
+            - heading "Komponen Gaji" [level=1] [ref=e172]
+            - paragraph [ref=e173]: Kelola komponen pendapatan dan potongan untuk payroll.
+          - button "Tambah Komponen" [ref=e175]:
+            - img
+            - text: Tambah Komponen
+        - table [ref=e180]:
+          - rowgroup [ref=e181]:
+            - row "Kode Nama Tipe Metode Pajak Dasar BPJS Aksi" [ref=e182]:
+              - columnheader "Kode" [ref=e183]
+              - columnheader "Nama" [ref=e184]
+              - columnheader "Tipe" [ref=e185]
+              - columnheader "Metode" [ref=e186]
+              - columnheader "Pajak" [ref=e187]
+              - columnheader "Dasar BPJS" [ref=e188]
+              - columnheader "Aksi" [ref=e189]
+          - rowgroup [ref=e190]:
+            - row "Belum ada komponen gaji" [ref=e191]:
+              - cell "Belum ada komponen gaji" [ref=e192]:
+                - generic [ref=e193]:
+                  - img [ref=e195]
+                  - paragraph [ref=e200]: Belum ada komponen gaji
+  - region "Notifications alt+T"

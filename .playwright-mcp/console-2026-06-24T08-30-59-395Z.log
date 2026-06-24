@@ -1,0 +1,59 @@
+[     331ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/employees?dev=1:157
+[     592ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/employees?dev=1:216
+[     636ms] TypeError: Cannot convert undefined or null to object
+    at sort (<anonymous>)
+    at mountStateImpl (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:11188:20)
+    at mountState (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:11209:19)
+    at Object.useState (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:19649:13)
+    at exports.useState (http://[::1]:5175/node_modules/.vite/deps/react.js?v=7a4441cc:748:31)
+    at EmployeesIndex (http://[::1]:5175/resources/js/pages/employees/index.tsx:34:26)
+    at Object.react_stack_bottom_frame (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:19466:12)
+    at renderWithHooks (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:10813:19)
+    at updateFunctionComponent (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:12169:16)
+    at beginWork (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:12740:20)
+[     636ms] [WARNING] %s
+
+%s
+ An error occurred in the <EmployeesIndex> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:8000/employees?dev=1:216
+[ 1191805ms] [LOG] [vite] server connection lost. Polling for restart... @ http://127.0.0.1:8000/employees?dev=1:216
+[ 1191924ms] [ERROR] Failed to send logs: TypeError: Failed to fetch
+    at flushLogs (http://127.0.0.1:8000/employees?dev=1:194:9) @ http://127.0.0.1:8000/employees?dev=1:202
+[ 1191928ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/employees?dev=1:157
+[ 1191946ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/employees?dev=1:216
+[ 1191992ms] TypeError: Cannot convert undefined or null to object
+    at sort (<anonymous>)
+    at mountStateImpl (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:11188:20)
+    at mountState (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:11209:19)
+    at Object.useState (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:19649:13)
+    at exports.useState (http://[::1]:5175/node_modules/.vite/deps/react.js?v=7a4441cc:748:31)
+    at EmployeesIndex (http://[::1]:5175/resources/js/pages/employees/index.tsx:34:26)
+    at Object.react_stack_bottom_frame (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:19466:12)
+    at renderWithHooks (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:10813:19)
+    at updateFunctionComponent (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:12169:16)
+    at beginWork (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:12740:20)
+[ 1191992ms] [WARNING] %s
+
+%s
+ An error occurred in the <EmployeesIndex> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:8000/employees?dev=1:216
+[ 2944109ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/employees?dev=1:157
+[ 2944113ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/employees?dev=1:216
+[ 2944146ms] TypeError: Cannot convert undefined or null to object
+    at sort (<anonymous>)
+    at mountStateImpl (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:11188:20)
+    at mountState (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:11209:19)
+    at Object.useState (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:19649:13)
+    at exports.useState (http://[::1]:5175/node_modules/.vite/deps/react.js?v=7a4441cc:748:31)
+    at EmployeesIndex (http://[::1]:5175/resources/js/pages/employees/index.tsx:34:26)
+    at Object.react_stack_bottom_frame (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:19466:12)
+    at renderWithHooks (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:10813:19)
+    at updateFunctionComponent (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:12169:16)
+    at beginWork (http://[::1]:5175/node_modules/.vite/deps/@inertiajs_react.js?v=4f27edd1:12740:20)
+[ 2944145ms] [WARNING] %s
+
+%s
+ An error occurred in the <EmployeesIndex> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://127.0.0.1:8000/employees?dev=1:216
+[ 3027579ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/employees?dev=1:157
+[ 3027588ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/employees?dev=1:216

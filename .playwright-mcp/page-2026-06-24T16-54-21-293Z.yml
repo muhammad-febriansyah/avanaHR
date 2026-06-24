@@ -1,0 +1,218 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Manajemen
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - button "Karyawan" [ref=e28]:
+                - img [ref=e29]
+                - generic [ref=e34]: Karyawan
+                - img [ref=e35]
+            - listitem [ref=e37]:
+              - button "Absensi" [ref=e38]:
+                - img [ref=e39]
+                - generic [ref=e48]: Absensi
+                - img [ref=e49]
+            - listitem [ref=e51]:
+              - button "Cuti & Lembur" [ref=e52]:
+                - img [ref=e53]
+                - generic [ref=e55]: Cuti & Lembur
+                - img [ref=e56]
+            - listitem [ref=e58]:
+              - button "Payroll" [ref=e59]:
+                - img [ref=e60]
+                - generic [ref=e63]: Payroll
+                - img [ref=e64]
+        - generic [ref=e66]:
+          - generic [ref=e67]: Personal
+          - list [ref=e68]:
+            - listitem [ref=e69]:
+              - button "Self-Service" [ref=e70]:
+                - img [ref=e71]
+                - generic [ref=e75]: Self-Service
+                - img [ref=e76]
+            - listitem [ref=e78]:
+              - button "Persetujuan" [ref=e79]:
+                - img [ref=e80]
+                - generic [ref=e84]: Persetujuan
+                - img [ref=e85]
+        - generic [ref=e87]:
+          - generic [ref=e88]: Sistem
+          - list [ref=e89]:
+            - listitem [ref=e90]:
+              - button "Laporan" [ref=e91]:
+                - img [ref=e92]
+                - generic [ref=e94]: Laporan
+                - img [ref=e95]
+            - listitem [ref=e97]:
+              - button "Pengaturan" [ref=e98]:
+                - img [ref=e99]
+                - generic [ref=e102]: Pengaturan
+                - img [ref=e103]
+      - generic [ref=e107]:
+        - generic [ref=e108]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e109] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e110]
+          - generic [ref=e113]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e114] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e115]
+          - generic [ref=e117]: (021) 5099-9000
+    - main [ref=e118]:
+      - generic [ref=e119]:
+        - button "Toggle sidebar" [ref=e120]:
+          - img
+          - generic [ref=e121]: Toggle sidebar
+        - generic [ref=e122]:
+          - img
+          - searchbox "Cari" [ref=e123]
+        - button "Notifikasi" [ref=e124]:
+          - img [ref=e125]
+        - button "AA Admin Avana PT Nusantara Jaya" [ref=e130]:
+          - generic [ref=e131]: AA
+          - generic [ref=e132]:
+            - generic [ref=e133]: Admin Avana
+            - generic [ref=e134]: PT Nusantara Jaya
+          - img [ref=e135]
+      - generic [ref=e251]:
+        - generic [ref=e252]:
+          - generic [ref=e253]:
+            - navigation "Breadcrumb" [ref=e254]:
+              - link "Dashboard" [ref=e255] [cursor=pointer]:
+                - /url: http://127.0.0.1:8000/dashboard
+              - img [ref=e256]
+              - generic [ref=e258]: Hak Akses (Role)
+            - heading "Hak Akses (Role)" [level=1] [ref=e259]
+            - paragraph [ref=e260]: Kelola role dan hak akses pengguna pada tenant Anda.
+          - link "Tambah Role" [ref=e262] [cursor=pointer]:
+            - /url: /roles/create
+            - img
+            - text: Tambah Role
+        - table [ref=e267]:
+          - rowgroup [ref=e268]:
+            - row "Role Hak Akses Pengguna Aksi" [ref=e269]:
+              - columnheader "Role" [ref=e270]
+              - columnheader "Hak Akses" [ref=e271]
+              - columnheader "Pengguna" [ref=e272]
+              - columnheader "Aksi" [ref=e273]
+          - rowgroup [ref=e274]:
+            - row "auditor Sistem 3 0 Edit" [ref=e275]:
+              - cell "auditor Sistem" [ref=e276]:
+                - generic [ref=e277]:
+                  - text: auditor
+                  - generic [ref=e278]:
+                    - img [ref=e279]
+                    - text: Sistem
+              - cell "3" [ref=e282]
+              - cell "0" [ref=e283]
+              - cell "Edit" [ref=e284]:
+                - link "Edit" [ref=e286] [cursor=pointer]:
+                  - /url: /roles/8/edit
+                  - img
+                  - text: Edit
+            - row "employee Sistem 1 16 Edit" [ref=e287]:
+              - cell "employee Sistem" [ref=e288]:
+                - generic [ref=e289]:
+                  - text: employee
+                  - generic [ref=e290]:
+                    - img [ref=e291]
+                    - text: Sistem
+              - cell "1" [ref=e294]
+              - cell "16" [ref=e295]
+              - cell "Edit" [ref=e296]:
+                - link "Edit" [ref=e298] [cursor=pointer]:
+                  - /url: /roles/7/edit
+                  - img
+                  - text: Edit
+            - row "finance Sistem 4 0 Edit" [ref=e299]:
+              - cell "finance Sistem" [ref=e300]:
+                - generic [ref=e301]:
+                  - text: finance
+                  - generic [ref=e302]:
+                    - img [ref=e303]
+                    - text: Sistem
+              - cell "4" [ref=e306]
+              - cell "0" [ref=e307]
+              - cell "Edit" [ref=e308]:
+                - link "Edit" [ref=e310] [cursor=pointer]:
+                  - /url: /roles/5/edit
+                  - img
+                  - text: Edit
+            - row "hr-admin Sistem 15 1 Edit" [ref=e311]:
+              - cell "hr-admin Sistem" [ref=e312]:
+                - generic [ref=e313]:
+                  - text: hr-admin
+                  - generic [ref=e314]:
+                    - img [ref=e315]
+                    - text: Sistem
+              - cell "15" [ref=e318]
+              - cell "1" [ref=e319]
+              - cell "Edit" [ref=e320]:
+                - link "Edit" [ref=e322] [cursor=pointer]:
+                  - /url: /roles/3/edit
+                  - img
+                  - text: Edit
+            - row "manager Sistem 5 4 Edit" [ref=e323]:
+              - cell "manager Sistem" [ref=e324]:
+                - generic [ref=e325]:
+                  - text: manager
+                  - generic [ref=e326]:
+                    - img [ref=e327]
+                    - text: Sistem
+              - cell "5" [ref=e330]
+              - cell "4" [ref=e331]
+              - cell "Edit" [ref=e332]:
+                - link "Edit" [ref=e334] [cursor=pointer]:
+                  - /url: /roles/6/edit
+                  - img
+                  - text: Edit
+            - row "payroll-officer Sistem 4 0 Edit" [ref=e335]:
+              - cell "payroll-officer Sistem" [ref=e336]:
+                - generic [ref=e337]:
+                  - text: payroll-officer
+                  - generic [ref=e338]:
+                    - img [ref=e339]
+                    - text: Sistem
+              - cell "4" [ref=e342]
+              - cell "0" [ref=e343]
+              - cell "Edit" [ref=e344]:
+                - link "Edit" [ref=e346] [cursor=pointer]:
+                  - /url: /roles/4/edit
+                  - img
+                  - text: Edit
+            - row "tenant-admin Sistem 3 1 Edit" [ref=e347]:
+              - cell "tenant-admin Sistem" [ref=e348]:
+                - generic [ref=e349]:
+                  - text: tenant-admin
+                  - generic [ref=e350]:
+                    - img [ref=e351]
+                    - text: Sistem
+              - cell "3" [ref=e354]
+              - cell "1" [ref=e355]
+              - cell "Edit" [ref=e356]:
+                - link "Edit" [ref=e358] [cursor=pointer]:
+                  - /url: /roles/2/edit
+                  - img
+                  - text: Edit
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=e359]:
+        - img [ref=e361]
+        - generic [ref=e364]: Role berhasil diperbarui.
+      - listitem [ref=e365]:
+        - img [ref=e367]
+        - generic [ref=e370]: Role berhasil diperbarui.

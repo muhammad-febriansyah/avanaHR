@@ -1,0 +1,299 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "AvanaHR" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img "AvanaHR" [ref=e12]
+      - generic [ref=e13]:
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Dashboard" [ref=e17] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e18]
+              - generic [ref=e23]: Dashboard
+        - generic [ref=e24]:
+          - generic [ref=e25]: Platform
+          - list [ref=e26]:
+            - listitem [ref=e27]:
+              - link "Tenant" [ref=e28] [cursor=pointer]:
+                - /url: /platform/tenants
+                - img [ref=e29]
+                - generic [ref=e33]: Tenant
+            - listitem [ref=e34]:
+              - link "Langganan & Paket" [ref=e35] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e36]
+                - generic [ref=e38]: Langganan & Paket
+            - listitem [ref=e39]:
+              - link "Provisioning" [ref=e40] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e41]
+                - generic [ref=e46]: Provisioning
+        - generic [ref=e47]:
+          - generic [ref=e48]: Keamanan & Audit
+          - list [ref=e49]:
+            - listitem [ref=e50]:
+              - link "Audit Log" [ref=e51] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e52]
+                - generic [ref=e55]: Audit Log
+            - listitem [ref=e56]:
+              - link "Security Events" [ref=e57] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e58]
+                - generic [ref=e60]: Security Events
+            - listitem [ref=e61]:
+              - link "Backup & Restore" [ref=e62] [cursor=pointer]:
+                - /url: ""
+                - img [ref=e63]
+                - generic [ref=e69]: Backup & Restore
+        - generic [ref=e70]:
+          - generic [ref=e71]: Manajemen
+          - list [ref=e72]:
+            - listitem [ref=e73]:
+              - button "Karyawan" [expanded] [ref=e74]:
+                - img [ref=e75]
+                - generic [ref=e80]: Karyawan
+                - img [ref=e81]
+              - list [ref=e84]:
+                - listitem [ref=e85]:
+                  - link "Data Karyawan" [ref=e86] [cursor=pointer]:
+                    - /url: /employees
+                    - generic [ref=e87]: Data Karyawan
+                - listitem [ref=e88]:
+                  - link "Struktur Organisasi" [ref=e89] [cursor=pointer]:
+                    - /url: /organization/structure
+                    - generic [ref=e90]: Struktur Organisasi
+                - listitem [ref=e91]:
+                  - link "Departemen & Posisi" [ref=e92] [cursor=pointer]:
+                    - /url: /departments
+                    - generic [ref=e93]: Departemen & Posisi
+                - listitem [ref=e94]:
+                  - link "Kalender Kerja" [ref=e95] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e96]: Kalender Kerja
+                - listitem [ref=e97]:
+                  - link "Lifecycle" [ref=e98] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e99]: Lifecycle
+                - listitem [ref=e100]:
+                  - link "Dokumen" [ref=e101] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e102]: Dokumen
+                - listitem [ref=e103]:
+                  - link "Tiket HR" [ref=e104] [cursor=pointer]:
+                    - /url: ""
+                    - generic [ref=e105]: Tiket HR
+            - listitem [ref=e106]:
+              - button "Absensi" [ref=e107]:
+                - img [ref=e108]
+                - generic [ref=e117]: Absensi
+                - img [ref=e118]
+            - listitem [ref=e120]:
+              - button "Cuti & Lembur" [ref=e121]:
+                - img [ref=e122]
+                - generic [ref=e124]: Cuti & Lembur
+                - img [ref=e125]
+            - listitem [ref=e127]:
+              - button "Payroll" [ref=e128]:
+                - img [ref=e129]
+                - generic [ref=e132]: Payroll
+                - img [ref=e133]
+        - generic [ref=e135]:
+          - generic [ref=e136]: Personal
+          - list [ref=e137]:
+            - listitem [ref=e138]:
+              - button "Self-Service" [ref=e139]:
+                - img [ref=e140]
+                - generic [ref=e144]: Self-Service
+                - img [ref=e145]
+            - listitem [ref=e147]:
+              - button "Persetujuan" [ref=e148]:
+                - img [ref=e149]
+                - generic [ref=e153]: Persetujuan
+                - img [ref=e154]
+        - generic [ref=e156]:
+          - generic [ref=e157]: Sistem
+          - list [ref=e158]:
+            - listitem [ref=e159]:
+              - button "Laporan" [ref=e160]:
+                - img [ref=e161]
+                - generic [ref=e163]: Laporan
+                - img [ref=e164]
+            - listitem [ref=e166]:
+              - button "Pengaturan" [ref=e167]:
+                - img [ref=e168]
+                - generic [ref=e171]: Pengaturan
+                - img [ref=e172]
+      - generic [ref=e176]:
+        - generic [ref=e177]: Butuh Bantuan?
+        - link "support@avanahr.co.id" [ref=e178] [cursor=pointer]:
+          - /url: mailto:support@avanahr.co.id
+          - img [ref=e179]
+          - generic [ref=e182]: support@avanahr.co.id
+        - link "(021) 5099-9000" [ref=e183] [cursor=pointer]:
+          - /url: tel:+622150999000
+          - img [ref=e184]
+          - generic [ref=e186]: (021) 5099-9000
+    - main [ref=e187]:
+      - generic [ref=e188]:
+        - button "Toggle sidebar" [ref=e189]:
+          - img
+          - generic [ref=e190]: Toggle sidebar
+        - generic [ref=e191]:
+          - img
+          - searchbox "Cari" [ref=e192]
+        - button "Notifikasi" [ref=e193]:
+          - img [ref=e194]
+        - button "SA Super Admin PT Nusantara Jaya" [ref=e199]:
+          - generic [ref=e200]: SA
+          - generic [ref=e201]:
+            - generic [ref=e202]: Super Admin
+            - generic [ref=e203]: PT Nusantara Jaya
+          - img [ref=e204]
+      - generic [ref=e206]:
+        - generic [ref=e208]:
+          - heading "Departemen & Posisi" [level=1] [ref=e209]
+          - paragraph [ref=e210]: "Kelola struktur unit organisasi: departemen dan posisi jabatan."
+        - generic [ref=e212]:
+          - generic [ref=e213]:
+            - heading "Departemen" [level=2] [ref=e214]
+            - button "Tambah Departemen" [ref=e215]:
+              - img
+              - text: Tambah Departemen
+          - table [ref=e218]:
+            - rowgroup [ref=e219]:
+              - row "Kode Nama Induk Posisi Aksi" [ref=e220]:
+                - columnheader "Kode" [ref=e221]
+                - columnheader "Nama" [ref=e222]
+                - columnheader "Induk" [ref=e223]
+                - columnheader "Posisi" [ref=e224]
+                - columnheader "Aksi" [ref=e225]
+            - rowgroup [ref=e226]:
+              - row "DEP001 Human Resources - 1 Edit Hapus" [ref=e227]:
+                - cell "DEP001" [ref=e228]
+                - cell "Human Resources" [ref=e229]
+                - cell "-" [ref=e230]
+                - cell "1" [ref=e231]
+                - cell "Edit Hapus" [ref=e232]:
+                  - generic [ref=e233]:
+                    - button "Edit" [ref=e234]:
+                      - img
+                      - text: Edit
+                    - button "Hapus" [ref=e235]:
+                      - img
+                      - text: Hapus
+              - row "DEP002 Finance - 1 Edit Hapus" [ref=e236]:
+                - cell "DEP002" [ref=e237]
+                - cell "Finance" [ref=e238]
+                - cell "-" [ref=e239]
+                - cell "1" [ref=e240]
+                - cell "Edit Hapus" [ref=e241]:
+                  - generic [ref=e242]:
+                    - button "Edit" [ref=e243]:
+                      - img
+                      - text: Edit
+                    - button "Hapus" [ref=e244]:
+                      - img
+                      - text: Hapus
+              - row "DEP003 Engineering - 1 Edit Hapus" [ref=e245]:
+                - cell "DEP003" [ref=e246]
+                - cell "Engineering" [ref=e247]
+                - cell "-" [ref=e248]
+                - cell "1" [ref=e249]
+                - cell "Edit Hapus" [ref=e250]:
+                  - generic [ref=e251]:
+                    - button "Edit" [ref=e252]:
+                      - img
+                      - text: Edit
+                    - button "Hapus" [ref=e253]:
+                      - img
+                      - text: Hapus
+              - row "DEP004 Sales - 1 Edit Hapus" [ref=e254]:
+                - cell "DEP004" [ref=e255]
+                - cell "Sales" [ref=e256]
+                - cell "-" [ref=e257]
+                - cell "1" [ref=e258]
+                - cell "Edit Hapus" [ref=e259]:
+                  - generic [ref=e260]:
+                    - button "Edit" [ref=e261]:
+                      - img
+                      - text: Edit
+                    - button "Hapus" [ref=e262]:
+                      - img
+                      - text: Hapus
+        - generic [ref=e264]:
+          - generic [ref=e265]:
+            - heading "Posisi" [level=2] [ref=e266]
+            - button "Tambah Posisi" [ref=e267]:
+              - img
+              - text: Tambah Posisi
+          - table [ref=e270]:
+            - rowgroup [ref=e271]:
+              - row "Kode Nama Departemen Level Grade Aksi" [ref=e272]:
+                - columnheader "Kode" [ref=e273]
+                - columnheader "Nama" [ref=e274]
+                - columnheader "Departemen" [ref=e275]
+                - columnheader "Level" [ref=e276]
+                - columnheader "Grade" [ref=e277]
+                - columnheader "Aksi" [ref=e278]
+            - rowgroup [ref=e279]:
+              - row "POS491 Account Manager Sales Director Grade p Edit Hapus" [ref=e280]:
+                - cell "POS491" [ref=e281]
+                - cell "Account Manager" [ref=e282]
+                - cell "Sales" [ref=e283]
+                - cell "Director" [ref=e284]
+                - cell "Grade p" [ref=e285]
+                - cell "Edit Hapus" [ref=e286]:
+                  - generic [ref=e287]:
+                    - button "Edit" [ref=e288]:
+                      - img
+                      - text: Edit
+                    - button "Hapus" [ref=e289]:
+                      - img
+                      - text: Hapus
+              - row "POS606 Social Worker Engineering Director Grade g Edit Hapus" [ref=e290]:
+                - cell "POS606" [ref=e291]
+                - cell "Social Worker" [ref=e292]
+                - cell "Engineering" [ref=e293]
+                - cell "Director" [ref=e294]
+                - cell "Grade g" [ref=e295]
+                - cell "Edit Hapus" [ref=e296]:
+                  - generic [ref=e297]:
+                    - button "Edit" [ref=e298]:
+                      - img
+                      - text: Edit
+                    - button "Hapus" [ref=e299]:
+                      - img
+                      - text: Hapus
+              - row "POS646 Potter Finance Staff Grade p Edit Hapus" [ref=e300]:
+                - cell "POS646" [ref=e301]
+                - cell "Potter" [ref=e302]
+                - cell "Finance" [ref=e303]
+                - cell "Staff" [ref=e304]
+                - cell "Grade p" [ref=e305]
+                - cell "Edit Hapus" [ref=e306]:
+                  - generic [ref=e307]:
+                    - button "Edit" [ref=e308]:
+                      - img
+                      - text: Edit
+                    - button "Hapus" [ref=e309]:
+                      - img
+                      - text: Hapus
+              - row "POS976 Mail Clerk Human Resources Director Grade p Edit Hapus" [ref=e310]:
+                - cell "POS976" [ref=e311]
+                - cell "Mail Clerk" [ref=e312]
+                - cell "Human Resources" [ref=e313]
+                - cell "Director" [ref=e314]
+                - cell "Grade p" [ref=e315]
+                - cell "Edit Hapus" [ref=e316]:
+                  - generic [ref=e317]:
+                    - button "Edit" [ref=e318]:
+                      - img
+                      - text: Edit
+                    - button "Hapus" [ref=e319]:
+                      - img
+                      - text: Hapus
+  - region "Notifications alt+T"

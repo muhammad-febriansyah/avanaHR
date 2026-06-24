@@ -1,0 +1,177 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /dashboard
+                    - img
+            - generic:
+              - generic:
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: /dashboard
+                      - img
+                      - generic: Dashboard
+              - generic:
+                - generic: Manajemen
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Karyawan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Absensi
+                      - img
+                  - listitem:
+                    - button [expanded]:
+                      - img
+                      - generic: Cuti & Lembur
+                      - img
+                    - generic:
+                      - list:
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Pengajuan Cuti
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Saldo Cuti
+                        - listitem:
+                          - link:
+                            - /url: /leave-types
+                            - generic: Jenis Cuti
+                        - listitem:
+                          - link:
+                            - /url: ""
+                            - generic: Lembur
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Payroll
+                      - img
+              - generic:
+                - generic: Personal
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Self-Service
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Persetujuan
+                      - img
+              - generic:
+                - generic: Sistem
+                - list:
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Laporan
+                      - img
+                  - listitem:
+                    - button:
+                      - img
+                      - generic: Pengaturan
+                      - img
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Butuh Bantuan?
+                  - link:
+                    - /url: mailto:support@avanahr.co.id
+                    - img
+                    - generic: support@avanahr.co.id
+                  - link:
+                    - /url: tel:+622150999000
+                    - img
+                    - generic: (021) 5099-9000
+      - main:
+        - generic:
+          - button:
+            - img
+            - generic: Toggle sidebar
+          - generic:
+            - img
+            - searchbox
+          - button:
+            - img
+          - button:
+            - generic: AA
+            - generic:
+              - generic: Admin Avana
+              - generic: PT Nusantara Jaya
+            - img
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=1]: Jenis Cuti
+              - paragraph: Kelola kategori cuti yang berlaku di perusahaan.
+            - generic:
+              - button:
+                - img
+                - text: Tambah Jenis Cuti
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - table:
+                    - rowgroup:
+                      - row:
+                        - columnheader: Kode
+                        - columnheader: Nama
+                        - columnheader: Dibayar
+                        - columnheader: Maks. Hari/Tahun
+                        - columnheader: Saldo Minus
+                        - columnheader: Aksi
+                    - rowgroup:
+                      - row:
+                        - cell:
+                          - generic:
+                            - generic:
+                              - img
+                            - paragraph: Belum ada jenis cuti
+    - region "Notifications alt+T"
+  - dialog "Tambah Jenis Cuti" [ref=e182]:
+    - heading "Tambah Jenis Cuti" [level=2] [ref=e184]
+    - generic [ref=e185]:
+      - generic [ref=e186]:
+        - generic [ref=e187]: Kode
+        - textbox "Kode" [active] [ref=e188]:
+          - /placeholder: Mis. CT, CS
+      - generic [ref=e189]:
+        - generic [ref=e190]: Nama
+        - textbox "Nama" [ref=e191]:
+          - /placeholder: Mis. Cuti Tahunan
+      - generic [ref=e192]:
+        - generic [ref=e193]: Maksimal Hari per Tahun
+        - spinbutton "Maksimal Hari per Tahun" [ref=e194]
+      - generic [ref=e195]:
+        - checkbox "Cuti dibayar (berbayar)" [checked] [ref=e196]:
+          - generic:
+            - img
+        - checkbox [checked]
+        - text: Cuti dibayar (berbayar)
+      - generic [ref=e197]:
+        - checkbox "Izinkan saldo minus" [ref=e198]
+        - checkbox
+        - text: Izinkan saldo minus
+    - generic [ref=e199]:
+      - button "Batal" [ref=e200]:
+        - img
+        - text: Batal
+      - button "Simpan" [ref=e201]
+    - button "Close" [ref=e202]:
+      - img
+      - generic [ref=e203]: Close
