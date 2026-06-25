@@ -34,6 +34,10 @@ class ShiftController extends Controller
             ]);
 
         return Inertia::render('shifts/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Jadwal & Shift', 'href' => route('shifts.index')],
+            ],
             'shifts' => $shifts,
         ]);
     }

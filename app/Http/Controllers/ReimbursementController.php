@@ -48,6 +48,10 @@ class ReimbursementController extends Controller
             ]);
 
         return Inertia::render('reimbursements/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Reimbursement', 'href' => route('reimbursements.index')],
+            ],
             'reimbursements' => $reimbursements,
             'filters' => (object) $filters,
             'statuses' => $this->statusOptions(),

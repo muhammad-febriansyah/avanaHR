@@ -8,6 +8,7 @@ use App\Actions\Employee\UpdateEmployeeAction;
 use App\Enums\EmployeeStatus;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Http\Requests\Employee\UpdateEmployeeRequest;
+use App\Models\CustomField;
 use App\Models\Employee;
 use App\Repositories\Employee\EmployeeRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -43,6 +44,7 @@ class EmployeeController extends Controller
 
         return Inertia::render('employees/create', [
             'statuses' => $this->statusOptions(),
+            'customFields' => $this->customFieldDefinitions(),
             'breadcrumbs' => [...$this->baseCrumbs(), ['title' => 'Tambah', 'href' => route('employees.create')]],
         ]);
     }
@@ -73,6 +75,8 @@ class EmployeeController extends Controller
         return Inertia::render('employees/edit', [
             'employee' => $employee,
             'statuses' => $this->statusOptions(),
+            'customFields' => $this->customFieldDefinitions(),
+            'customFieldValues' => $this->customFieldValuesFor($employee),
             'breadcrumbs' => [
                 ...$this->baseCrumbs(),
                 ['title' => $employee->fullName(), 'href' => route('employees.show', $employee)],
@@ -112,6 +116,42 @@ class EmployeeController extends Controller
             ['title' => 'Dashboard', 'href' => route('dashboard')],
             ['title' => 'Karyawan', 'href' => route('employees.index')],
         ];
+    }
+
+    /**
+     * Tenant-defined custom field definitions for the employee entity.
+     *
+     * @return list<array{key: string, label: string, type: string, options: array<int, string>|null, is_required: bool}>
+     */
+    private function customFieldDefinitions(): array
+    {
+        return CustomField::query()
+            ->where('entity_type', 'employee')
+            ->orderBy('order')
+            ->orderBy('id')
+            ->get()
+            ->map(fn (CustomField $field): array => [
+                'key' => $field->key,
+                'label' => $field->label,
+                'type' => $field->type,
+                'options' => $field->options,
+                'is_required' => $field->is_required,
+            ])
+            ->all();
+    }
+
+    /**
+     * Existing custom field values for an employee, keyed by field key.
+     *
+     * @return array<string, mixed>
+     */
+    private function customFieldValuesFor(Employee $employee): array
+    {
+        return $employee->customFieldValues()
+            ->with('customField:id,key')
+            ->get()
+            ->mapWithKeys(fn ($value): array => [$value->customField->key => $value->value])
+            ->all();
     }
 
     /**

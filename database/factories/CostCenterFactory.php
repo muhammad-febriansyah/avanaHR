@@ -15,7 +15,8 @@ class CostCenterFactory extends Factory
     public function definition(): array
     {
         return [
-            'code' => 'CC'.fake()->unique()->numberBetween(100, 999),
+            // Cap below 900 so codes never collide with CC900/CC901 test literals.
+            'code' => 'CC'.fake()->unique()->numberBetween(100, 899),
             'name' => 'Cost Center '.fake()->randomElement(['HQ', 'Ops', 'Sales', 'RND']),
         ];
     }

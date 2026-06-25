@@ -53,6 +53,10 @@ class DepartmentController extends Controller
             ]);
 
         return Inertia::render('org-units/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Departemen & Posisi', 'href' => route('departments.index')],
+            ],
             'departments' => $departments,
             'positions' => $positions,
             'options' => [

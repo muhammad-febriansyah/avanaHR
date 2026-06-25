@@ -19,6 +19,10 @@ class LeaveTypeController extends Controller
         $this->authorize('viewAny', LeaveType::class);
 
         return Inertia::render('leave-types/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Jenis Cuti', 'href' => route('leave-types.index')],
+            ],
             'leaveTypes' => LeaveType::orderBy('code')->get([
                 'id', 'code', 'name', 'is_paid', 'max_days_year', 'allow_negative',
             ]),

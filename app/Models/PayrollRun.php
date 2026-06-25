@@ -31,7 +31,7 @@ class PayrollRun extends Model
 
     public function payslips(): HasMany
     {
-        return $this->hasMany(Payslip::class);
+        return $this->hasMany(Payslip::class, 'run_id');
     }
 
     public function bankFiles(): HasMany

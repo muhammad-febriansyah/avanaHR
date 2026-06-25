@@ -42,6 +42,10 @@ class PayslipController extends Controller
             ]);
 
         return Inertia::render('payslips/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Slip Gaji', 'href' => route('payslips.index')],
+            ],
             'payslips' => $payslips,
             'filters' => (object) $filters,
             'options' => [
@@ -62,6 +66,11 @@ class PayslipController extends Controller
         ]);
 
         return Inertia::render('payslips/show', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Slip Gaji', 'href' => route('payslips.index')],
+                ['title' => 'Detail', 'href' => route('payslips.show', $payslip)],
+            ],
             'payslip' => [
                 'id' => $payslip->id,
                 'employee_name' => $payslip->employee?->fullName(),

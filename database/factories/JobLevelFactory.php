@@ -15,7 +15,8 @@ class JobLevelFactory extends Factory
     public function definition(): array
     {
         return [
-            'code' => 'LV'.fake()->unique()->numberBetween(1, 99),
+            // Cap below 90 so codes never collide with LV90/LV91 test literals.
+            'code' => 'LV'.fake()->unique()->numberBetween(1, 89),
             'name' => fake()->randomElement(['Staff', 'Senior', 'Supervisor', 'Manager', 'Director']),
             'order' => fake()->numberBetween(1, 5),
         ];

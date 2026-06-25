@@ -3,12 +3,15 @@
 namespace App\Http\Requests\Employee;
 
 use App\Enums\EmployeeStatus;
+use App\Http\Requests\Concerns\ValidatesCustomFields;
 use App\Support\CurrentTenant;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateEmployeeRequest extends FormRequest
 {
+    use ValidatesCustomFields;
+
     public function authorize(): bool
     {
         return $this->user()->can('employee.update');
@@ -23,6 +26,7 @@ class UpdateEmployeeRequest extends FormRequest
         $employeeId = $this->route('employee')->id;
 
         return [
+            ...$this->customFieldRules('employee'),
             'employee_no' => ['required', 'string', 'max:50', Rule::unique('employees', 'employee_no')->where('tenant_id', $tenantId)->ignore($employeeId)],
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['nullable', 'string', 'max:100'],
@@ -47,6 +51,7 @@ class UpdateEmployeeRequest extends FormRequest
     public function messages(): array
     {
         return [
+            ...$this->customFieldMessages('employee'),
             'employee_no.required' => 'Nomor karyawan wajib diisi.',
             'employee_no.unique' => 'Nomor karyawan sudah digunakan.',
             'first_name.required' => 'Nama depan wajib diisi.',

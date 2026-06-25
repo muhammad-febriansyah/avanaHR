@@ -53,6 +53,10 @@ class LeaveBalanceController extends Controller
             ]);
 
         return Inertia::render('leave-balances/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Saldo Cuti', 'href' => route('leave-balances.index')],
+            ],
             'balances' => $balances,
             'filters' => (object) $filters,
             'currentYear' => $year,

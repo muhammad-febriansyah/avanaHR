@@ -12,6 +12,8 @@ class AttendanceDaily extends Model
 {
     use BelongsToTenant, HasFactory;
 
+    protected $table = 'attendance_daily';
+
     protected $guarded = ['id'];
 
     protected function casts(): array

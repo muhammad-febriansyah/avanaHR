@@ -38,6 +38,10 @@ class WorkCalendarController extends Controller
             : collect();
 
         return Inertia::render('calendars/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Kalender Kerja', 'href' => route('work-calendars.index')],
+            ],
             'calendars' => $calendars,
             'holidays' => $holidays,
             'selectedCalendarId' => $selected?->id,

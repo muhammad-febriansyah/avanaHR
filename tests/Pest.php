@@ -1,6 +1,8 @@
 <?php
 
+use App\Support\CurrentTenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 /*
@@ -16,6 +18,14 @@ use Tests\TestCase;
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
+    ->beforeEach(function () {
+        // Reset cross-request singletons so tenant scope / RBAC state never
+        // leaks between tests (a tenant set by one test must not bleed into the
+        // next). Keeps the suite deterministic regardless of execution order.
+        app(CurrentTenant::class)->forget();
+        app(PermissionRegistrar::class)->setPermissionsTeamId(null);
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+    })
     ->in('Feature');
 
 /*

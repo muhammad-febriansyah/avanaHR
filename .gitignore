@@ -27,3 +27,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Playwright MCP browser logs (noise)
+/.playwright-mcp

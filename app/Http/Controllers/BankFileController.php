@@ -38,6 +38,10 @@ class BankFileController extends Controller
             ]);
 
         return Inertia::render('bank-files/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'File Bank', 'href' => route('bank-files.index')],
+            ],
             'bankFiles' => $files,
             'filters' => (object) $filters,
             'banks' => $this->bankOptions(),

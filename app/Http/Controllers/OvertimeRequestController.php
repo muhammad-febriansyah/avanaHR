@@ -51,6 +51,10 @@ class OvertimeRequestController extends Controller
             ]);
 
         return Inertia::render('overtime-requests/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Lembur', 'href' => route('overtime-requests.index')],
+            ],
             'requests' => $requests,
             'filters' => (object) $filters,
             'statuses' => $this->statusOptions(),

@@ -42,6 +42,10 @@ class PayrollRunController extends Controller
             ]);
 
         return Inertia::render('payroll-runs/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Proses Payroll', 'href' => route('payroll-runs.index')],
+            ],
             'runs' => $runs,
             'filters' => (object) $filters,
             'types' => $this->typeOptions(),

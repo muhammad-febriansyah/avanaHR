@@ -54,6 +54,10 @@ class LeaveRequestController extends Controller
             ]);
 
         return Inertia::render('leave-requests/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Pengajuan Cuti', 'href' => route('leave-requests.index')],
+            ],
             'requests' => $requests,
             'filters' => (object) $filters,
             'statuses' => $this->statusOptions(),

@@ -12,6 +12,8 @@ class AuditLog extends Model
 {
     use BelongsToTenant, HasFactory;
 
+    public const UPDATED_AT = null;
+
     protected $guarded = ['id'];
 
     protected function casts(): array

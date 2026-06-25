@@ -33,6 +33,10 @@ class PayrollComponentController extends Controller
             ]);
 
         return Inertia::render('payroll-components/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Komponen Gaji', 'href' => route('payroll-components.index')],
+            ],
             'components' => $components,
         ]);
     }

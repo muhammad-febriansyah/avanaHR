@@ -1,8 +1,0 @@
-[     134ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/employees?fix=1:157
-[     157ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/employees?fix=1:216
-[ 1114517ms] [LOG] [vite] server connection lost. Polling for restart... @ http://127.0.0.1:8000/employees?fix=1:216
-[ 1114711ms] [ERROR] Failed to send logs: TypeError: Failed to fetch
-    at flushLogs (http://127.0.0.1:8000/employees?fix=1:194:9) @ http://127.0.0.1:8000/employees?fix=1:202
-[ 1114716ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://127.0.0.1:8000/_boost/browser-logs @ http://127.0.0.1:8000/employees?dir=asc&sort=first_name:157
-[ 1114755ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:8000/employees?dir=asc&sort=first_name:216
-[15990722ms] [LOG] [vite] server connection lost. Polling for restart... @ http://127.0.0.1:8000/employees?dir=asc&sort=first_name:216

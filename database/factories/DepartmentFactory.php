@@ -18,7 +18,8 @@ class DepartmentFactory extends Factory
         return [
             'company_id' => Company::factory(),
             'parent_id' => null,
-            'code' => 'DEP'.fake()->unique()->numberBetween(100, 999),
+            // Cap below 900 so codes never collide with DEP900/DEP901 test literals.
+            'code' => 'DEP'.fake()->unique()->numberBetween(100, 899),
             'name' => fake()->randomElement([
                 'Human Resources', 'Finance', 'Engineering', 'Sales',
                 'Marketing', 'Operations', 'IT', 'Legal',

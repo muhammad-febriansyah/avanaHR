@@ -36,6 +36,10 @@ class PayrollPeriodController extends Controller
             ]);
 
         return Inertia::render('payroll-periods/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Periode Payroll', 'href' => route('payroll-periods.index')],
+            ],
             'periods' => $periods,
             'statuses' => array_map(
                 fn (PayrollPeriodStatus $status): array => ['value' => $status->value, 'label' => ucfirst($status->value)],

@@ -2,8 +2,6 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     Building2,
     ChartColumn,
-    CircleUserRound,
-    ClipboardCheck,
     CreditCard,
     DatabaseBackup,
     Fingerprint,
@@ -29,6 +27,11 @@ import permissions from '@/actions/App/Http/Controllers/PermissionController';
 import roles from '@/actions/App/Http/Controllers/RoleController';
 import users from '@/actions/App/Http/Controllers/UserController';
 import workCalendars from '@/actions/App/Http/Controllers/WorkCalendarController';
+import auditLogs from '@/actions/App/Http/Controllers/Platform/AuditLogController';
+import backups from '@/actions/App/Http/Controllers/Platform/BackupController';
+import provisioning from '@/actions/App/Http/Controllers/Platform/ProvisioningController';
+import securityEvents from '@/actions/App/Http/Controllers/Platform/SecurityEventController';
+import subscriptions from '@/actions/App/Http/Controllers/Platform/SubscriptionController';
 import tenants from '@/actions/App/Http/Controllers/Platform/TenantController';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
@@ -44,7 +47,17 @@ import {
 } from '@/components/ui/sidebar';
 import { usePermissions } from '@/hooks/use-permissions';
 import { dashboard } from '@/routes';
+import { executive as analyticsExecutive, workforce as analyticsWorkforce } from '@/routes/analytics';
+import { index as approvalFlowsIndex } from '@/routes/approval-flows';
+import { index as benefitTypesIndex } from '@/routes/benefit-types';
+import { index as employeeBenefitsIndex } from '@/routes/employee-benefits';
+import { index as attendanceIndex } from '@/routes/attendance';
+import { index as attendanceCorrectionsIndex } from '@/routes/attendance-corrections';
+import { index as employeeDocumentsIndex } from '@/routes/employee-documents';
+import { index as hrTicketsIndex } from '@/routes/hr-tickets';
 import { index as leaveBalancesIndex } from '@/routes/leave-balances';
+import { index as lifecycleIndex } from '@/routes/lifecycle';
+import { index as movementsIndex } from '@/routes/movements';
 import { index as leaveRequestsIndex } from '@/routes/leave-requests';
 import { index as leaveTypesIndex } from '@/routes/leave-types';
 import { index as overtimeRequestsIndex } from '@/routes/overtime-requests';
@@ -53,8 +66,13 @@ import { index as payrollPeriodsIndex } from '@/routes/payroll-periods';
 import { index as payrollRunsIndex } from '@/routes/payroll-runs';
 import { index as payslipsIndex } from '@/routes/payslips';
 import { index as reimbursementsIndex } from '@/routes/reimbursements';
+import { index as reportBuilderIndex } from '@/routes/report-builder';
+import { compliance as reportsCompliance } from '@/routes/reports';
+import { edit as securitySettingsEdit } from '@/routes/security-settings';
 import { index as shiftsIndex } from '@/routes/shifts';
 import { index as thrBonusRunsIndex } from '@/routes/thr-bonus-runs';
+import { index as timesheetsIndex } from '@/routes/timesheets';
+import { index as workVisitsIndex } from '@/routes/work-visits';
 import type { NavItem } from '@/types';
 
 /**
@@ -85,9 +103,10 @@ const navGroups: NavGroup[] = [
                     { title: 'Jenjang Jabatan', href: jobLevels.index.url(), permission: 'employee.view' },
                     { title: 'Grade Jabatan', href: jobGrades.index.url(), permission: 'employee.view' },
                     { title: 'Kalender Kerja', href: workCalendars.index.url(), permission: 'employee.view' },
-                    { title: 'Lifecycle', href: '#', permission: 'employee.view' },
-                    { title: 'Dokumen', href: '#', permission: 'employee.view' },
-                    { title: 'Tiket HR', href: '#', permission: 'employee.view' },
+                    { title: 'Lifecycle', href: lifecycleIndex(), permission: 'employee.view' },
+                    { title: 'Mutasi & Movement', href: movementsIndex(), permission: 'employee.view' },
+                    { title: 'Dokumen', href: employeeDocumentsIndex(), permission: 'employee.view' },
+                    { title: 'Tiket HR', href: hrTicketsIndex(), permission: 'employee.view' },
                 ],
             },
             {
@@ -96,12 +115,10 @@ const navGroups: NavGroup[] = [
                 icon: Fingerprint,
                 feature: 'attendance',
                 children: [
-                    { title: 'Absen Hari Ini', href: '#', permission: 'attendance.view' },
-                    { title: 'Rekap Absensi', href: '#', permission: 'attendance.view' },
-                    { title: 'Koreksi Absensi', href: '#', permission: 'attendance.view' },
+                    { title: 'Rekap Absensi', href: attendanceIndex(), permission: 'attendance.view' },
+                    { title: 'Koreksi Absensi', href: attendanceCorrectionsIndex(), permission: 'attendance.view' },
                     { title: 'Jadwal & Shift', href: shiftsIndex(), permission: 'attendance.manage' },
-                    { title: 'Timesheet', href: '#', permission: 'attendance.view' },
-                    { title: 'Import Biometrik', href: '#', permission: 'attendance.manage' },
+                    { title: 'Timesheet', href: timesheetsIndex(), permission: 'attendance.view' },
                 ],
             },
             {
@@ -114,6 +131,7 @@ const navGroups: NavGroup[] = [
                     { title: 'Saldo Cuti', href: leaveBalancesIndex(), permission: 'leave.view' },
                     { title: 'Jenis Cuti', href: leaveTypesIndex(), permission: 'setting.manage' },
                     { title: 'Lembur', href: overtimeRequestsIndex(), permission: 'attendance.view' },
+                    { title: 'Kunjungan Kerja', href: workVisitsIndex(), permission: 'employee.view' },
                 ],
             },
             {
@@ -130,41 +148,14 @@ const navGroups: NavGroup[] = [
                     { title: 'Pinjaman', href: employeeLoans.index.url(), permission: 'payroll.view' },
                     { title: 'THR & Bonus', href: thrBonusRunsIndex(), permission: 'payroll.run' },
                     { title: 'File Bank', href: bankFiles.index.url(), permission: 'payroll.approve' },
+                    { title: 'Benefit Karyawan', href: employeeBenefitsIndex(), permission: 'payroll.view' },
+                    { title: 'Jenis Benefit', href: benefitTypesIndex(), permission: 'payroll.view' },
                 ],
             },
         ],
     },
-    {
-        label: 'Personal',
-        items: [
-            {
-                title: 'Self-Service',
-                href: '#',
-                icon: CircleUserRound,
-                feature: 'ess',
-                children: [
-                    { title: 'Dashboard Saya', href: '#' },
-                    { title: 'Profil', href: '#' },
-                    { title: 'Slip Gaji Saya', href: '#' },
-                    { title: 'Cuti Saya', href: '#' },
-                    { title: 'Klaim', href: '#' },
-                    { title: 'Status Pengajuan', href: '#' },
-                ],
-            },
-            {
-                title: 'Persetujuan',
-                href: '#',
-                icon: ClipboardCheck,
-                permission: 'leave.approve',
-                feature: 'approval',
-                children: [
-                    { title: 'Inbox Approval', href: '#', permission: 'leave.approve' },
-                    { title: 'Tim Saya', href: '#', permission: 'leave.approve' },
-                    { title: 'Kalender Tim', href: '#', permission: 'leave.approve' },
-                ],
-            },
-        ],
-    },
+    // Grup "Personal" (Self-Service + Persetujuan) di-hide: ESS/MSS = Flutter
+    // (karyawan via mobile). Approval manager sudah lewat halaman transaksi.
     {
         label: 'Sistem',
         items: [
@@ -174,10 +165,10 @@ const navGroups: NavGroup[] = [
                 icon: ChartColumn,
                 feature: 'analytics',
                 children: [
-                    { title: 'Analitik Workforce', href: '#', permission: 'report.view' },
-                    { title: 'Dashboard Eksekutif', href: '#', permission: 'report.view' },
-                    { title: 'Report Builder', href: '#', permission: 'report.export' },
-                    { title: 'Laporan Kepatuhan', href: '#', permission: 'report.view' },
+                    { title: 'Analitik Workforce', href: analyticsWorkforce(), permission: 'report.view' },
+                    { title: 'Dashboard Eksekutif', href: analyticsExecutive(), permission: 'report.view' },
+                    { title: 'Report Builder', href: reportBuilderIndex(), permission: 'report.view' },
+                    { title: 'Laporan Kepatuhan', href: reportsCompliance(), permission: 'report.view' },
                 ],
             },
             {
@@ -191,11 +182,11 @@ const navGroups: NavGroup[] = [
                     { title: 'Pengguna', href: users.index.url(), permission: 'setting.manage' },
                     { title: 'Hak Akses (Role)', href: roles.index.url(), permission: 'setting.manage' },
                     { title: 'Permission', href: permissions.index.url(), permission: 'setting.manage' },
-                    { title: 'Workflow Approval', href: '#', permission: 'setting.manage' },
-                    { title: 'Custom Field', href: '#', permission: 'setting.manage' },
-                    { title: 'Keamanan', href: '#', permission: 'setting.manage' },
-                    { title: 'Integrasi', href: '#', permission: 'setting.manage' },
-                    { title: 'Langganan', href: '#', permission: 'setting.manage' },
+                    { title: 'Workflow Approval', href: approvalFlowsIndex(), permission: 'setting.manage' },
+                    // Custom Field di-hide: baru CRUD definisi, render value di form
+                    // Employee belum (setengah jadi). Route/halaman/test tetap ada.
+                    { title: 'Keamanan', href: securitySettingsEdit(), permission: 'setting.manage' },
+                    // Integrasi & Langganan di-hide: belum dibutuhkan.
                 ],
             },
         ],
@@ -214,16 +205,16 @@ const platformNavGroups: NavGroup[] = [
         label: 'Platform',
         items: [
             { title: 'Tenant', href: tenants.index.url(), icon: Building2 },
-            { title: 'Langganan & Paket', href: '#', icon: CreditCard },
-            { title: 'Provisioning', href: '#', icon: Rocket },
+            { title: 'Langganan & Paket', href: subscriptions.index.url(), icon: CreditCard },
+            { title: 'Provisioning', href: provisioning.index.url(), icon: Rocket },
         ],
     },
     {
         label: 'Keamanan & Audit',
         items: [
-            { title: 'Audit Log', href: '#', icon: ScrollText },
-            { title: 'Security Events', href: '#', icon: ShieldAlert },
-            { title: 'Backup & Restore', href: '#', icon: DatabaseBackup },
+            { title: 'Audit Log', href: auditLogs.index.url(), icon: ScrollText },
+            { title: 'Security Events', href: securityEvents.index.url(), icon: ShieldAlert },
+            { title: 'Backup & Restore', href: backups.index.url(), icon: DatabaseBackup },
         ],
     },
 ];

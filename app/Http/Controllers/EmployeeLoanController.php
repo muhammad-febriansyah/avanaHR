@@ -48,6 +48,10 @@ class EmployeeLoanController extends Controller
             ]);
 
         return Inertia::render('employee-loans/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Pinjaman', 'href' => route('employee-loans.index')],
+            ],
             'loans' => $loans,
             'filters' => (object) $filters,
             'statuses' => $this->statusOptions(),

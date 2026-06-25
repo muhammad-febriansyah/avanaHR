@@ -34,6 +34,10 @@ class ThrBonusRunController extends Controller
             ]);
 
         return Inertia::render('thr-bonus-runs/index', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'THR & Bonus', 'href' => route('thr-bonus-runs.index')],
+            ],
             'runs' => $runs,
             'filters' => (object) $filters,
             'types' => $this->typeOptions(),

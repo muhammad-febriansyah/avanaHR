@@ -17,7 +17,9 @@ class JobGradeFactory extends Factory
         $min = fake()->numberBetween(5, 30) * 1_000_000;
 
         return [
-            'code' => 'GR'.fake()->unique()->numberBetween(1, 99),
+            // Cap below 90 so generated codes never collide with the GR90/GR91
+            // literals hard-coded in tests (keeps the suite order-independent).
+            'code' => 'GR'.fake()->unique()->numberBetween(1, 89),
             'name' => 'Grade '.fake()->randomLetter(),
             'salary_band_min' => $min,
             'salary_band_max' => $min + fake()->numberBetween(5, 20) * 1_000_000,

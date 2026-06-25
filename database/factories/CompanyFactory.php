@@ -15,7 +15,8 @@ class CompanyFactory extends Factory
     public function definition(): array
     {
         return [
-            'code' => 'CMP'.fake()->unique()->numberBetween(100, 999),
+            // Cap below 900 so codes never collide with CMP900/CMP901 test literals.
+            'code' => 'CMP'.fake()->unique()->numberBetween(100, 899),
             'name' => fake('id_ID')->company(),
             'npwp' => fake()->numerify('##.###.###.#-###.###'),
             'address' => fake('id_ID')->address(),

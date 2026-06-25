@@ -17,9 +17,21 @@ import {
 } from '@/components/ui/select';
 import type { EmployeeFull, StatusOption } from '@/types/employee';
 
+export type CustomFieldDef = {
+    key: string;
+    label: string;
+    type: string;
+    options: string[] | null;
+    is_required: boolean;
+};
+
+export type CustomFieldValues = Record<string, string | number | boolean | null>;
+
 type EmployeeFormProps = {
     statuses: StatusOption[];
     employee?: EmployeeFull;
+    customFields?: CustomFieldDef[];
+    customFieldValues?: CustomFieldValues;
 };
 
 const GENDER_OPTIONS: StatusOption[] = [
@@ -27,12 +39,16 @@ const GENDER_OPTIONS: StatusOption[] = [
     { value: 'female', label: 'Perempuan' },
 ];
 
+const NONE = '__none__';
+
 /**
  * Shared create/edit form for an employee.
  */
 export default function EmployeeForm({
     statuses,
     employee,
+    customFields = [],
+    customFieldValues = {},
 }: EmployeeFormProps) {
     const formProps = employee
         ? employees.update.form(employee.id)
@@ -40,6 +56,28 @@ export default function EmployeeForm({
 
     const [gender, setGender] = useState(employee?.gender ?? '');
     const [status, setStatus] = useState(employee?.status ?? '');
+
+    const [customValues, setCustomValues] = useState<Record<string, string>>(
+        () =>
+            Object.fromEntries(
+                customFields.map((field) => {
+                    const raw = customFieldValues[field.key];
+                    const value =
+                        field.type === 'checkbox'
+                            ? raw === true || raw === 1 || raw === '1'
+                                ? '1'
+                                : '0'
+                            : raw === null || raw === undefined
+                              ? ''
+                              : String(raw);
+                    return [field.key, value];
+                }),
+            ),
+    );
+
+    function setCustom(key: string, value: string) {
+        setCustomValues((prev) => ({ ...prev, [key]: value }));
+    }
 
     return (
         <Form {...formProps} className="mx-auto w-full max-w-4xl">
@@ -244,6 +282,157 @@ export default function EmployeeForm({
                             />
                             <InputError message={errors.address} />
                         </div>
+
+                        {customFields.length > 0 && (
+                            <div className="grid gap-5 border-t pt-5 md:col-span-2 md:grid-cols-2">
+                                <div className="md:col-span-2">
+                                    <h3 className="text-sm font-semibold text-foreground">
+                                        Data Tambahan
+                                    </h3>
+                                    <p className="text-xs text-muted-foreground">
+                                        Field khusus yang dikonfigurasi untuk
+                                        perusahaan ini.
+                                    </p>
+                                </div>
+
+                                {customFields.map((field) => {
+                                    const name = `custom_fields[${field.key}]`;
+                                    const error =
+                                        errors[`custom_fields.${field.key}`];
+                                    const value = customValues[field.key] ?? '';
+
+                                    return (
+                                        <div
+                                            key={field.key}
+                                            className={
+                                                field.type === 'textarea'
+                                                    ? 'grid gap-2 md:col-span-2'
+                                                    : 'grid gap-2'
+                                            }
+                                        >
+                                            <Label htmlFor={`cf_${field.key}`}>
+                                                {field.label}{' '}
+                                                {field.is_required && (
+                                                    <RequiredMark />
+                                                )}
+                                            </Label>
+
+                                            {field.type === 'select' ? (
+                                                <>
+                                                    <input
+                                                        type="hidden"
+                                                        name={name}
+                                                        value={value}
+                                                    />
+                                                    <Select
+                                                        value={value || NONE}
+                                                        onValueChange={(v) =>
+                                                            setCustom(
+                                                                field.key,
+                                                                v === NONE
+                                                                    ? ''
+                                                                    : v,
+                                                            )
+                                                        }
+                                                    >
+                                                        <SelectTrigger
+                                                            id={`cf_${field.key}`}
+                                                            className="w-full"
+                                                        >
+                                                            <SelectValue placeholder="Pilih" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem
+                                                                value={NONE}
+                                                            >
+                                                                — kosong —
+                                                            </SelectItem>
+                                                            {(
+                                                                field.options ??
+                                                                []
+                                                            ).map((option) => (
+                                                                <SelectItem
+                                                                    key={option}
+                                                                    value={option}
+                                                                >
+                                                                    {option}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </>
+                                            ) : field.type === 'checkbox' ? (
+                                                <>
+                                                    <input
+                                                        type="hidden"
+                                                        name={name}
+                                                        value={value || '0'}
+                                                    />
+                                                    <label className="flex items-center gap-2 text-sm">
+                                                        <input
+                                                            id={`cf_${field.key}`}
+                                                            type="checkbox"
+                                                            checked={
+                                                                value === '1'
+                                                            }
+                                                            onChange={(e) =>
+                                                                setCustom(
+                                                                    field.key,
+                                                                    e.target
+                                                                        .checked
+                                                                        ? '1'
+                                                                        : '0',
+                                                                )
+                                                            }
+                                                            className="size-4 rounded border-input"
+                                                        />
+                                                        Ya
+                                                    </label>
+                                                </>
+                                            ) : field.type === 'textarea' ? (
+                                                <textarea
+                                                    id={`cf_${field.key}`}
+                                                    name={name}
+                                                    value={value}
+                                                    onChange={(e) =>
+                                                        setCustom(
+                                                            field.key,
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    rows={3}
+                                                    placeholder={field.label}
+                                                    className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                                                />
+                                            ) : (
+                                                <Input
+                                                    id={`cf_${field.key}`}
+                                                    name={name}
+                                                    type={
+                                                        field.type === 'number'
+                                                            ? 'number'
+                                                            : field.type ===
+                                                                'date'
+                                                              ? 'date'
+                                                              : 'text'
+                                                    }
+                                                    value={value}
+                                                    onChange={(e) =>
+                                                        setCustom(
+                                                            field.key,
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    placeholder={field.label}
+                                                />
+                                            )}
+
+                                            <InputError message={error} />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
                     </CardContent>
                     <CardFooter className="flex justify-end gap-3">
                         <Button asChild variant="outline" type="button">

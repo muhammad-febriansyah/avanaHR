@@ -21,7 +21,8 @@ class PositionFactory extends Factory
             'department_id' => Department::factory(),
             'job_level_id' => JobLevel::factory(),
             'job_grade_id' => JobGrade::factory(),
-            'code' => 'POS'.fake()->unique()->numberBetween(100, 999),
+            // Cap below 900 so codes never collide with POS900/POS901 test literals.
+            'code' => 'POS'.fake()->unique()->numberBetween(100, 899),
             'name' => fake()->jobTitle(),
         ];
     }

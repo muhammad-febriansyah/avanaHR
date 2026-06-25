@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import { Building2, ChevronRight, Network, Users } from 'lucide-react';
+import { Building2, Minus, Network, Plus, Users } from 'lucide-react';
 import { useState } from 'react';
 import PageHeader from '@/components/page-header';
 import { Card, CardContent } from '@/components/ui/card';
@@ -18,81 +18,77 @@ type StructureProps = {
     tree: OrgNode[];
 };
 
-function TreeNode({ node, depth }: { node: OrgNode; depth: number }) {
-    const [open, setOpen] = useState(depth < 1);
+function NodeBox({ node }: { node: OrgNode }) {
+    const [open, setOpen] = useState(true);
     const hasChildren = node.children.length > 0;
     const isCompany = node.type === 'company';
 
     return (
         <li>
-            <div
-                className="flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-muted/60"
-                style={{ paddingLeft: `${depth * 20 + 8}px` }}
-            >
-                <button
-                    type="button"
-                    onClick={() => hasChildren && setOpen((value) => !value)}
+            <div className="org-node">
+                <div
                     className={cn(
-                        'flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground',
-                        hasChildren
-                            ? 'hover:text-foreground'
-                            : 'invisible cursor-default',
-                    )}
-                    aria-label={open ? 'Tutup' : 'Buka'}
-                >
-                    <ChevronRight
-                        className={cn(
-                            'size-4 transition-transform',
-                            open && 'rotate-90',
-                        )}
-                    />
-                </button>
-
-                <span
-                    className={cn(
-                        'flex size-8 shrink-0 items-center justify-center rounded-lg',
-                        isCompany
-                            ? 'bg-[linear-gradient(135deg,#2F54C9,#6E9BE6)] text-white'
-                            : 'bg-primary/10 text-primary',
+                        'relative flex w-56 flex-col items-center gap-2 rounded-xl border bg-card px-4 py-4 text-center shadow-sm',
+                        isCompany ? 'border-primary/30' : 'border-border',
                     )}
                 >
-                    {isCompany ? (
-                        <Building2 className="size-[18px]" />
-                    ) : (
-                        <Network className="size-[18px]" />
-                    )}
-                </span>
-
-                <div className="min-w-0 flex-1">
-                    <p
+                    <span
                         className={cn(
-                            'truncate text-sm text-navy',
-                            isCompany ? 'font-semibold' : 'font-medium',
+                            'flex size-10 items-center justify-center rounded-lg',
+                            isCompany
+                                ? 'bg-[linear-gradient(135deg,#2F54C9,#6E9BE6)] text-white'
+                                : 'bg-primary/10 text-primary',
                         )}
                     >
-                        {node.name}
-                    </p>
-                    <p className="truncate text-xs text-muted-foreground">
-                        {node.code}
-                    </p>
-                </div>
-
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                    <Users className="size-3.5" />
-                    <span className="tabular-nums text-foreground">
-                        {node.headcount}
+                        {isCompany ? (
+                            <Building2 className="size-5" />
+                        ) : (
+                            <Network className="size-5" />
+                        )}
                     </span>
-                </span>
+
+                    <div className="min-w-0">
+                        <p
+                            className={cn(
+                                'truncate text-sm text-navy',
+                                isCompany ? 'font-semibold' : 'font-medium',
+                            )}
+                        >
+                            {node.name}
+                        </p>
+                        <p className="truncate text-xs text-muted-foreground">
+                            {node.code}
+                        </p>
+                    </div>
+
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/40 px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                        <Users className="size-3.5" />
+                        <span className="tabular-nums text-foreground">
+                            {node.headcount}
+                        </span>
+                    </span>
+
+                    {hasChildren && (
+                        <button
+                            type="button"
+                            onClick={() => setOpen((value) => !value)}
+                            aria-label={open ? 'Tutup' : 'Buka'}
+                            className="absolute -bottom-3 left-1/2 z-10 flex size-6 -translate-x-1/2 items-center justify-center rounded-full border bg-card text-muted-foreground shadow-sm transition-colors hover:text-foreground"
+                        >
+                            {open ? (
+                                <Minus className="size-3.5" />
+                            ) : (
+                                <Plus className="size-3.5" />
+                            )}
+                        </button>
+                    )}
+                </div>
             </div>
 
             {hasChildren && open && (
                 <ul>
                     {node.children.map((child) => (
-                        <TreeNode
-                            key={`${child.type}-${child.id}`}
-                            node={child}
-                            depth={depth + 1}
-                        />
+                        <NodeBox key={`${child.type}-${child.id}`} node={child} />
                     ))}
                 </ul>
             )}
@@ -104,6 +100,8 @@ export default function OrganizationStructure({ tree }: StructureProps) {
     return (
         <>
             <Head title="Struktur Organisasi" />
+
+            <style>{orgTreeCss}</style>
 
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <PageHeader
@@ -123,15 +121,16 @@ export default function OrganizationStructure({ tree }: StructureProps) {
                                 </p>
                             </div>
                         ) : (
-                            <ul>
-                                {tree.map((node) => (
-                                    <TreeNode
-                                        key={`${node.type}-${node.id}`}
-                                        node={node}
-                                        depth={0}
-                                    />
-                                ))}
-                            </ul>
+                            <div className="org-tree overflow-x-auto pb-4">
+                                <ul>
+                                    {tree.map((node) => (
+                                        <NodeBox
+                                            key={`${node.type}-${node.id}`}
+                                            node={node}
+                                        />
+                                    ))}
+                                </ul>
+                            </div>
                         )}
                     </CardContent>
                 </Card>
@@ -139,3 +138,66 @@ export default function OrganizationStructure({ tree }: StructureProps) {
         </>
     );
 }
+
+/**
+ * Classic CSS org-chart connectors: nested <ul>/<li> laid out horizontally,
+ * with pseudo-element lines joining each parent to its children.
+ */
+const orgTreeCss = `
+.org-tree { width: 100%; }
+.org-tree ul { display: flex; justify-content: center; padding-top: 24px; position: relative; }
+.org-tree li {
+    list-style: none;
+    position: relative;
+    padding: 24px 12px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* connectors from each child up to the horizontal bus */
+.org-tree li::before,
+.org-tree li::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 50%;
+    width: 50%;
+    height: 24px;
+    border-top: 2px solid var(--border);
+}
+.org-tree li::after {
+    right: auto;
+    left: 50%;
+    border-left: 2px solid var(--border);
+}
+.org-tree li::before {
+    border-right: 2px solid var(--border);
+}
+/* single child: straight line, no horizontal bus */
+.org-tree li:only-child::after,
+.org-tree li:only-child::before { display: none; }
+.org-tree li:only-child { padding-top: 24px; }
+/* trim the outer side of first/last child */
+.org-tree li:first-child::before,
+.org-tree li:last-child::after { border: 0 none; }
+.org-tree li:last-child::before {
+    border-right: 2px solid var(--border);
+    border-radius: 0 6px 0 0;
+}
+.org-tree li:first-child::after {
+    border-radius: 6px 0 0 0;
+}
+/* downward stub from a parent into its children bus */
+.org-tree ul ul::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 24px;
+    border-left: 2px solid var(--border);
+}
+.org-tree > ul { padding-top: 0; }
+.org-tree > ul > li::before,
+.org-tree > ul > li::after { display: none; }
+.org-node { position: relative; }
+`;
