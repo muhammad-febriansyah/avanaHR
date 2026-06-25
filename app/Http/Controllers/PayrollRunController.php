@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Payroll\ProcessPayrollRunAction;
 use App\Http\Requests\PayrollRun\StorePayrollRunRequest;
 use App\Http\Requests\PayrollRun\UpdatePayrollRunRequest;
 use App\Models\PayrollPeriod;
 use App\Models\PayrollRun;
+use App\Models\Payslip;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -93,6 +95,64 @@ class PayrollRunController extends Controller
         $payrollRun->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Proses payroll berhasil dihapus.']);
+
+        return back();
+    }
+
+    public function show(PayrollRun $payrollRun): Response
+    {
+        $this->authorize('view', $payrollRun);
+
+        $payrollRun->load('period');
+        $payslips = $payrollRun->payslips()
+            ->with('employee:id,first_name,last_name,employee_no')
+            ->orderBy('id')
+            ->get()
+            ->map(fn (Payslip $payslip): array => [
+                'id' => $payslip->id,
+                'employee_name' => $payslip->employee?->fullName(),
+                'employee_no' => $payslip->employee?->employee_no,
+                'gross' => $payslip->gross,
+                'deductions' => $payslip->deductions,
+                'tax' => $payslip->tax,
+                'bpjs_employee' => $payslip->bpjs_employee,
+                'net' => $payslip->net,
+            ]);
+
+        return Inertia::render('payroll-runs/show', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Proses Payroll', 'href' => route('payroll-runs.index')],
+                ['title' => $payrollRun->run_no, 'href' => route('payroll-runs.show', $payrollRun)],
+            ],
+            'run' => [
+                'id' => $payrollRun->id,
+                'run_no' => $payrollRun->run_no,
+                'status' => $payrollRun->status,
+                'period_code' => $payrollRun->period?->code,
+                'gross_total' => $payrollRun->gross_total,
+                'net_total' => $payrollRun->net_total,
+                'tax_total' => $payrollRun->tax_total,
+                'bpjs_total' => $payrollRun->bpjs_total,
+                'can_process' => $payrollRun->status === 'draft' || $payrollRun->status === 'calculated',
+            ],
+            'payslips' => $payslips,
+        ]);
+    }
+
+    public function process(PayrollRun $payrollRun, ProcessPayrollRunAction $action): RedirectResponse
+    {
+        $this->authorize('update', $payrollRun);
+
+        if (! in_array($payrollRun->status, ['draft', 'calculated'], true)) {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Proses payroll yang sudah final tidak bisa dihitung ulang.']);
+
+            return back();
+        }
+
+        $action->execute($payrollRun);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Payroll berhasil dihitung.']);
 
         return back();
     }

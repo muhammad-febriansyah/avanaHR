@@ -6,6 +6,7 @@ use App\Models\AuditLog;
 use App\Models\Backup;
 use App\Models\BenefitClaim;
 use App\Models\BenefitType;
+use App\Models\BpjsParameter;
 use App\Models\Branch;
 use App\Models\ClearanceItem;
 use App\Models\Company;
@@ -14,15 +15,19 @@ use App\Models\CustomField;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\EmployeeBenefit;
+use App\Models\EmployeeBpjsProfile;
 use App\Models\EmployeeDocument;
 use App\Models\EmployeeEmployment;
 use App\Models\EmployeeLifecycleEvent;
 use App\Models\EmployeeMovement;
+use App\Models\EmployeeSalaryComponent;
+use App\Models\EmployeeTaxProfile;
 use App\Models\Holiday;
 use App\Models\HrTicket;
 use App\Models\HrTicketMessage;
 use App\Models\JobGrade;
 use App\Models\JobLevel;
+use App\Models\PayrollComponent;
 use App\Models\Position;
 use App\Models\SecurityEvent;
 use App\Models\Tenant;
@@ -159,6 +164,7 @@ class DemoTenantSeeder extends Seeder
         $this->seedMovements($tid);
         $this->seedWorkVisits($tid);
         $this->seedBenefits($tid);
+        $this->seedPayrollInputs($tid);
 
         CustomField::create([
             'tenant_id' => $tid,
@@ -430,6 +436,76 @@ class DemoTenantSeeder extends Seeder
             'decided_at' => now()->subDays(14),
             'decision_note' => 'Disetujui.',
         ]);
+    }
+
+    /**
+     * Seed payroll inputs so a run can actually be calculated: components,
+     * BPJS parameters, and per-employee salary/tax/BPJS profiles, plus a draft
+     * period + run for the current month. PTKP statuses limited to TER cat. A.
+     */
+    private function seedPayrollInputs(int $tenantId): void
+    {
+        $employees = Employee::query()
+            ->where('tenant_id', $tenantId)
+            ->where('employee_no', '!=', 'ADM00001')
+            ->take(6)
+            ->get();
+
+        if ($employees->isEmpty()) {
+            return;
+        }
+
+        $basic = PayrollComponent::create([
+            'tenant_id' => $tenantId, 'code' => 'GAPOK', 'name' => 'Gaji Pokok',
+            'type' => 'earning', 'calc_type' => 'fixed', 'formula' => null,
+            'is_taxable' => true, 'is_bpjs_base' => true,
+        ]);
+        $transport = PayrollComponent::create([
+            'tenant_id' => $tenantId, 'code' => 'TRANS', 'name' => 'Tunjangan Transport',
+            'type' => 'earning', 'calc_type' => 'fixed', 'formula' => null,
+            'is_taxable' => true, 'is_bpjs_base' => false,
+        ]);
+        $meal = PayrollComponent::create([
+            'tenant_id' => $tenantId, 'code' => 'MAKAN', 'name' => 'Tunjangan Makan',
+            'type' => 'earning', 'calc_type' => 'fixed', 'formula' => null,
+            'is_taxable' => true, 'is_bpjs_base' => false,
+        ]);
+
+        $defaults = config('payroll.bpjs_defaults');
+        BpjsParameter::create([
+            'tenant_id' => $tenantId,
+            'effective_date' => '2024-01-01',
+            'kes_rate_employee' => $defaults['kes_rate_employee'],
+            'kes_rate_employer' => $defaults['kes_rate_employer'],
+            'kes_cap' => $defaults['kes_cap'],
+            'tk_rates' => $defaults['tk_rates'],
+        ]);
+
+        $ptkpCycle = ['TK/0', 'K/0', 'TK/1']; // semua kategori TER A
+        $basicCycle = [8_000_000, 12_000_000, 15_000_000, 9_500_000, 7_000_000, 20_000_000];
+
+        foreach ($employees as $index => $employee) {
+            $basicAmount = $basicCycle[$index % count($basicCycle)];
+            $effective = '2024-01-01';
+
+            EmployeeSalaryComponent::create(['tenant_id' => $tenantId, 'employee_id' => $employee->id, 'component_id' => $basic->id, 'effective_date' => $effective, 'amount' => $basicAmount, 'rate' => 0]);
+            EmployeeSalaryComponent::create(['tenant_id' => $tenantId, 'employee_id' => $employee->id, 'component_id' => $transport->id, 'effective_date' => $effective, 'amount' => 1_000_000, 'rate' => 0]);
+            EmployeeSalaryComponent::create(['tenant_id' => $tenantId, 'employee_id' => $employee->id, 'component_id' => $meal->id, 'effective_date' => $effective, 'amount' => 750_000, 'rate' => 0]);
+
+            EmployeeTaxProfile::create([
+                'tenant_id' => $tenantId, 'employee_id' => $employee->id, 'effective_date' => $effective,
+                'ptkp_status' => $ptkpCycle[$index % count($ptkpCycle)], 'npwp' => null,
+                'tax_method' => 'ter', 'beginning_ytd' => 0,
+            ]);
+
+            EmployeeBpjsProfile::create([
+                'tenant_id' => $tenantId, 'employee_id' => $employee->id, 'effective_date' => $effective,
+                'bpjs_kesehatan_no' => null, 'bpjs_tk_no' => null,
+                'kesehatan_basis' => $basicAmount, 'tk_basis' => $basicAmount,
+                'participation_flags' => ['kesehatan' => true, 'jht' => true, 'jkk' => true, 'jkm' => true, 'jp' => true],
+            ]);
+        }
+
     }
 
     /**

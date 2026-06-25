@@ -78,6 +78,11 @@ class Employee extends Model
         return $this->hasMany(EmployeeBpjsProfile::class);
     }
 
+    public function salaryComponents(): HasMany
+    {
+        return $this->hasMany(EmployeeSalaryComponent::class);
+    }
+
     public function documents(): HasMany
     {
         return $this->hasMany(EmployeeDocument::class);

@@ -37,7 +37,7 @@ _Terakhir diperbarui: 2026-06-25. Audit Playwright E2E + cross-check BRD v1.1 / 
 - [x] `PayrollRun::payslips()` pakai FK default `payroll_run_id` (kolom asli `run_id`). Fixed → `hasMany(Payslip::class, 'run_id')`.
 - [x] Test flaky (factory code GR/LV/CC/CMP/DEP/POS overlap literal test). Fixed → range factory di-cap di bawah literal. + `tests/Pest.php` reset CurrentTenant/permission cache global.
 
-Status test: **396/396 pass**.
+Status test: **415/415 pass**.
 
 ## ✅ Employee Movement Management — Slice 1 (2026-06-25)
 Menu "Mutasi & Movement" (sidebar grup Karyawan). Movement = transaksi aktif effective-dated (bukan ledger pasif kayak Lifecycle).
@@ -81,6 +81,18 @@ Menu "Mutasi & Movement" (sidebar grup Karyawan). Movement = transaksi aktif eff
 - **Klaim**: tambah klaim → decide approve/reject. **Sisa = quota − Σ klaim approved** (`remainingQuota()`). Approve **diblok kalau > sisa plafon** ('Klaim melebihi sisa plafon').
 - BenefitType ga bisa dihapus kalau dipakai. Reuse permission payroll.view/payroll.approve (admin+finance).
 - 13 test + Playwright E2E (buat jenis KES → tetapkan plafon Rp5jt ke Carla → klaim Rp1.5jt → Setujui → Sisa Rp3.5jt/30%, DB confirm). **396/396 total.**
+
+## ✅ Payroll Engine (PPh21 TER + BPJS + prorate) — 2026-06-25
+**Mesin hitung gaji** — sebelumnya PayrollRun cuma stub (bikin record, ga ngitung). Sekarang menghitung beneran.
+- **`ProcessPayrollRunAction`** (DB transaction, idempotent): per karyawan payrollable (punya komponen gaji, employed di periode) → earnings/deductions dari `employee_salary_components`, BPJS, PPh21 TER, prorate join/resign tengah bulan (hari kalender) → bikin `Payslip` + `payslip_lines` + total run, status draft→calculated.
+- **`BpjsCalculator`**: Kesehatan (cap basis) + JHT/JKK/JKM/JP, split karyawan vs perusahaan, dari `bpjs_parameters` (configurable, effective-dated) + `employee_bpjs_profiles`.
+- **`Pph21TerCalculator`**: PPh21 metode TER bulanan (PMK 168/2023), rate lookup dari `config/payroll.php`.
+- **⚠️ Angka TER/BPJS = config/seed ber-FLAG "PLACEHOLDER, wajib validasi regulasi"** (anti salah-angka-fatal). Kategori TER A terisi; B/C sengaja kosong (throw kalau dipakai) sampai diisi dari regulasi. Logika rumus benar; angka tarif data yang dikoreksi tanpa ubah kode.
+- UI: tombol **Hitung Payroll** + halaman run (4 kartu total + tabel payslip) + halaman payslip (lines). **Input UI**: assign komponen gaji per karyawan (`employees/{id}/salary`).
+- Seed demo: komponen GAPOK/TRANS/MAKAN, BpjsParameter 2024, 6 karyawan (gaji + PTKP kategori-A + profil BPJS).
+- **19 test** (unit math: BPJS split, cap, TER lookup, netto, prorate, idempotent, no-tax-profile + HTTP: process route, RBAC payroll.run, salary CRUD) + Playwright E2E (buat periode→run→Hitung Payroll → 6 payslip, Bruto Rp82jt, PPh21 Rp5.106.474, BPJS Rp9.125.407, Netto Rp74.312.257; payslip pertama net Rp9.202.453 = match unit test). **415/415 total.**
+- **3 asumsi butuh validasi akuntan:** metode TER (bukan gross-up); bruto-kena-pajak = gaji + BPJS-employer taxable (Kesehatan+JKK+JKM); prorate by hari kalender.
+- **Belum (next):** approval/lock run (draft→approved→paid + immutable), slip PDF, UI config BPJS param + PTKP/BPJS profil per karyawan (sekarang seed-only), TER kategori B/C, komponen percentage/formula (sekarang fixed amount).
 
 ---
 

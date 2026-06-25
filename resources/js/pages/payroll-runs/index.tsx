@@ -1,8 +1,9 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import {
     ChevronLeft,
     ChevronRight,
     Cog,
+    Eye,
     Pencil,
     Plus,
     Trash2,
@@ -303,6 +304,20 @@ export default function PayrollRunsIndex({
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="flex items-center justify-end gap-2">
+                                                        <Button
+                                                            asChild
+                                                            size="sm"
+                                                            variant="outline"
+                                                        >
+                                                            <Link
+                                                                href={payrollRuns.show.url(
+                                                                    item.id,
+                                                                )}
+                                                            >
+                                                                <Eye />
+                                                                Lihat
+                                                            </Link>
+                                                        </Button>
                                                         <Button
                                                             size="sm"
                                                             variant="outline"

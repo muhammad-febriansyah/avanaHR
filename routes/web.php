@@ -17,6 +17,7 @@ use App\Http\Controllers\EmployeeDocumentController;
 use App\Http\Controllers\EmployeeLifecycleEventController;
 use App\Http\Controllers\EmployeeLoanController;
 use App\Http\Controllers\EmployeeMovementController;
+use App\Http\Controllers\EmployeeSalaryComponentController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HrTicketController;
 use App\Http\Controllers\JobGradeController;
@@ -85,7 +86,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('payroll-periods', PayrollPeriodController::class)
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('payroll-runs', PayrollRunController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+        ->only(['index', 'store', 'show', 'update', 'destroy']);
+    Route::post('payroll-runs/{payrollRun}/process', [PayrollRunController::class, 'process'])
+        ->name('payroll-runs.process');
+    Route::get('employees/{employee}/salary', [EmployeeSalaryComponentController::class, 'index'])
+        ->name('employees.salary.index');
+    Route::post('employees/{employee}/salary', [EmployeeSalaryComponentController::class, 'store'])
+        ->name('employees.salary.store');
+    Route::patch('salary-components/{salaryComponent}', [EmployeeSalaryComponentController::class, 'update'])
+        ->name('employees.salary.update');
+    Route::delete('salary-components/{salaryComponent}', [EmployeeSalaryComponentController::class, 'destroy'])
+        ->name('employees.salary.destroy');
     Route::resource('payslips', PayslipController::class)
         ->only(['index', 'show']);
     Route::resource('bank-files', BankFileController::class)

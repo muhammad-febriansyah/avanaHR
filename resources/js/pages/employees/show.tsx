@@ -1,7 +1,8 @@
 import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, Pencil } from 'lucide-react';
+import { ArrowLeft, Pencil, Wallet } from 'lucide-react';
 import type { ReactNode } from 'react';
 import employees from '@/actions/App/Http/Controllers/EmployeeController';
+import salary from '@/actions/App/Http/Controllers/EmployeeSalaryComponentController';
 import PageHeader from '@/components/page-header';
 import StatusBadge from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
@@ -60,6 +61,12 @@ export default function EmployeesShow({ employee }: ShowProps) {
                         <Link href={employees.index.url()}>
                             <ArrowLeft />
                             Kembali
+                        </Link>
+                    </Button>
+                    <Button asChild variant="outline">
+                        <Link href={salary.index.url(employee.id)}>
+                            <Wallet />
+                            Komponen Gaji
                         </Link>
                     </Button>
                     <Button asChild variant="success">
