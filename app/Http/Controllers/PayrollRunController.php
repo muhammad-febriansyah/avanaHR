@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Actions\Payroll\ProcessPayrollRunAction;
 use App\Http\Requests\PayrollRun\StorePayrollRunRequest;
 use App\Http\Requests\PayrollRun\UpdatePayrollRunRequest;
+use App\Models\AuditLog;
+use App\Models\EmployeeMovement;
 use App\Models\PayrollPeriod;
 use App\Models\PayrollRun;
 use App\Models\Payslip;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -62,6 +65,13 @@ class PayrollRunController extends Controller
     {
         $data = $request->validated();
 
+        $period = PayrollPeriod::find($data['period_id']);
+        if ($period !== null && in_array($period->status->value, ['locked', 'disbursed'], true)) {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Periode sudah dikunci, tidak bisa membuat proses payroll baru.']);
+
+            return back();
+        }
+
         PayrollRun::create([
             ...$data,
             'run_no' => $this->nextRunNo($data['period_id']),
@@ -75,6 +85,12 @@ class PayrollRunController extends Controller
 
     public function update(UpdatePayrollRunRequest $request, PayrollRun $payrollRun): RedirectResponse
     {
+        if (! in_array($payrollRun->status, ['draft', 'calculated'], true)) {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Payroll yang sudah disetujui/dibayar tidak bisa diubah.']);
+
+            return back();
+        }
+
         $payrollRun->update($request->validated());
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Proses payroll berhasil diperbarui.']);
@@ -135,6 +151,9 @@ class PayrollRunController extends Controller
                 'tax_total' => $payrollRun->tax_total,
                 'bpjs_total' => $payrollRun->bpjs_total,
                 'can_process' => $payrollRun->status === 'draft' || $payrollRun->status === 'calculated',
+                'can_approve' => $payrollRun->status === 'calculated',
+                'can_revert' => $payrollRun->status === 'approved',
+                'can_pay' => $payrollRun->status === 'approved',
             ],
             'payslips' => $payslips,
         ]);
@@ -155,6 +174,121 @@ class PayrollRunController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Payroll berhasil dihitung.']);
 
         return back();
+    }
+
+    /**
+     * Approve (lock) a calculated run. Blocked while any employee in the run
+     * has a pending exit clearance (BRD: payroll final menunggu clearance).
+     */
+    public function approve(Request $request, PayrollRun $payrollRun): RedirectResponse
+    {
+        $this->authorize('approve', $payrollRun);
+
+        if ($payrollRun->status !== 'calculated') {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Hanya payroll berstatus calculated yang bisa disetujui.']);
+
+            return back();
+        }
+
+        $blocked = $this->employeesWithPendingClearance($payrollRun);
+        if ($blocked->isNotEmpty()) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => 'Clearance belum selesai untuk: '.$blocked->implode(', ').'. Selesaikan sebelum approve payroll.',
+            ]);
+
+            return back();
+        }
+
+        $this->transition($request, $payrollRun, 'approved', 'payroll.approved');
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Payroll disetujui dan dikunci.']);
+
+        return back();
+    }
+
+    /**
+     * Revert an approved (but unpaid) run back to calculated for re-processing.
+     */
+    public function revert(Request $request, PayrollRun $payrollRun): RedirectResponse
+    {
+        $this->authorize('approve', $payrollRun);
+
+        if ($payrollRun->status !== 'approved') {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Hanya payroll yang sudah disetujui yang bisa dibatalkan persetujuannya.']);
+
+            return back();
+        }
+
+        $this->transition($request, $payrollRun, 'calculated', 'payroll.reverted');
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Persetujuan dibatalkan, payroll kembali calculated.']);
+
+        return back();
+    }
+
+    /**
+     * Mark an approved run as paid (after bank disbursement). Final + immutable.
+     */
+    public function pay(Request $request, PayrollRun $payrollRun): RedirectResponse
+    {
+        $this->authorize('approve', $payrollRun);
+
+        if ($payrollRun->status !== 'approved') {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Hanya payroll yang sudah disetujui yang bisa ditandai dibayar.']);
+
+            return back();
+        }
+
+        $this->transition($request, $payrollRun, 'paid', 'payroll.paid');
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Payroll ditandai sudah dibayar.']);
+
+        return back();
+    }
+
+    /**
+     * Apply a status transition with an audit log entry.
+     */
+    private function transition(Request $request, PayrollRun $payrollRun, string $to, string $event): void
+    {
+        $from = $payrollRun->status;
+        $payrollRun->update(['status' => $to]);
+
+        AuditLog::create([
+            'tenant_id' => $payrollRun->tenant_id,
+            'user_id' => $request->user()->id,
+            'auditable_type' => PayrollRun::class,
+            'auditable_id' => $payrollRun->id,
+            'event' => $event,
+            'old_values' => ['status' => $from],
+            'new_values' => ['status' => $to],
+            'ip' => $request->ip(),
+            'user_agent' => (string) $request->userAgent(),
+        ]);
+    }
+
+    /**
+     * Names of employees in the run with an exit movement still awaiting clearance.
+     *
+     * @return Collection<int, string>
+     */
+    private function employeesWithPendingClearance(PayrollRun $payrollRun): Collection
+    {
+        $employeeIds = $payrollRun->payslips()->pluck('employee_id');
+
+        return EmployeeMovement::query()
+            ->with('employee:id,first_name,last_name')
+            ->whereIn('employee_id', $employeeIds)
+            ->whereIn('type', ['resign', 'terminate'])
+            ->whereIn('status', ['scheduled', 'applied']) // committed exits only, not drafts
+            ->where('requires_clearance', true)
+            ->get()
+            ->filter(fn (EmployeeMovement $movement): bool => $movement->hasPendingClearance())
+            ->map(fn (EmployeeMovement $movement): ?string => $movement->employee?->fullName())
+            ->filter()
+            ->unique()
+            ->values();
     }
 
     /**

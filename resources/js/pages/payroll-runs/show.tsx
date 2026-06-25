@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { ArrowLeft, Calculator, Eye } from 'lucide-react';
+import { ArrowLeft, Banknote, Calculator, Eye, Lock, RotateCcw } from 'lucide-react';
 import payslips from '@/actions/App/Http/Controllers/PayslipController';
 import payrollRuns from '@/actions/App/Http/Controllers/PayrollRunController';
 import ConfirmDialog from '@/components/confirm-dialog';
@@ -33,6 +33,9 @@ type Run = {
     tax_total: number;
     bpjs_total: number;
     can_process: boolean;
+    can_approve: boolean;
+    can_revert: boolean;
+    can_pay: boolean;
 };
 
 type Payslip = {
@@ -74,6 +77,30 @@ export default function PayrollRunsShow({
         );
     }
 
+    function approve() {
+        router.post(
+            payrollRuns.approve.url(run.id),
+            {},
+            { preserveScroll: true },
+        );
+    }
+
+    function revert() {
+        router.post(
+            payrollRuns.revert.url(run.id),
+            {},
+            { preserveScroll: true },
+        );
+    }
+
+    function pay() {
+        router.post(
+            payrollRuns.pay.url(run.id),
+            {},
+            { preserveScroll: true },
+        );
+    }
+
     const processLabel = run.status === 'calculated' ? 'Hitung Ulang' : 'Hitung Payroll';
 
     const summary: SummaryCard[] = [
@@ -108,6 +135,48 @@ export default function PayrollRunsShow({
                                 <Button>
                                     <Calculator />
                                     {processLabel}
+                                </Button>
+                            }
+                        />
+                    )}
+                    {run.can_approve && (
+                        <ConfirmDialog
+                            title="Setujui & Kunci"
+                            description="Setujui & kunci payroll ini? Setelah disetujui payroll tidak bisa dihitung ulang."
+                            confirmLabel="Setujui & Kunci"
+                            onConfirm={approve}
+                            trigger={
+                                <Button className="bg-emerald-600 text-white hover:bg-emerald-700">
+                                    <Lock />
+                                    Setujui & Kunci
+                                </Button>
+                            }
+                        />
+                    )}
+                    {run.can_revert && (
+                        <ConfirmDialog
+                            title="Batalkan Persetujuan"
+                            description="Batalkan persetujuan? Payroll kembali ke status calculated dan bisa dihitung ulang."
+                            confirmLabel="Batalkan Persetujuan"
+                            onConfirm={revert}
+                            trigger={
+                                <Button variant="outline">
+                                    <RotateCcw />
+                                    Batalkan Persetujuan
+                                </Button>
+                            }
+                        />
+                    )}
+                    {run.can_pay && (
+                        <ConfirmDialog
+                            title="Tandai Dibayar"
+                            description="Tandai payroll sudah dibayar? Status menjadi final."
+                            confirmLabel="Tandai Dibayar"
+                            onConfirm={pay}
+                            trigger={
+                                <Button className="bg-teal-600 text-white hover:bg-teal-700">
+                                    <Banknote />
+                                    Tandai Dibayar
                                 </Button>
                             }
                         />

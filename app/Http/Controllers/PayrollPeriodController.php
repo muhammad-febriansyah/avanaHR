@@ -8,6 +8,7 @@ use App\Http\Requests\PayrollPeriod\UpdatePayrollPeriodRequest;
 use App\Models\PayrollPeriod;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -32,6 +33,8 @@ class PayrollPeriodController extends Controller
                 'cutoff_date' => $period->cutoff_date?->format('Y-m-d'),
                 'pay_date' => $period->pay_date?->format('Y-m-d'),
                 'status' => $period->status->value,
+                'can_close' => $period->status === PayrollPeriodStatus::Draft,
+                'can_reopen' => $period->status === PayrollPeriodStatus::Locked,
                 'runs_count' => $period->runs_count,
             ]);
 
@@ -88,6 +91,40 @@ class PayrollPeriodController extends Controller
         $payrollPeriod->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Periode payroll berhasil dihapus.']);
+
+        return back();
+    }
+
+    public function close(Request $request, PayrollPeriod $payrollPeriod): RedirectResponse
+    {
+        abort_unless($request->user()->can('payroll.approve'), 403);
+
+        if ($payrollPeriod->status !== PayrollPeriodStatus::Draft) {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Hanya periode draft yang bisa dikunci.']);
+
+            return back();
+        }
+
+        $payrollPeriod->update(['status' => PayrollPeriodStatus::Locked]);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Periode dikunci.']);
+
+        return back();
+    }
+
+    public function reopen(Request $request, PayrollPeriod $payrollPeriod): RedirectResponse
+    {
+        abort_unless($request->user()->can('payroll.approve'), 403);
+
+        if ($payrollPeriod->status !== PayrollPeriodStatus::Locked) {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Hanya periode terkunci yang bisa dibuka.']);
+
+            return back();
+        }
+
+        $payrollPeriod->update(['status' => PayrollPeriodStatus::Draft]);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Periode dibuka kembali.']);
 
         return back();
     }

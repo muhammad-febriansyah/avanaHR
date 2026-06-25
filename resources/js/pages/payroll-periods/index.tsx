@@ -1,5 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { CalendarClock, Pencil, Plus, Trash2, X } from 'lucide-react';
+import { CalendarClock, Lock, LockOpen, Pencil, Plus, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import payrollPeriods from '@/actions/App/Http/Controllers/PayrollPeriodController';
@@ -44,6 +44,8 @@ type Period = {
     cutoff_date: string | null;
     pay_date: string | null;
     status: string;
+    can_close: boolean;
+    can_reopen: boolean;
     runs_count: number;
 };
 
@@ -149,6 +151,14 @@ export default function PayrollPeriodsIndex({
         router.delete(payrollPeriods.destroy.url(id), { preserveScroll: true });
     }
 
+    function handleClose(id: number) {
+        router.post(payrollPeriods.close.url(id), {}, { preserveScroll: true });
+    }
+
+    function handleReopen(id: number) {
+        router.post(payrollPeriods.reopen.url(id), {}, { preserveScroll: true });
+    }
+
     return (
         <>
             <Head title="Periode Payroll" />
@@ -229,6 +239,48 @@ export default function PayrollPeriodsIndex({
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="flex items-center justify-end gap-2">
+                                                        {item.can_close && (
+                                                            <ConfirmDialog
+                                                                title="Kunci Periode Payroll"
+                                                                description="Kunci periode ini? Tidak bisa membuat proses payroll baru di periode ini."
+                                                                confirmLabel="Kunci"
+                                                                onConfirm={() =>
+                                                                    handleClose(
+                                                                        item.id,
+                                                                    )
+                                                                }
+                                                                trigger={
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="outline"
+                                                                    >
+                                                                        <Lock />
+                                                                        Kunci
+                                                                    </Button>
+                                                                }
+                                                            />
+                                                        )}
+                                                        {item.can_reopen && (
+                                                            <ConfirmDialog
+                                                                title="Buka Periode Payroll"
+                                                                description="Buka kembali periode ini? Proses payroll baru dapat dibuat lagi."
+                                                                confirmLabel="Buka"
+                                                                onConfirm={() =>
+                                                                    handleReopen(
+                                                                        item.id,
+                                                                    )
+                                                                }
+                                                                trigger={
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="outline"
+                                                                    >
+                                                                        <LockOpen />
+                                                                        Buka
+                                                                    </Button>
+                                                                }
+                                                            />
+                                                        )}
                                                         <Button
                                                             size="sm"
                                                             variant="outline"

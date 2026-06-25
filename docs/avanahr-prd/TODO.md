@@ -37,7 +37,7 @@ _Terakhir diperbarui: 2026-06-25. Audit Playwright E2E + cross-check BRD v1.1 / 
 - [x] `PayrollRun::payslips()` pakai FK default `payroll_run_id` (kolom asli `run_id`). Fixed → `hasMany(Payslip::class, 'run_id')`.
 - [x] Test flaky (factory code GR/LV/CC/CMP/DEP/POS overlap literal test). Fixed → range factory di-cap di bawah literal. + `tests/Pest.php` reset CurrentTenant/permission cache global.
 
-Status test: **415/415 pass**.
+Status test: **428/428 pass**.
 
 ## ✅ Employee Movement Management — Slice 1 (2026-06-25)
 Menu "Mutasi & Movement" (sidebar grup Karyawan). Movement = transaksi aktif effective-dated (bukan ledger pasif kayak Lifecycle).
@@ -92,7 +92,16 @@ Menu "Mutasi & Movement" (sidebar grup Karyawan). Movement = transaksi aktif eff
 - Seed demo: komponen GAPOK/TRANS/MAKAN, BpjsParameter 2024, 6 karyawan (gaji + PTKP kategori-A + profil BPJS).
 - **19 test** (unit math: BPJS split, cap, TER lookup, netto, prorate, idempotent, no-tax-profile + HTTP: process route, RBAC payroll.run, salary CRUD) + Playwright E2E (buat periode→run→Hitung Payroll → 6 payslip, Bruto Rp82jt, PPh21 Rp5.106.474, BPJS Rp9.125.407, Netto Rp74.312.257; payslip pertama net Rp9.202.453 = match unit test). **415/415 total.**
 - **3 asumsi butuh validasi akuntan:** metode TER (bukan gross-up); bruto-kena-pajak = gaji + BPJS-employer taxable (Kesehatan+JKK+JKM); prorate by hari kalender.
-- **Belum (next):** approval/lock run (draft→approved→paid + immutable), slip PDF, UI config BPJS param + PTKP/BPJS profil per karyawan (sekarang seed-only), TER kategori B/C, komponen percentage/formula (sekarang fixed amount).
+- **Belum (next):** slip PDF, UI config BPJS param + PTKP/BPJS profil per karyawan (sekarang seed-only), TER kategori B/C, komponen percentage/formula (sekarang fixed amount).
+
+## ✅ Payroll Approval + Lock + Period Lock — 2026-06-25
+Bikin payroll **production-safe & immutable** (BRD: "payroll period terkunci = IMMUTABLE").
+- **Status flow run:** draft → calculated → **approved** (kunci) → **paid** (final). Tombol Setujui&Kunci / Batalkan Persetujuan / Tandai Dibayar di halaman run (gate `can_approve/revert/pay`). Permission `payroll.approve` (admin+finance).
+- **Immutable:** run approved/paid → `process()` + `update()` + `destroy()` diblok (ga bisa hitung ulang/ubah/hapus).
+- **Audit:** tiap transisi tulis `audit_logs` (event `payroll.approved`/`reverted`/`paid`, old/new status, ip/ua).
+- **Clearance gate (Movement Slice 4 — UNBLOCKED):** approve diblok kalau ada karyawan di run dgn exit movement **committed (scheduled/applied)** + clearance pending. Draft resign ga blok (rencana, bukan exit). BRD "payroll final menunggu clearance".
+- **Period lock:** `payroll-periods.close` (Draft→Locked) / `reopen` (Locked→Draft), permission payroll.approve. Periode Locked → **ga bisa bikin run baru** (guard di PayrollRunController.store). Tombol Kunci/Buka di halaman periode.
+- **13 test** (approve/revert/pay transisi, clearance gate block+allow, RBAC payroll.approve, immutability, audit, period close/reopen/guard) + Playwright E2E (run calculated → Setujui&Kunci → approved+audit → Tandai Dibayar → paid; audit trail confirmed). **428/428 total.**
 
 ---
 

@@ -31,4 +31,9 @@ class PayrollRunPolicy
     {
         return $user->can('payroll.run');
     }
+
+    public function approve(User $user, PayrollRun $payrollRun): bool
+    {
+        return $user->can('payroll.approve');
+    }
 }

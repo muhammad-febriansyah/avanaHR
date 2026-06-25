@@ -85,10 +85,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('payroll-periods', PayrollPeriodController::class)
         ->only(['index', 'store', 'update', 'destroy']);
+    Route::post('payroll-periods/{payrollPeriod}/close', [PayrollPeriodController::class, 'close'])
+        ->name('payroll-periods.close');
+    Route::post('payroll-periods/{payrollPeriod}/reopen', [PayrollPeriodController::class, 'reopen'])
+        ->name('payroll-periods.reopen');
     Route::resource('payroll-runs', PayrollRunController::class)
         ->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::post('payroll-runs/{payrollRun}/process', [PayrollRunController::class, 'process'])
         ->name('payroll-runs.process');
+    Route::post('payroll-runs/{payrollRun}/approve', [PayrollRunController::class, 'approve'])
+        ->name('payroll-runs.approve');
+    Route::post('payroll-runs/{payrollRun}/revert', [PayrollRunController::class, 'revert'])
+        ->name('payroll-runs.revert');
+    Route::post('payroll-runs/{payrollRun}/pay', [PayrollRunController::class, 'pay'])
+        ->name('payroll-runs.pay');
     Route::get('employees/{employee}/salary', [EmployeeSalaryComponentController::class, 'index'])
         ->name('employees.salary.index');
     Route::post('employees/{employee}/salary', [EmployeeSalaryComponentController::class, 'store'])
