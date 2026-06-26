@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Platform;
 
+use App\Actions\Platform\CreatePlatformBackupAction;
 use App\Http\Controllers\Controller;
+use App\Jobs\RestorePlatformBackup;
 use App\Models\Backup;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class BackupController extends Controller
 {
@@ -22,6 +25,8 @@ class BackupController extends Controller
                 'type' => $backup->type,
                 'status' => $backup->status,
                 'location' => $backup->location,
+                'size_bytes' => $backup->size_bytes,
+                'error' => $backup->error,
                 'tenant_name' => $backup->tenant?->name,
                 'created_at' => $backup->created_at?->format('Y-m-d H:i'),
             ]);
@@ -35,34 +40,46 @@ class BackupController extends Controller
         ]);
     }
 
-    public function store(): RedirectResponse
+    public function store(CreatePlatformBackupAction $action): RedirectResponse
     {
-        $stamp = Carbon::now()->format('Ymd-His');
+        $backup = $action->execute();
 
-        Backup::create([
-            'tenant_id' => null,
-            'type' => 'full',
-            'status' => 'completed',
-            'location' => "backups/platform-{$stamp}.zip",
+        $message = $backup->status === 'completed'
+            ? 'Backup database berhasil dibuat.'
+            : 'Backup gagal: '.$backup->error;
+
+        Inertia::flash('toast', [
+            'type' => $backup->status === 'completed' ? 'success' : 'error',
+            'message' => $message,
         ]);
-
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Backup penuh berhasil dibuat.']);
 
         return back();
     }
 
+    /**
+     * Download the backup file so it can be archived or restored manually.
+     */
+    public function download(Backup $backup): BinaryFileResponse
+    {
+        abort_unless($backup->status === 'completed' && Storage::disk('local')->exists($backup->location), 404);
+
+        return response()->download(Storage::disk('local')->path($backup->location));
+    }
+
     public function restore(Backup $backup): RedirectResponse
     {
-        if ($backup->status !== 'completed') {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Hanya backup selesai yang dapat dipulihkan.']);
+        if ($backup->status !== 'completed' || ! Storage::disk('local')->exists($backup->location)) {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Berkas backup tidak ditemukan atau belum selesai.']);
 
             return back();
         }
 
-        // Real restore runs as an async job; here we just acknowledge the request.
+        // Restore is destructive + slow → run off the request via a queued job.
+        RestorePlatformBackup::dispatch($backup->id);
+
         Inertia::flash('toast', [
             'type' => 'info',
-            'message' => "Pemulihan dari backup #{$backup->id} dijadwalkan.",
+            'message' => "Pemulihan dari backup #{$backup->id} dijadwalkan (berjalan di latar belakang).",
         ]);
 
         return back();

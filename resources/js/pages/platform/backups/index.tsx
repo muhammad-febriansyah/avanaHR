@@ -3,6 +3,7 @@ import {
     ChevronLeft,
     ChevronRight,
     DatabaseBackup,
+    Download,
     Plus,
     RotateCcw,
 } from 'lucide-react';
@@ -28,6 +29,8 @@ type BackupRow = {
     type: string;
     status: string;
     location: string | null;
+    size_bytes: number | null;
+    error: string | null;
     tenant_name: string | null;
     created_at: string | null;
 };
@@ -161,23 +164,40 @@ export default function BackupsIndex({ backups: paginator }: IndexProps) {
                                                 <TableCell className="text-right">
                                                     {row.status ===
                                                     'completed' ? (
-                                                        <ConfirmDialog
-                                                            title="Pulihkan Backup"
-                                                            description={`Yakin pulihkan data dari backup #${row.id}? Tindakan ini menimpa data saat ini.`}
-                                                            confirmLabel="Pulihkan"
-                                                            onConfirm={() =>
-                                                                restore(row.id)
-                                                            }
-                                                            trigger={
+                                                        <div className="flex justify-end gap-2">
+                                                            <a
+                                                                href={backups.download.url(
+                                                                    row.id,
+                                                                )}
+                                                            >
                                                                 <Button
                                                                     size="sm"
-                                                                    variant="secondary"
+                                                                    variant="outline"
                                                                 >
-                                                                    <RotateCcw />
-                                                                    Pulihkan
+                                                                    <Download />
+                                                                    Unduh
                                                                 </Button>
-                                                            }
-                                                        />
+                                                            </a>
+                                                            <ConfirmDialog
+                                                                title="Pulihkan Backup"
+                                                                description={`Yakin pulihkan data dari backup #${row.id}? Tindakan ini menimpa data saat ini.`}
+                                                                confirmLabel="Pulihkan"
+                                                                onConfirm={() =>
+                                                                    restore(
+                                                                        row.id,
+                                                                    )
+                                                                }
+                                                                trigger={
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="secondary"
+                                                                    >
+                                                                        <RotateCcw />
+                                                                        Pulihkan
+                                                                    </Button>
+                                                                }
+                                                            />
+                                                        </div>
                                                     ) : (
                                                         <span className="text-xs text-muted-foreground">
                                                             -

@@ -27,10 +27,16 @@ class EmployeeController extends Controller
     {
         $this->authorize('viewAny', Employee::class);
 
+        $employees = $this->employees->paginateForIndex(
+            $request->only('search', 'status', 'sort', 'dir', 'per_page'),
+        );
+
+        if (! $request->user()->can('employee.view_sensitive')) {
+            $employees->getCollection()->transform(fn (Employee $e): Employee => $e->maskSensitiveAttributes());
+        }
+
         return Inertia::render('employees/index', [
-            'employees' => $this->employees->paginateForIndex(
-                $request->only('search', 'status', 'sort', 'dir', 'per_page'),
-            ),
+            'employees' => $employees,
             'filters' => (object) $request->only('search', 'status', 'sort', 'dir', 'per_page'),
             'statuses' => $this->statusOptions(),
             'stats' => (object) $this->employees->statusCounts(),
@@ -62,8 +68,14 @@ class EmployeeController extends Controller
     {
         $this->authorize('view', $employee);
 
+        $detail = $this->employees->loadDetail($employee);
+
+        if (! request()->user()->can('employee.view_sensitive')) {
+            $detail->maskSensitiveAttributes();
+        }
+
         return Inertia::render('employees/show', [
-            'employee' => $this->employees->loadDetail($employee),
+            'employee' => $detail,
             'breadcrumbs' => [...$this->baseCrumbs(), ['title' => $employee->fullName(), 'href' => route('employees.show', $employee)]],
         ]);
     }

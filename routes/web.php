@@ -282,6 +282,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->name('subscriptions.index');
             Route::get('backups', [BackupController::class, 'index'])->name('backups.index');
             Route::post('backups', [BackupController::class, 'store'])->name('backups.store');
+            Route::get('backups/{backup}/download', [BackupController::class, 'download'])
+                ->name('backups.download');
             Route::post('backups/{backup}/restore', [BackupController::class, 'restore'])
                 ->name('backups.restore');
         });

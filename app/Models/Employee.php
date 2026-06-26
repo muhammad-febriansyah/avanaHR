@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\EmployeeStatus;
 use App\Models\Concerns\BelongsToTenant;
+use App\Support\SensitiveData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -30,6 +31,24 @@ class Employee extends Model
     public function fullName(): string
     {
         return trim($this->first_name.' '.$this->last_name);
+    }
+
+    /**
+     * Mask sensitive identifiers (NIK, NPWP, bank account) in place — used when
+     * serialising for a user without the employee.view_sensitive permission.
+     */
+    public function maskSensitiveAttributes(): static
+    {
+        $this->nik_ktp = SensitiveData::mask($this->nik_ktp);
+        $this->npwp = SensitiveData::mask($this->npwp);
+
+        if ($this->relationLoaded('bankAccounts')) {
+            $this->bankAccounts->each(function (EmployeeBankAccount $account): void {
+                $account->account_no = SensitiveData::mask($account->account_no);
+            });
+        }
+
+        return $this;
     }
 
     public function employments(): HasMany
