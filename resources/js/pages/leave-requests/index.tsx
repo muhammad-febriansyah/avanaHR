@@ -1,7 +1,6 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import {
     CalendarRange,
-    Check,
     ChevronLeft,
     ChevronRight,
     Pencil,
@@ -204,14 +203,6 @@ export default function LeaveRequestsIndex({
         router.delete(leaveRequests.destroy.url(id), { preserveScroll: true });
     }
 
-    function decide(id: number, decision: 'approved' | 'rejected') {
-        router.patch(
-            leaveRequests.decide.url(id),
-            { status: decision },
-            { preserveScroll: true },
-        );
-    }
-
     const previewDays = dayCount(form.data.start_date, form.data.end_date);
     const rows = paginator.data;
 
@@ -222,7 +213,7 @@ export default function LeaveRequestsIndex({
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <PageHeader
                     title="Pengajuan Cuti"
-                    description="Kelola dan setujui pengajuan cuti karyawan."
+                    description="Kelola pengajuan cuti karyawan. Persetujuan dilakukan via Inbox Approval."
                 >
                     <Button onClick={openCreate}>
                         <Plus />
@@ -375,48 +366,18 @@ export default function LeaveRequestsIndex({
                                                     <div className="flex items-center justify-end gap-2">
                                                         {item.status ===
                                                         'pending' ? (
-                                                            <>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    className="text-emerald-700 hover:text-emerald-700 dark:text-emerald-400"
-                                                                    onClick={() =>
-                                                                        decide(
-                                                                            item.id,
-                                                                            'approved',
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <Check />
-                                                                    Setujui
-                                                                </Button>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    className="text-red-700 hover:text-red-700 dark:text-red-400"
-                                                                    onClick={() =>
-                                                                        decide(
-                                                                            item.id,
-                                                                            'rejected',
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <X />
-                                                                    Tolak
-                                                                </Button>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    onClick={() =>
-                                                                        openEdit(
-                                                                            item,
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <Pencil />
-                                                                    Edit
-                                                                </Button>
-                                                            </>
+                                                            <Button
+                                                                size="sm"
+                                                                variant="outline"
+                                                                onClick={() =>
+                                                                    openEdit(
+                                                                        item,
+                                                                    )
+                                                                }
+                                                            >
+                                                                <Pencil />
+                                                                Edit
+                                                            </Button>
                                                         ) : null}
                                                         <ConfirmDialog
                                                             title="Hapus Pengajuan Cuti"

@@ -1,6 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import {
-    Check,
     ChevronLeft,
     ChevronRight,
     Clock,
@@ -196,14 +195,6 @@ export default function OvertimeRequestsIndex({
         });
     }
 
-    function decide(id: number, decision: 'approved' | 'rejected') {
-        router.patch(
-            overtimeRequests.decide.url(id),
-            { status: decision },
-            { preserveScroll: true },
-        );
-    }
-
     const rows = paginator.data;
 
     return (
@@ -213,7 +204,7 @@ export default function OvertimeRequestsIndex({
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <PageHeader
                     title="Lembur"
-                    description="Kelola pengajuan dan persetujuan lembur karyawan."
+                    description="Ajukan lembur karyawan. Persetujuan diproses lewat Inbox Approval."
                 >
                     <Button onClick={openCreate}>
                         <Plus />
@@ -336,48 +327,18 @@ export default function OvertimeRequestsIndex({
                                                     <div className="flex items-center justify-end gap-2">
                                                         {item.status ===
                                                         'pending' ? (
-                                                            <>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    className="text-emerald-700 hover:text-emerald-700 dark:text-emerald-400"
-                                                                    onClick={() =>
-                                                                        decide(
-                                                                            item.id,
-                                                                            'approved',
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <Check />
-                                                                    Setujui
-                                                                </Button>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    className="text-red-700 hover:text-red-700 dark:text-red-400"
-                                                                    onClick={() =>
-                                                                        decide(
-                                                                            item.id,
-                                                                            'rejected',
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <X />
-                                                                    Tolak
-                                                                </Button>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    onClick={() =>
-                                                                        openEdit(
-                                                                            item,
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <Pencil />
-                                                                    Edit
-                                                                </Button>
-                                                            </>
+                                                            <Button
+                                                                size="sm"
+                                                                variant="outline"
+                                                                onClick={() =>
+                                                                    openEdit(
+                                                                        item,
+                                                                    )
+                                                                }
+                                                            >
+                                                                <Pencil />
+                                                                Edit
+                                                            </Button>
                                                         ) : null}
                                                         <ConfirmDialog
                                                             title="Hapus Pengajuan Lembur"

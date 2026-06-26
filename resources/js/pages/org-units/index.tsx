@@ -41,6 +41,8 @@ type Department = {
     name: string;
     parent_id: number | null;
     parent_name: string | null;
+    head_employee_id: number | null;
+    head_name: string | null;
     positions_count: number;
 };
 
@@ -61,6 +63,7 @@ type IndexProps = {
     positions: Position[];
     options: {
         departments: Option[];
+        employees: Option[];
         jobLevels: Option[];
         jobGrades: Option[];
     };
@@ -68,7 +71,12 @@ type IndexProps = {
 
 const NONE = 'none';
 
-type DepartmentForm = { code: string; name: string; parent_id: string };
+type DepartmentForm = {
+    code: string;
+    name: string;
+    parent_id: string;
+    head_employee_id: string;
+};
 type PositionForm = {
     code: string;
     name: string;
@@ -77,7 +85,12 @@ type PositionForm = {
     job_grade_id: string;
 };
 
-const emptyDepartment: DepartmentForm = { code: '', name: '', parent_id: NONE };
+const emptyDepartment: DepartmentForm = {
+    code: '',
+    name: '',
+    parent_id: NONE,
+    head_employee_id: NONE,
+};
 const emptyPosition: PositionForm = {
     code: '',
     name: '',
@@ -138,6 +151,7 @@ function DepartmentSection({
             code: item.code,
             name: item.name,
             parent_id: item.parent_id?.toString() ?? NONE,
+            head_employee_id: item.head_employee_id?.toString() ?? NONE,
         });
         setOpen(true);
     }
@@ -149,6 +163,7 @@ function DepartmentSection({
             code: form.data.code,
             name: form.data.name,
             parent_id: toId(form.data.parent_id),
+            head_employee_id: toId(form.data.head_employee_id),
         }));
 
         const opts = { preserveScroll: true, onSuccess: () => setOpen(false) };
@@ -187,6 +202,7 @@ function DepartmentSection({
                                 <TableHead>Kode</TableHead>
                                 <TableHead>Nama</TableHead>
                                 <TableHead>Induk</TableHead>
+                                <TableHead>Kepala</TableHead>
                                 <TableHead>Posisi</TableHead>
                                 <TableHead className="text-right">Aksi</TableHead>
                             </TableRow>
@@ -194,7 +210,7 @@ function DepartmentSection({
                         <TableBody>
                             {rows.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="py-12">
+                                    <TableCell colSpan={6} className="py-12">
                                         <EmptyState
                                             icon={
                                                 <Network className="size-6" />
@@ -212,6 +228,9 @@ function DepartmentSection({
                                         <TableCell>{item.name}</TableCell>
                                         <TableCell>
                                             {item.parent_name ?? '-'}
+                                        </TableCell>
+                                        <TableCell>
+                                            {item.head_name ?? '-'}
                                         </TableCell>
                                         <TableCell>
                                             {item.positions_count}
@@ -297,6 +316,16 @@ function DepartmentSection({
                                 </p>
                             )}
                         </div>
+                        <OptionalSelect
+                            id="dept-head"
+                            label="Kepala"
+                            value={form.data.head_employee_id}
+                            onChange={(value) =>
+                                form.setData('head_employee_id', value)
+                            }
+                            options={options.employees}
+                            error={form.errors.head_employee_id}
+                        />
                     </form>
 
                     <DialogFooter>

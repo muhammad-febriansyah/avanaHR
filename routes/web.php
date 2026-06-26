@@ -1,11 +1,15 @@
 <?php
 
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\ApprovalController;
+use App\Http\Controllers\ApprovalDelegationController;
 use App\Http\Controllers\ApprovalFlowController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceCorrectionController;
 use App\Http\Controllers\BankFileController;
 use App\Http\Controllers\BenefitTypeController;
+use App\Http\Controllers\BpjsParameterController;
+use App\Http\Controllers\BrandingController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ComplianceReportController;
 use App\Http\Controllers\CostCenterController;
@@ -14,10 +18,12 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeBenefitController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeDocumentController;
+use App\Http\Controllers\EmployeeHistoryController;
 use App\Http\Controllers\EmployeeLifecycleEventController;
 use App\Http\Controllers\EmployeeLoanController;
 use App\Http\Controllers\EmployeeMovementController;
 use App\Http\Controllers\EmployeeSalaryComponentController;
+use App\Http\Controllers\EmployeeTaxBpjsController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HrTicketController;
 use App\Http\Controllers\JobGradeController;
@@ -67,14 +73,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('organization/structure', [OrganizationController::class, 'structure'])
         ->name('organization.structure');
+    Route::patch('organization/departments/{department}/reparent', [OrganizationController::class, 'reparent'])
+        ->name('organization.departments.reparent');
     Route::resource('leave-types', LeaveTypeController::class)
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('leave-balances', LeaveBalanceController::class)
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('leave-requests', LeaveRequestController::class)
         ->only(['index', 'store', 'update', 'destroy']);
-    Route::patch('leave-requests/{leaveRequest}/decide', [LeaveRequestController::class, 'decide'])
-        ->name('leave-requests.decide');
     Route::resource('departments', DepartmentController::class)
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('positions', PositionController::class)
@@ -99,6 +105,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('payroll-runs.revert');
     Route::post('payroll-runs/{payrollRun}/pay', [PayrollRunController::class, 'pay'])
         ->name('payroll-runs.pay');
+    Route::get('employees/{employee}/history', [EmployeeHistoryController::class, 'index'])
+        ->name('employees.history');
+    Route::get('employees/{employee}/tax-bpjs', [EmployeeTaxBpjsController::class, 'index'])
+        ->name('employees.tax-bpjs.index');
+    Route::post('employees/{employee}/tax-profiles', [EmployeeTaxBpjsController::class, 'storeTax'])
+        ->name('employees.tax-profiles.store');
+    Route::delete('tax-profiles/{taxProfile}', [EmployeeTaxBpjsController::class, 'destroyTax'])
+        ->name('employees.tax-profiles.destroy');
+    Route::post('employees/{employee}/bpjs-profiles', [EmployeeTaxBpjsController::class, 'storeBpjs'])
+        ->name('employees.bpjs-profiles.store');
+    Route::delete('bpjs-profiles/{bpjsProfile}', [EmployeeTaxBpjsController::class, 'destroyBpjs'])
+        ->name('employees.bpjs-profiles.destroy');
     Route::get('employees/{employee}/salary', [EmployeeSalaryComponentController::class, 'index'])
         ->name('employees.salary.index');
     Route::post('employees/{employee}/salary', [EmployeeSalaryComponentController::class, 'store'])
@@ -109,16 +127,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('employees.salary.destroy');
     Route::resource('payslips', PayslipController::class)
         ->only(['index', 'show']);
+    Route::get('payslips/{payslip}/print', [PayslipController::class, 'print'])
+        ->name('payslips.print');
     Route::resource('bank-files', BankFileController::class)
+        ->only(['index', 'store', 'destroy']);
+    Route::resource('bpjs-parameters', BpjsParameterController::class)
         ->only(['index', 'store', 'destroy']);
     Route::resource('reimbursements', ReimbursementController::class)
         ->only(['index', 'store', 'update', 'destroy']);
-    Route::patch('reimbursements/{reimbursement}/decide', [ReimbursementController::class, 'decide'])
-        ->name('reimbursements.decide');
     Route::resource('employee-loans', EmployeeLoanController::class)
         ->only(['index', 'store', 'update', 'destroy']);
-    Route::patch('employee-loans/{employeeLoan}/decide', [EmployeeLoanController::class, 'decide'])
-        ->name('employee-loans.decide');
     Route::resource('thr-bonus-runs', ThrBonusRunController::class)
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('work-calendars', WorkCalendarController::class)
@@ -133,15 +151,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->only(['index', 'create', 'store', 'show', 'destroy']);
     Route::post('employee-benefits/{employeeBenefit}/claims', [EmployeeBenefitController::class, 'storeClaim'])
         ->name('employee-benefits.claims.store');
-    Route::patch('benefit-claims/{benefitClaim}/decide', [EmployeeBenefitController::class, 'decideClaim'])
-        ->name('employee-benefits.claims.decide');
     Route::delete('benefit-claims/{benefitClaim}', [EmployeeBenefitController::class, 'destroyClaim'])
         ->name('employee-benefits.claims.destroy');
 
     Route::resource('work-visits', WorkVisitController::class)
         ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
-    Route::patch('work-visits/{workVisit}/decide', [WorkVisitController::class, 'decide'])
-        ->name('work-visits.decide');
     Route::post('work-visits/{workVisit}/reports', [WorkVisitController::class, 'storeReport'])
         ->name('work-visits.reports.store');
     Route::delete('work-visits/{workVisit}/reports/{report}', [WorkVisitController::class, 'destroyReport'])
@@ -149,8 +163,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('overtime-requests', OvertimeRequestController::class)
         ->only(['index', 'store', 'update', 'destroy']);
-    Route::patch('overtime-requests/{overtimeRequest}/decide', [OvertimeRequestController::class, 'decide'])
-        ->name('overtime-requests.decide');
 
     Route::resource('employee-documents', EmployeeDocumentController::class)
         ->only(['index', 'store', 'update', 'destroy']);
@@ -166,10 +178,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('movements.unschedule');
     Route::patch('clearance-items/{clearanceItem}', [EmployeeMovementController::class, 'updateClearance'])
         ->name('movements.clearance.update');
+    // Approver inbox (generic approval engine runtime).
+    Route::get('approvals', [ApprovalController::class, 'index'])->name('approvals.index');
+    Route::get('approvals/{approvalRequest}', [ApprovalController::class, 'show'])->name('approvals.show');
+    Route::post('approvals/{approvalRequest}/act', [ApprovalController::class, 'act'])->name('approvals.act');
+
+    // Self-service approval delegation.
+    Route::get('approval-delegations', [ApprovalDelegationController::class, 'index'])
+        ->name('approval-delegations.index');
+    Route::post('approval-delegations', [ApprovalDelegationController::class, 'store'])
+        ->name('approval-delegations.store');
+    Route::delete('approval-delegations/{approvalDelegation}', [ApprovalDelegationController::class, 'destroy'])
+        ->name('approval-delegations.destroy');
+
     Route::resource('approval-flows', ApprovalFlowController::class)
         ->only(['index', 'store', 'show', 'update', 'destroy']);
+    Route::patch('approval-flows/{approvalFlow}/conditions', [ApprovalFlowController::class, 'updateConditions'])
+        ->name('approval-flows.conditions');
     Route::resource('custom-fields', CustomFieldController::class)
         ->only(['index', 'store', 'update', 'destroy']);
+    Route::get('branding', [BrandingController::class, 'edit'])->name('branding.edit');
+    Route::post('branding', [BrandingController::class, 'update'])->name('branding.update');
     Route::get('security-settings', [SecuritySettingController::class, 'edit'])
         ->name('security-settings.edit');
     Route::put('security-settings', [SecuritySettingController::class, 'update'])
@@ -203,8 +232,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('attendance-corrections', [AttendanceCorrectionController::class, 'index'])
         ->name('attendance-corrections.index');
-    Route::patch('attendance-corrections/{attendanceCorrection}/decide', [AttendanceCorrectionController::class, 'decide'])
-        ->name('attendance-corrections.decide');
     Route::resource('timesheets', TimesheetController::class)
         ->only(['index', 'store', 'update', 'destroy']);
 

@@ -1,6 +1,9 @@
 <?php
 
+use App\Approvals\ApprovalEngine;
+use App\Enums\ApprovalActionType;
 use App\Enums\RequestStatus;
+use App\Models\ApprovalFlow;
 use App\Models\Employee;
 use App\Models\LeaveBalance;
 use App\Models\LeaveRequest;
@@ -23,6 +26,9 @@ beforeEach(function () {
     $this->admin = User::where('email', 'admin@avanahr.id')->firstOrFail();
     $this->employee = Employee::firstOrFail();
     $this->leaveType = LeaveType::factory()->create(['allow_negative' => false]);
+    $this->manager = User::query()
+        ->whereHas('roles', fn ($q) => $q->where('name', 'manager'))
+        ->firstOrFail();
 });
 
 function leavePayload(array $overrides = []): array
@@ -49,7 +55,7 @@ it('renders the leave requests index', function () {
         );
 });
 
-it('creates a request and computes inclusive days', function () {
+it('creates a pending request routed to approval and computes inclusive days', function () {
     $this->actingAs($this->admin)
         ->post(route('leave-requests.store'), leavePayload())
         ->assertRedirect();
@@ -58,6 +64,12 @@ it('creates a request and computes inclusive days', function () {
 
     expect((float) $leave->days)->toBe(3.0);
     expect($leave->status)->toBe(RequestStatus::Pending);
+
+    $this->assertDatabaseHas('approval_requests', [
+        'approvable_type' => $leave->getMorphClass(),
+        'approvable_id' => $leave->id,
+        'status' => 'pending',
+    ]);
 });
 
 it('rejects an end date before the start date', function () {
@@ -86,7 +98,7 @@ it('blocks a request that exceeds the available balance', function () {
         ->assertSessionHasErrors('end_date');
 });
 
-it('deducts the balance when approved', function () {
+it('deducts the balance when approved through the engine', function () {
     $balance = LeaveBalance::create([
         'employee_id' => $this->employee->id,
         'leave_type_id' => $this->leaveType->id,
@@ -99,16 +111,22 @@ it('deducts the balance when approved', function () {
     ]);
     $leave = LeaveRequest::create(leavePayload(['days' => 3, 'status' => RequestStatus::Pending]));
 
-    $this->actingAs($this->admin)
-        ->patch(route('leave-requests.decide', $leave), ['status' => 'approved'])
-        ->assertRedirect();
+    $engine = app(ApprovalEngine::class);
+    $request = $engine->submit($leave, $this->admin);
+
+    expect($request)->not->toBeNull();
+    expect($leave->fresh()->status)->toBe(RequestStatus::Pending);
+
+    $engine->act($request, $this->manager, ApprovalActionType::Approve);
+
+    expect($leave->fresh()->status)->toBe(RequestStatus::Approved);
 
     $balance->refresh();
     expect((float) $balance->used)->toBe(3.0);
     expect((float) $balance->available)->toBe(9.0);
 });
 
-it('does not touch the balance when rejected', function () {
+it('does not touch the balance when rejected through the engine', function () {
     $balance = LeaveBalance::create([
         'employee_id' => $this->employee->id,
         'leave_type_id' => $this->leaveType->id,
@@ -121,24 +139,39 @@ it('does not touch the balance when rejected', function () {
     ]);
     $leave = LeaveRequest::create(leavePayload(['days' => 3, 'status' => RequestStatus::Pending]));
 
-    $this->actingAs($this->admin)
-        ->patch(route('leave-requests.decide', $leave), ['status' => 'rejected'])
-        ->assertRedirect();
+    $engine = app(ApprovalEngine::class);
+    $request = $engine->submit($leave, $this->admin);
+    $engine->act($request, $this->manager, ApprovalActionType::Reject, 'tidak perlu');
 
+    expect($leave->fresh()->status)->toBe(RequestStatus::Rejected);
     expect((float) $balance->fresh()->available)->toBe(12.0);
 });
 
-it('does not re-decide a processed request', function () {
-    $leave = LeaveRequest::factory()->approved()->create([
+it('auto-approves and deducts the balance when no flow is configured', function () {
+    ApprovalFlow::where('transaction_type', 'leave')->delete();
+
+    $balance = LeaveBalance::create([
         'employee_id' => $this->employee->id,
         'leave_type_id' => $this->leaveType->id,
+        'year' => 2026,
+        'entitled' => 12,
+        'used' => 0,
+        'pending' => 0,
+        'expired' => 0,
+        'available' => 12,
     ]);
 
     $this->actingAs($this->admin)
-        ->patch(route('leave-requests.decide', $leave), ['status' => 'rejected'])
+        ->post(route('leave-requests.store'), leavePayload(['end_date' => '2026-07-03']))
         ->assertRedirect();
 
-    expect($leave->fresh()->status)->toBe(RequestStatus::Approved);
+    $leave = LeaveRequest::firstOrFail();
+
+    expect($leave->status)->toBe(RequestStatus::Approved);
+
+    $balance->refresh();
+    expect((float) $balance->used)->toBe(3.0);
+    expect((float) $balance->available)->toBe(9.0);
 });
 
 it('deletes a request', function () {

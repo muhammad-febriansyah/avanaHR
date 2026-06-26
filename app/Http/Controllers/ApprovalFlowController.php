@@ -6,8 +6,11 @@ use App\Http\Requests\ApprovalFlow\StoreApprovalFlowRequest;
 use App\Http\Requests\ApprovalFlow\StoreApprovalFlowStepRequest;
 use App\Models\ApprovalFlow;
 use App\Models\ApprovalFlowStep;
+use App\Models\Branch;
+use App\Models\JobGrade;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -64,6 +67,7 @@ class ApprovalFlowController extends Controller
                 'name' => $approvalFlow->name,
                 'transaction_type' => $approvalFlow->transaction_type,
                 'is_active' => $approvalFlow->is_active,
+                'conditions' => $approvalFlow->conditions ?? [],
                 'steps' => $approvalFlow->steps->map(fn (ApprovalFlowStep $step): array => [
                     'id' => $step->id,
                     'order' => $step->order,
@@ -77,6 +81,16 @@ class ApprovalFlowController extends Controller
             ],
             'transactionTypes' => $this->transactionTypes(),
             'approverTypes' => $this->approverTypes(),
+            'gradeOptions' => JobGrade::query()
+                ->orderBy('code')
+                ->get(['code', 'name'])
+                ->map(fn (JobGrade $grade): array => ['value' => $grade->code, 'label' => "{$grade->code} - {$grade->name}"])
+                ->all(),
+            'branchOptions' => Branch::query()
+                ->orderBy('name')
+                ->get(['id', 'name'])
+                ->map(fn (Branch $branch): array => ['value' => (string) $branch->id, 'label' => $branch->name])
+                ->all(),
         ]);
     }
 
@@ -87,6 +101,45 @@ class ApprovalFlowController extends Controller
         $approvalFlow->update(['is_active' => ! $approvalFlow->is_active]);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Status alur diperbarui.']);
+
+        return back();
+    }
+
+    public function updateConditions(Request $request, ApprovalFlow $approvalFlow): RedirectResponse
+    {
+        $this->authorize('update', $approvalFlow);
+
+        $validated = $request->validate([
+            'amount_min' => ['nullable', 'integer', 'min:0'],
+            'amount_max' => ['nullable', 'integer', 'min:0'],
+            'grade_in' => ['nullable', 'array'],
+            'grade_in.*' => ['string'],
+            'department_id' => ['nullable', 'integer'],
+            'branch_id' => ['nullable', 'integer'],
+        ]);
+
+        // Build the conditions, omitting null/empty values so an unset field
+        // never over-constrains routing (empty conditions = always match).
+        $conditions = [];
+
+        foreach (['amount_min', 'amount_max', 'department_id', 'branch_id'] as $key) {
+            if (($validated[$key] ?? null) !== null) {
+                $conditions[$key] = $validated[$key];
+            }
+        }
+
+        $gradeIn = array_values(array_filter(
+            $validated['grade_in'] ?? [],
+            static fn (string $code): bool => trim($code) !== '',
+        ));
+
+        if ($gradeIn !== []) {
+            $conditions['grade_in'] = $gradeIn;
+        }
+
+        $approvalFlow->update(['conditions' => $conditions ?: null]);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Kondisi routing diperbarui.']);
 
         return back();
     }
@@ -158,6 +211,8 @@ class ApprovalFlowController extends Controller
             ['value' => 'overtime', 'label' => 'Lembur'],
             ['value' => 'reimbursement', 'label' => 'Reimbursement'],
             ['value' => 'loan', 'label' => 'Pinjaman'],
+            ['value' => 'work_visit', 'label' => 'Kunjungan Kerja'],
+            ['value' => 'benefit_claim', 'label' => 'Klaim Benefit'],
             ['value' => 'attendance_correction', 'label' => 'Koreksi Absensi'],
             ['value' => 'lifecycle', 'label' => 'Perubahan Data'],
             ['value' => 'payroll', 'label' => 'Payroll'],

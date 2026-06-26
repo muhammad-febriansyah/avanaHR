@@ -31,6 +31,11 @@ class Department extends Model
         return $this->belongsTo(Department::class, 'parent_id');
     }
 
+    public function head(): BelongsTo
+    {
+        return $this->belongsTo(Employee::class, 'head_employee_id');
+    }
+
     public function children(): HasMany
     {
         return $this->hasMany(Department::class, 'parent_id');

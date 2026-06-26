@@ -1,8 +1,10 @@
 import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, Pencil, Wallet } from 'lucide-react';
+import { ArrowLeft, History, Pencil, Wallet } from 'lucide-react';
 import type { ReactNode } from 'react';
 import employees from '@/actions/App/Http/Controllers/EmployeeController';
+import employeeHistory from '@/actions/App/Http/Controllers/EmployeeHistoryController';
 import salary from '@/actions/App/Http/Controllers/EmployeeSalaryComponentController';
+import taxBpjs from '@/actions/App/Http/Controllers/EmployeeTaxBpjsController';
 import PageHeader from '@/components/page-header';
 import StatusBadge from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
@@ -67,6 +69,18 @@ export default function EmployeesShow({ employee }: ShowProps) {
                         <Link href={salary.index.url(employee.id)}>
                             <Wallet />
                             Komponen Gaji
+                        </Link>
+                    </Button>
+                    <Button asChild variant="outline">
+                        <Link href={taxBpjs.index.url(employee.id)}>
+                            <Wallet />
+                            Pajak & BPJS
+                        </Link>
+                    </Button>
+                    <Button asChild variant="outline">
+                        <Link href={employeeHistory.index.url(employee.id)}>
+                            <History />
+                            Riwayat
                         </Link>
                     </Button>
                     <Button asChild variant="success">

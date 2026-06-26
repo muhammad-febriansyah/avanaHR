@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\PayrollRun;
 use App\Models\Payslip;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -92,5 +96,36 @@ class PayslipController extends Controller
                 ])->all(),
             ],
         ]);
+    }
+
+    /**
+     * Stream the payslip as a PDF (dompdf) so the user can view or save it.
+     */
+    public function print(Payslip $payslip): HttpResponse
+    {
+        $this->authorize('view', $payslip);
+
+        $payslip->load([
+            'employee:id,first_name,last_name,employee_no',
+            'employee.currentEmployment.company',
+            'run:id,run_no,period_id',
+            'run.period:id,code,year,month',
+            'lines:id,payslip_id,component_code,component_name,type,amount',
+        ]);
+
+        // The employee's company (its own tenant data); fall back to the first.
+        $company = $payslip->employee?->currentEmployment?->company
+            ?? Company::orderBy('id')->first();
+
+        $filename = 'slip-gaji-'.($payslip->employee?->employee_no ?? $payslip->id)
+            .'-'.($payslip->run?->period?->code ?? '').'.pdf';
+
+        return Pdf::loadView('payslip-print', [
+            'payslip' => $payslip,
+            'company' => $company,
+            'logoPath' => $company?->logo_path
+                ? Storage::disk('public')->path($company->logo_path)
+                : null,
+        ])->stream($filename);
     }
 }

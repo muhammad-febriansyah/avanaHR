@@ -56,6 +56,7 @@ type DocumentRow = {
     expired_at: string | null;
     access_level: string;
     expiry_status: string;
+    file_url: string | null;
 };
 
 type Filters = { search?: string; document_type?: string; status?: string };
@@ -102,6 +103,7 @@ type DocForm = {
     expired_at: string;
     reminder_days: string;
     access_level: string;
+    file: File | null;
 };
 
 const emptyForm: DocForm = {
@@ -112,6 +114,7 @@ const emptyForm: DocForm = {
     expired_at: '',
     reminder_days: '30',
     access_level: 'internal',
+    file: null,
 };
 
 export default function EmployeeDocumentsIndex({
@@ -177,6 +180,7 @@ export default function EmployeeDocumentsIndex({
             expired_at: item.expired_at ?? '',
             reminder_days: '30',
             access_level: item.access_level,
+            file: null,
         });
         setOpen(true);
     }
@@ -188,7 +192,10 @@ export default function EmployeeDocumentsIndex({
         if (editing) {
             form.put(employeeDocuments.update.url(editing.id), opts);
         } else {
-            form.post(employeeDocuments.store.url(), opts);
+            form.post(employeeDocuments.store.url(), {
+                ...opts,
+                forceFormData: true,
+            });
         }
     }
 
@@ -301,7 +308,19 @@ export default function EmployeeDocumentsIndex({
                                                     {label(types, item.document_type)}
                                                 </TableCell>
                                                 <TableCell className="font-mono text-xs">
-                                                    {item.number ?? '-'}
+                                                    <div className="flex flex-col gap-1">
+                                                        <span>{item.number ?? '-'}</span>
+                                                        {item.file_url && (
+                                                            <a
+                                                                href={item.file_url}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="font-sans font-medium text-primary underline-offset-2 hover:underline"
+                                                            >
+                                                                Unduh
+                                                            </a>
+                                                        )}
+                                                    </div>
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="flex items-center gap-2">
@@ -549,6 +568,31 @@ export default function EmployeeDocumentsIndex({
                                 </Select>
                             </div>
                         </div>
+
+                        {!editing && (
+                            <div className="grid gap-2">
+                                <Label htmlFor="doc-file">Berkas (PDF / Gambar)</Label>
+                                <Input
+                                    id="doc-file"
+                                    type="file"
+                                    accept=".pdf,.png,.jpg,.jpeg,.webp"
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'file',
+                                            e.target.files?.[0] ?? null,
+                                        )
+                                    }
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    Maksimal 4 MB. Format: PDF, PNG, JPG, WEBP.
+                                </p>
+                                {form.errors.file && (
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.file}
+                                    </p>
+                                )}
+                            </div>
+                        )}
                     </form>
 
                     <DialogFooter>

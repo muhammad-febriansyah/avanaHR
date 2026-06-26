@@ -67,34 +67,6 @@ it('rejects an end time before the start time', function () {
         ->assertSessionHasErrors('end_time');
 });
 
-it('approves a pending request', function () {
-    $overtime = OvertimeRequest::factory()->create(['employee_id' => $this->employee->id]);
-
-    $this->actingAs($this->admin)
-        ->patch(route('overtime-requests.decide', $overtime), ['status' => 'approved'])
-        ->assertRedirect();
-
-    expect($overtime->fresh()->status)->toBe(RequestStatus::Approved);
-});
-
-it('does not re-decide an already processed request', function () {
-    $overtime = OvertimeRequest::factory()->approved()->create(['employee_id' => $this->employee->id]);
-
-    $this->actingAs($this->admin)
-        ->patch(route('overtime-requests.decide', $overtime), ['status' => 'rejected'])
-        ->assertRedirect();
-
-    expect($overtime->fresh()->status)->toBe(RequestStatus::Approved);
-});
-
-it('rejects an invalid decision status', function () {
-    $overtime = OvertimeRequest::factory()->create(['employee_id' => $this->employee->id]);
-
-    $this->actingAs($this->admin)
-        ->patch(route('overtime-requests.decide', $overtime), ['status' => 'pending'])
-        ->assertSessionHasErrors('status');
-});
-
 it('blocks editing a non-pending request', function () {
     $overtime = OvertimeRequest::factory()->approved()->create(['employee_id' => $this->employee->id]);
 

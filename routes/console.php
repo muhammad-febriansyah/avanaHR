@@ -10,3 +10,9 @@ Artisan::command('inspire', function () {
 
 // Apply scheduled employee movements whose effective date has arrived.
 Schedule::command('movements:apply-due')->dailyAt('01:00');
+
+// Remind + escalate approval steps that have breached their SLA.
+Schedule::command('approvals:check-sla')->hourly();
+
+// Deliver pending email notifications via SMTP.
+Schedule::command('notifications:dispatch')->everyMinute();

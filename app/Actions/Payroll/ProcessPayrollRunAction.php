@@ -2,9 +2,11 @@
 
 namespace App\Actions\Payroll;
 
+use App\Enums\EmployeeStatus;
 use App\Models\BpjsParameter;
 use App\Models\Employee;
 use App\Models\EmployeeSalaryComponent;
+use App\Models\PayrollComponent;
 use App\Models\PayrollRun;
 use App\Models\Payslip;
 use App\Support\Payroll\BpjsCalculator;
@@ -94,6 +96,9 @@ class ProcessPayrollRunAction
         return Employee::query()
             ->whereDate('join_date', '<=', $periodEnd)
             ->where(fn ($q) => $q->whereNull('resign_date')->orWhereDate('resign_date', '>=', $periodStart))
+            // Exclude inactive (suspended) staff. Resigned/terminated are caught
+            // by resign_date above and prorated for their final worked days.
+            ->where('status', '!=', EmployeeStatus::Suspended->value)
             ->whereHas('salaryComponents', fn ($q) => $q->whereDate('effective_date', '<=', $periodEnd))
             ->orderBy('id')
             ->get();
@@ -121,16 +126,39 @@ class ProcessPayrollRunAction
         $taxableEarnings = 0;
         $deductionComponents = 0;
 
+        // Pass 1: fixed components. The prorated fixed-earning total is the base
+        // for percentage components.
+        $fixedEarningBase = 0;
+        $percentageComponents = [];
+
         foreach ($components as $sc) {
             $component = $sc->component;
-            $amount = (int) round($sc->amount * ($component->type === 'earning' ? $ratio : 1.0));
 
-            $lines[] = [
-                'component_code' => $component->code,
-                'component_name' => $component->name,
-                'type' => $component->type,
-                'amount' => $amount,
-            ];
+            if ($component->calc_type === 'percentage') {
+                $percentageComponents[] = $sc;
+
+                continue;
+            }
+
+            $amount = (int) round($sc->amount * ($component->type === 'earning' ? $ratio : 1.0));
+            $lines[] = $this->componentLine($component, $amount);
+
+            if ($component->type === 'earning') {
+                $earnings += $amount;
+                $fixedEarningBase += $amount;
+                if ($component->is_taxable) {
+                    $taxableEarnings += $amount;
+                }
+            } else {
+                $deductionComponents += $amount;
+            }
+        }
+
+        // Pass 2: percentage components — rate% of the (already prorated) base.
+        foreach ($percentageComponents as $sc) {
+            $component = $sc->component;
+            $amount = (int) round($fixedEarningBase * (float) ($sc->rate ?? 0) / 100);
+            $lines[] = $this->componentLine($component, $amount);
 
             if ($component->type === 'earning') {
                 $earnings += $amount;
@@ -242,6 +270,19 @@ class ProcessPayrollRunAction
         $workedDays = $start->diffInDays($end) + 1;
 
         return min(1.0, $workedDays / $daysInMonth);
+    }
+
+    /**
+     * @return array{component_code:string, component_name:string, type:string, amount:int}
+     */
+    private function componentLine(PayrollComponent $component, int $amount): array
+    {
+        return [
+            'component_code' => $component->code,
+            'component_name' => $component->name,
+            'type' => $component->type,
+            'amount' => $amount,
+        ];
     }
 
     /**

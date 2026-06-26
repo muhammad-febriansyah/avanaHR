@@ -1,6 +1,9 @@
 <?php
 
+use App\Approvals\ApprovalEngine;
+use App\Enums\ApprovalActionType;
 use App\Enums\RequestStatus;
+use App\Models\ApprovalFlow;
 use App\Models\AttendanceCorrection;
 use App\Models\AttendanceDaily;
 use App\Models\Employee;
@@ -19,8 +22,12 @@ beforeEach(function () {
     $this->tenant = Tenant::firstOrFail();
     app(CurrentTenant::class)->set($this->tenant);
     app(PermissionRegistrar::class)->setPermissionsTeamId($this->tenant->id);
+    $this->engine = app(ApprovalEngine::class);
     $this->admin = User::where('email', 'admin@avanahr.id')->firstOrFail();
     $this->employee = Employee::firstOrFail();
+    $this->manager = User::query()
+        ->whereHas('roles', fn ($q) => $q->where('name', 'manager'))
+        ->firstOrFail();
 });
 
 it('renders the corrections index', function () {
@@ -36,15 +43,32 @@ it('renders the corrections index', function () {
         );
 });
 
-it('approves a correction and flags the daily record', function () {
+it('opens a pending approval request when submitted through the engine', function () {
+    $correction = AttendanceCorrection::factory()->create([
+        'employee_id' => $this->employee->id,
+        'status' => RequestStatus::Pending,
+    ]);
+
+    $request = $this->engine->submit($correction, $this->admin);
+
+    expect($request)->not->toBeNull();
+    $this->assertDatabaseHas('approval_requests', [
+        'approvable_type' => $correction->getMorphClass(),
+        'approvable_id' => $correction->id,
+        'status' => 'pending',
+    ]);
+    expect($correction->fresh()->status)->toBe(RequestStatus::Pending);
+});
+
+it('approves a correction via the engine and flags the daily record', function () {
     $correction = AttendanceCorrection::factory()->create([
         'employee_id' => $this->employee->id,
         'date' => '2026-02-03',
+        'status' => RequestStatus::Pending,
     ]);
 
-    $this->actingAs($this->admin)
-        ->patch(route('attendance-corrections.decide', $correction), ['status' => 'approved'])
-        ->assertRedirect();
+    $request = $this->engine->submit($correction, $this->admin);
+    $this->engine->act($request, $this->manager, ApprovalActionType::Approve);
 
     expect($correction->fresh()->status)->toBe(RequestStatus::Approved);
 
@@ -55,36 +79,40 @@ it('approves a correction and flags the daily record', function () {
     expect($daily->has_correction)->toBeTrue();
 });
 
-it('does not re-decide a processed correction', function () {
-    $correction = AttendanceCorrection::factory()->approved()->create([
+it('rejects a correction via the engine without flagging the daily record', function () {
+    $correction = AttendanceCorrection::factory()->create([
         'employee_id' => $this->employee->id,
+        'date' => '2026-02-04',
+        'status' => RequestStatus::Pending,
     ]);
 
-    $this->actingAs($this->admin)
-        ->patch(route('attendance-corrections.decide', $correction), ['status' => 'rejected'])
-        ->assertRedirect();
+    $request = $this->engine->submit($correction, $this->admin);
+    $this->engine->act($request, $this->manager, ApprovalActionType::Reject, 'tidak valid');
 
+    expect($correction->fresh()->status)->toBe(RequestStatus::Rejected);
+
+    expect(AttendanceDaily::where('employee_id', $this->employee->id)
+        ->whereDate('date', '2026-02-04')
+        ->exists())->toBeFalse();
+});
+
+it('auto-approves a correction and flags the daily record when no flow exists', function () {
+    ApprovalFlow::where('transaction_type', 'attendance_correction')->delete();
+
+    $correction = AttendanceCorrection::factory()->create([
+        'employee_id' => $this->employee->id,
+        'date' => '2026-02-05',
+        'status' => RequestStatus::Pending,
+    ]);
+
+    $request = $this->engine->submit($correction, $this->admin);
+
+    expect($request)->toBeNull();
     expect($correction->fresh()->status)->toBe(RequestStatus::Approved);
-});
 
-it('rejects an invalid decision status', function () {
-    $correction = AttendanceCorrection::factory()->create(['employee_id' => $this->employee->id]);
+    $daily = AttendanceDaily::where('employee_id', $this->employee->id)
+        ->whereDate('date', '2026-02-05')
+        ->firstOrFail();
 
-    $this->actingAs($this->admin)
-        ->patch(route('attendance-corrections.decide', $correction), ['status' => 'pending'])
-        ->assertSessionHasErrors('status');
-});
-
-it('forbids users without attendance.manage from deciding', function () {
-    $correction = AttendanceCorrection::factory()->create(['employee_id' => $this->employee->id]);
-
-    $employee = User::where('tenant_id', $this->tenant->id)
-        ->get()
-        ->first(fn (User $user) => ! $user->can('attendance.manage'));
-
-    expect($employee)->not->toBeNull();
-
-    $this->actingAs($employee)
-        ->patch(route('attendance-corrections.decide', $correction), ['status' => 'approved'])
-        ->assertForbidden();
+    expect($daily->has_correction)->toBeTrue();
 });

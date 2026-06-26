@@ -2,24 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Approvals\ApprovalEngine;
 use App\Enums\RequestStatus;
-use App\Http\Requests\WorkVisit\DecideWorkVisitRequest;
 use App\Http\Requests\WorkVisit\StoreWorkVisitReportRequest;
 use App\Http\Requests\WorkVisit\StoreWorkVisitRequest;
 use App\Http\Requests\WorkVisit\UpdateWorkVisitRequest;
 use App\Models\Employee;
 use App\Models\WorkVisit;
 use App\Models\WorkVisitReport;
+use App\Support\CurrentTenant;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class WorkVisitController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(private readonly ApprovalEngine $engine) {}
 
     public function index(Request $request): Response
     {
@@ -84,7 +89,16 @@ class WorkVisitController extends Controller
             'status' => RequestStatus::Pending,
         ]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Kunjungan kerja berhasil diajukan.']);
+        // Route through the approval engine: auto-approves when no flow is
+        // configured, otherwise opens a request that approvers act on via the
+        // approval inbox.
+        $approval = $this->engine->submit($workVisit, $request->user());
+
+        $message = $approval === null
+            ? 'Kunjungan kerja dibuat dan disetujui otomatis (belum ada alur persetujuan).'
+            : 'Kunjungan kerja diajukan dan menunggu persetujuan.';
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
 
         return redirect()->route('work-visits.show', $workVisit);
     }
@@ -125,6 +139,7 @@ class WorkVisitController extends Controller
                     'location' => $report->location,
                     'notes' => $report->notes,
                     'attachment_path' => $report->attachment_path,
+                    'attachment_url' => $this->attachmentUrl($report->attachment_path),
                 ])->all(),
             ],
         ]);
@@ -177,41 +192,40 @@ class WorkVisitController extends Controller
         return redirect()->route('work-visits.index');
     }
 
-    public function decide(DecideWorkVisitRequest $request, WorkVisit $workVisit): RedirectResponse
-    {
-        $this->authorize('update', $workVisit);
-
-        if (! $workVisit->isPending()) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Pengajuan ini sudah diproses.']);
-
-            return back();
-        }
-
-        $validated = $request->validated();
-        $status = RequestStatus::from($validated['status']);
-
-        $workVisit->update([
-            'status' => $status,
-            'decided_by' => $request->user()->id,
-            'decided_at' => now(),
-            'decision_note' => $validated['decision_note'] ?? null,
-        ]);
-
-        $label = $status === RequestStatus::Approved ? 'disetujui' : 'ditolak';
-        Inertia::flash('toast', ['type' => 'success', 'message' => "Kunjungan kerja {$label}."]);
-
-        return back();
-    }
-
     public function storeReport(StoreWorkVisitReportRequest $request, WorkVisit $workVisit): RedirectResponse
     {
         $this->authorize('update', $workVisit);
 
-        $workVisit->reports()->create($request->validated());
+        $data = $request->safe()->except('attachment');
+
+        if ($request->hasFile('attachment')) {
+            // Per-tenant prefix keeps uploaded visit attachments isolated on disk.
+            $tenantId = app(CurrentTenant::class)->id();
+            $data['attachment_path'] = $request->file('attachment')->store('visits/'.$tenantId, 'public');
+        }
+
+        $workVisit->reports()->create($data);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Laporan kunjungan ditambahkan.']);
 
         return back();
+    }
+
+    /**
+     * Resolve a downloadable URL for a stored attachment path. Plain links
+     * (e.g. https://… entered manually) are returned as-is.
+     */
+    private function attachmentUrl(?string $attachmentPath): ?string
+    {
+        if ($attachmentPath === null || $attachmentPath === '') {
+            return null;
+        }
+
+        if (Str::startsWith($attachmentPath, ['http://', 'https://'])) {
+            return $attachmentPath;
+        }
+
+        return Storage::url($attachmentPath);
     }
 
     public function destroyReport(WorkVisit $workVisit, WorkVisitReport $report): RedirectResponse

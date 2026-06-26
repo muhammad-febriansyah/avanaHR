@@ -107,7 +107,7 @@ export default function WorkVisitsIndex({
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <PageHeader
                     title="Kunjungan Kerja"
-                    description="Kelola pengajuan kunjungan kerja / perjalanan dinas karyawan."
+                    description="Kelola pengajuan kunjungan kerja / perjalanan dinas karyawan. Persetujuan diproses melalui Inbox Approval."
                 >
                     <Button asChild>
                         <Link href={workVisits.create.url()}>

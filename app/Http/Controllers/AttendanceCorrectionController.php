@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\AttendanceStatus;
 use App\Enums\RequestStatus;
-use App\Http\Requests\AttendanceCorrection\DecideAttendanceCorrectionRequest;
 use App\Models\AttendanceCorrection;
-use App\Models\AttendanceDaily;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -56,42 +52,6 @@ class AttendanceCorrectionController extends Controller
             'filters' => (object) $filters,
             'statuses' => $this->statusOptions(),
         ]);
-    }
-
-    public function decide(DecideAttendanceCorrectionRequest $request, AttendanceCorrection $attendanceCorrection): RedirectResponse
-    {
-        $this->authorize('update', $attendanceCorrection);
-
-        if ($attendanceCorrection->status !== RequestStatus::Pending) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Koreksi ini sudah diproses.']);
-
-            return back();
-        }
-
-        $status = RequestStatus::from($request->validated()['status']);
-        $attendanceCorrection->update(['status' => $status]);
-
-        // Raw attendance stays immutable; the approved correction only flags the
-        // computed daily record so payroll knows it was adjusted (RULE-003).
-        if ($status === RequestStatus::Approved) {
-            $daily = AttendanceDaily::query()->firstOrNew([
-                'employee_id' => $attendanceCorrection->employee_id,
-                'date' => $attendanceCorrection->date->format('Y-m-d'),
-            ]);
-
-            $daily->fill([
-                'work_minutes' => $daily->work_minutes ?? 0,
-                'late_minutes' => $daily->late_minutes ?? 0,
-                'early_leave_minutes' => $daily->early_leave_minutes ?? 0,
-                'status' => $daily->status ?? AttendanceStatus::Present,
-                'has_correction' => true,
-            ])->save();
-        }
-
-        $label = $status === RequestStatus::Approved ? 'disetujui' : 'ditolak';
-        Inertia::flash('toast', ['type' => 'success', 'message' => "Koreksi absensi {$label}."]);
-
-        return back();
     }
 
     /**

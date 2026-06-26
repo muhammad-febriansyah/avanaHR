@@ -1,6 +1,6 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { ArrowLeft, Plus, Trash2, Users } from 'lucide-react';
-import type { FormEvent } from 'react';
+import { ArrowLeft, Filter, Plus, Trash2, Users } from 'lucide-react';
+import { type FormEvent, useState } from 'react';
 import approvalFlows from '@/actions/App/Http/Controllers/ApprovalFlowController';
 import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
@@ -31,11 +31,20 @@ type Step = {
     allow_delegate: boolean;
 };
 
+type Conditions = {
+    amount_min?: number;
+    amount_max?: number;
+    grade_in?: string[];
+    department_id?: number;
+    branch_id?: number;
+};
+
 type Flow = {
     id: number;
     name: string;
     transaction_type: string;
     is_active: boolean;
+    conditions: Conditions;
     steps: Step[];
 };
 
@@ -43,6 +52,8 @@ type ShowProps = {
     flow: Flow;
     transactionTypes: Option[];
     approverTypes: Option[];
+    gradeOptions: Option[];
+    branchOptions: Option[];
 };
 
 function label(options: Option[], value: string): string {
@@ -58,10 +69,20 @@ type StepForm = {
     allow_delegate: boolean;
 };
 
+type ConditionsForm = {
+    amount_min: string;
+    amount_max: string;
+    grade_in: string;
+    department_id: string;
+    branch_id: string;
+};
+
 export default function ApprovalFlowShow({
     flow,
     transactionTypes,
     approverTypes,
+    gradeOptions,
+    branchOptions,
 }: ShowProps) {
     useFlashToast();
 
@@ -73,6 +94,15 @@ export default function ApprovalFlowShow({
         sla_hours: '24',
         allow_delegate: false,
     });
+
+    const [conditions, setConditions] = useState<ConditionsForm>({
+        amount_min: flow.conditions.amount_min?.toString() ?? '',
+        amount_max: flow.conditions.amount_max?.toString() ?? '',
+        grade_in: (flow.conditions.grade_in ?? []).join(', '),
+        department_id: flow.conditions.department_id?.toString() ?? '',
+        branch_id: flow.conditions.branch_id?.toString() ?? '',
+    });
+    const [savingConditions, setSavingConditions] = useState(false);
 
     function addStep(event: FormEvent) {
         event.preventDefault();
@@ -88,6 +118,32 @@ export default function ApprovalFlowShow({
 
     function toggleActive() {
         router.patch(approvalFlows.update.url(flow.id), {}, { preserveScroll: true });
+    }
+
+    function saveConditions(event: FormEvent) {
+        event.preventDefault();
+
+        const grades = conditions.grade_in
+            .split(',')
+            .map((code) => code.trim())
+            .filter((code) => code !== '');
+
+        router.patch(
+            approvalFlows.updateConditions.url(flow.id),
+            {
+                amount_min: conditions.amount_min === '' ? null : Number(conditions.amount_min),
+                amount_max: conditions.amount_max === '' ? null : Number(conditions.amount_max),
+                grade_in: grades,
+                department_id:
+                    conditions.department_id === '' ? null : Number(conditions.department_id),
+                branch_id: conditions.branch_id === '' ? null : Number(conditions.branch_id),
+            },
+            {
+                preserveScroll: true,
+                onStart: () => setSavingConditions(true),
+                onFinish: () => setSavingConditions(false),
+            },
+        );
     }
 
     return (
@@ -304,6 +360,130 @@ export default function ApprovalFlowShow({
                         </CardContent>
                     </Card>
                 </div>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-base">
+                            <Filter className="size-4" />
+                            Kondisi Routing
+                        </CardTitle>
+                        <p className="text-sm text-muted-foreground">
+                            Alur ini hanya dipakai saat semua kondisi terpenuhi. Biarkan kosong =
+                            berlaku untuk semua pengajuan.
+                        </p>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={saveConditions} className="grid gap-4">
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="cond-amount-min">Nominal minimum</Label>
+                                    <Input
+                                        id="cond-amount-min"
+                                        type="number"
+                                        min="0"
+                                        value={conditions.amount_min}
+                                        onChange={(e) =>
+                                            setConditions((prev) => ({
+                                                ...prev,
+                                                amount_min: e.target.value,
+                                            }))
+                                        }
+                                        placeholder="Mis. 1000000"
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="cond-amount-max">Nominal maksimum</Label>
+                                    <Input
+                                        id="cond-amount-max"
+                                        type="number"
+                                        min="0"
+                                        value={conditions.amount_max}
+                                        onChange={(e) =>
+                                            setConditions((prev) => ({
+                                                ...prev,
+                                                amount_max: e.target.value,
+                                            }))
+                                        }
+                                        placeholder="Mis. 5000000"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid gap-2">
+                                <Label htmlFor="cond-grade">Grade (kode, pisahkan dengan koma)</Label>
+                                <Input
+                                    id="cond-grade"
+                                    value={conditions.grade_in}
+                                    onChange={(e) =>
+                                        setConditions((prev) => ({
+                                            ...prev,
+                                            grade_in: e.target.value,
+                                        }))
+                                    }
+                                    placeholder="Mis. G1, G2"
+                                />
+                                {gradeOptions.length > 0 && (
+                                    <p className="text-xs text-muted-foreground">
+                                        Tersedia:{' '}
+                                        {gradeOptions.map((option) => option.value).join(', ')}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="cond-department">ID Departemen</Label>
+                                    <Input
+                                        id="cond-department"
+                                        type="number"
+                                        min="0"
+                                        value={conditions.department_id}
+                                        onChange={(e) =>
+                                            setConditions((prev) => ({
+                                                ...prev,
+                                                department_id: e.target.value,
+                                            }))
+                                        }
+                                        placeholder="Opsional"
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="cond-branch">Cabang</Label>
+                                    <Select
+                                        value={conditions.branch_id || 'all'}
+                                        onValueChange={(value) =>
+                                            setConditions((prev) => ({
+                                                ...prev,
+                                                branch_id: value === 'all' ? '' : value,
+                                            }))
+                                        }
+                                    >
+                                        <SelectTrigger id="cond-branch" className="w-full">
+                                            <SelectValue placeholder="Semua cabang" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">Semua cabang</SelectItem>
+                                            {branchOptions.map((option) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <Button type="submit" disabled={savingConditions}>
+                                    Simpan Kondisi
+                                </Button>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
             </div>
         </>
     );

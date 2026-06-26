@@ -5,12 +5,14 @@ import {
     CreditCard,
     DatabaseBackup,
     Fingerprint,
+    Inbox,
     LayoutDashboard,
     Plane,
     Rocket,
     ScrollText,
     Settings,
     ShieldAlert,
+    UserCog,
     Users,
     Wallet,
 } from 'lucide-react';
@@ -48,8 +50,12 @@ import {
 import { usePermissions } from '@/hooks/use-permissions';
 import { dashboard } from '@/routes';
 import { executive as analyticsExecutive, workforce as analyticsWorkforce } from '@/routes/analytics';
+import { index as approvalDelegationsIndex } from '@/routes/approval-delegations';
 import { index as approvalFlowsIndex } from '@/routes/approval-flows';
+import { index as approvalsIndex } from '@/routes/approvals';
 import { index as benefitTypesIndex } from '@/routes/benefit-types';
+import { index as bpjsParametersIndex } from '@/routes/bpjs-parameters';
+import { edit as brandingEdit } from '@/routes/branding';
 import { index as employeeBenefitsIndex } from '@/routes/employee-benefits';
 import { index as attendanceIndex } from '@/routes/attendance';
 import { index as attendanceCorrectionsIndex } from '@/routes/attendance-corrections';
@@ -85,6 +91,8 @@ const navGroups: NavGroup[] = [
     {
         items: [
             { title: 'Dashboard', href: dashboard(), icon: LayoutDashboard },
+            { title: 'Inbox Approval', href: approvalsIndex(), icon: Inbox, permission: 'approval.act' },
+            { title: 'Delegasi Approval', href: approvalDelegationsIndex(), icon: UserCog, permission: 'approval.act' },
         ],
     },
     {
@@ -150,6 +158,7 @@ const navGroups: NavGroup[] = [
                     { title: 'File Bank', href: bankFiles.index.url(), permission: 'payroll.approve' },
                     { title: 'Benefit Karyawan', href: employeeBenefitsIndex(), permission: 'payroll.view' },
                     { title: 'Jenis Benefit', href: benefitTypesIndex(), permission: 'payroll.view' },
+                    { title: 'Parameter BPJS', href: bpjsParametersIndex(), permission: 'payroll.view' },
                 ],
             },
         ],
@@ -179,6 +188,7 @@ const navGroups: NavGroup[] = [
                 feature: 'settings',
                 children: [
                     { title: 'Perusahaan', href: companies.index.url(), permission: 'setting.manage' },
+                    { title: 'Branding', href: brandingEdit(), permission: 'setting.manage' },
                     { title: 'Pengguna', href: users.index.url(), permission: 'setting.manage' },
                     { title: 'Hak Akses (Role)', href: roles.index.url(), permission: 'setting.manage' },
                     { title: 'Permission', href: permissions.index.url(), permission: 'setting.manage' },

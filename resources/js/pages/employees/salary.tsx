@@ -42,6 +42,7 @@ type Component = {
     code: string;
     name: string;
     type: ComponentType | null;
+    calc_type?: string | null;
 };
 
 type SalaryComponent = {
@@ -50,7 +51,9 @@ type SalaryComponent = {
     component_code: string | null;
     component_name: string | null;
     type: ComponentType | null;
+    calc_type?: string | null;
     amount: number;
+    rate?: number;
     effective_date: string | null;
 };
 
@@ -63,12 +66,14 @@ type SalaryProps = {
 type FormData = {
     component_id: string;
     amount: string;
+    rate: string;
     effective_date: string;
 };
 
 const emptyForm: FormData = {
     component_id: '',
     amount: '',
+    rate: '',
     effective_date: '',
 };
 
@@ -115,6 +120,11 @@ export default function EmployeeSalary({
 
     const form = useForm<FormData>(emptyForm);
 
+    const selectedComponent = components.find(
+        (c) => c.id.toString() === form.data.component_id,
+    );
+    const isPercentage = selectedComponent?.calc_type === 'percentage';
+
     function openCreate() {
         setEditing(null);
         form.setDefaults(emptyForm);
@@ -129,6 +139,7 @@ export default function EmployeeSalary({
         form.setData({
             component_id: item.component_id.toString(),
             amount: item.amount.toString(),
+            rate: item.rate ? item.rate.toString() : '',
             effective_date: item.effective_date ?? '',
         });
         setOpen(true);
@@ -141,7 +152,8 @@ export default function EmployeeSalary({
             component_id: form.data.component_id
                 ? Number(form.data.component_id)
                 : null,
-            amount: form.data.amount === '' ? null : Number(form.data.amount),
+            amount: form.data.amount === '' ? 0 : Number(form.data.amount),
+            rate: form.data.rate === '' ? null : Number(form.data.rate),
             effective_date: form.data.effective_date,
         };
 
@@ -224,7 +236,12 @@ export default function EmployeeSalary({
                                                     />
                                                 </TableCell>
                                                 <TableCell className="text-right">
-                                                    {formatRupiah(item.amount)}
+                                                    {item.calc_type ===
+                                                    'percentage'
+                                                        ? `${item.rate ?? 0}%`
+                                                        : formatRupiah(
+                                                              item.amount,
+                                                          )}
                                                 </TableCell>
                                                 <TableCell>
                                                     {item.effective_date ?? '-'}
@@ -326,30 +343,61 @@ export default function EmployeeSalary({
                             )}
                         </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="amount">Nominal (Rp)</Label>
-                            <Input
-                                id="amount"
-                                type="number"
-                                min={0}
-                                value={form.data.amount}
-                                onChange={(event) =>
-                                    form.setData('amount', event.target.value)
-                                }
-                                placeholder="Mis. 5000000"
-                            />
-                            {form.data.amount &&
-                                Number(form.data.amount) > 0 && (
-                                    <p className="text-xs text-muted-foreground">
-                                        {formatRupiah(Number(form.data.amount))}
+                        {isPercentage ? (
+                            <div className="grid gap-2">
+                                <Label htmlFor="rate">Persentase (%)</Label>
+                                <Input
+                                    id="rate"
+                                    type="number"
+                                    min={0}
+                                    step="0.01"
+                                    value={form.data.rate}
+                                    onChange={(event) =>
+                                        form.setData('rate', event.target.value)
+                                    }
+                                    placeholder="Mis. 10"
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    Dihitung dari total penghasilan tetap (mis.
+                                    gaji pokok) saat payroll.
+                                </p>
+                                {form.errors.rate && (
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.rate}
                                     </p>
                                 )}
-                            {form.errors.amount && (
-                                <p className="text-sm text-destructive">
-                                    {form.errors.amount}
-                                </p>
-                            )}
-                        </div>
+                            </div>
+                        ) : (
+                            <div className="grid gap-2">
+                                <Label htmlFor="amount">Nominal (Rp)</Label>
+                                <Input
+                                    id="amount"
+                                    type="number"
+                                    min={0}
+                                    value={form.data.amount}
+                                    onChange={(event) =>
+                                        form.setData(
+                                            'amount',
+                                            event.target.value,
+                                        )
+                                    }
+                                    placeholder="Mis. 5000000"
+                                />
+                                {form.data.amount &&
+                                    Number(form.data.amount) > 0 && (
+                                        <p className="text-xs text-muted-foreground">
+                                            {formatRupiah(
+                                                Number(form.data.amount),
+                                            )}
+                                        </p>
+                                    )}
+                                {form.errors.amount && (
+                                    <p className="text-sm text-destructive">
+                                        {form.errors.amount}
+                                    </p>
+                                )}
+                            </div>
+                        )}
 
                         <div className="grid gap-2">
                             <Label htmlFor="effective_date">

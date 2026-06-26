@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Approvals\ApprovalEngine;
 use App\Enums\RequestStatus;
-use App\Http\Requests\LeaveRequest\DecideLeaveRequestRequest;
 use App\Http\Requests\LeaveRequest\StoreLeaveRequestRequest;
 use App\Http\Requests\LeaveRequest\UpdateLeaveRequestRequest;
 use App\Models\Employee;
-use App\Models\LeaveBalance;
 use App\Models\LeaveRequest;
 use App\Models\LeaveType;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class LeaveRequestController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(private readonly ApprovalEngine $engine) {}
 
     public function index(Request $request): Response
     {
@@ -74,13 +74,22 @@ class LeaveRequestController extends Controller
 
     public function store(StoreLeaveRequestRequest $request): RedirectResponse
     {
-        LeaveRequest::create([
+        $leave = LeaveRequest::create([
             ...$request->validated(),
             'days' => $request->requestedDays(),
             'status' => RequestStatus::Pending,
         ]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Pengajuan cuti berhasil ditambahkan.']);
+        // Route through the approval engine: auto-approves when no flow is
+        // configured, otherwise opens a request that approvers act on via the
+        // approval inbox.
+        $approval = $this->engine->submit($leave, $request->user());
+
+        $message = $approval === null
+            ? 'Pengajuan cuti dibuat dan disetujui otomatis (belum ada alur persetujuan).'
+            : 'Pengajuan cuti diajukan dan menunggu persetujuan.';
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
 
         return back();
     }
@@ -103,32 +112,6 @@ class LeaveRequestController extends Controller
         return back();
     }
 
-    public function decide(DecideLeaveRequestRequest $request, LeaveRequest $leaveRequest): RedirectResponse
-    {
-        $this->authorize('update', $leaveRequest);
-
-        if ($leaveRequest->status !== RequestStatus::Pending) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Pengajuan ini sudah diproses.']);
-
-            return back();
-        }
-
-        $status = RequestStatus::from($request->validated()['status']);
-
-        DB::transaction(function () use ($leaveRequest, $status): void {
-            $leaveRequest->update(['status' => $status]);
-
-            if ($status === RequestStatus::Approved) {
-                $this->applyToBalance($leaveRequest);
-            }
-        });
-
-        $label = $status === RequestStatus::Approved ? 'disetujui' : 'ditolak';
-        Inertia::flash('toast', ['type' => 'success', 'message' => "Pengajuan cuti {$label}."]);
-
-        return back();
-    }
-
     public function destroy(LeaveRequest $leaveRequest): RedirectResponse
     {
         $this->authorize('delete', $leaveRequest);
@@ -138,30 +121,6 @@ class LeaveRequestController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Pengajuan cuti berhasil dihapus.']);
 
         return back();
-    }
-
-    /**
-     * Deduct approved leave days from the matching balance: add to used and
-     * recompute the available balance. No-op when no balance is configured.
-     */
-    private function applyToBalance(LeaveRequest $leaveRequest): void
-    {
-        $balance = LeaveBalance::query()
-            ->where('employee_id', $leaveRequest->employee_id)
-            ->where('leave_type_id', $leaveRequest->leave_type_id)
-            ->where('year', $leaveRequest->start_date->year)
-            ->first();
-
-        if ($balance === null) {
-            return;
-        }
-
-        $balance->used = (float) $balance->used + (float) $leaveRequest->days;
-        $balance->available = (float) $balance->entitled
-            - (float) $balance->used
-            - (float) $balance->pending
-            - (float) $balance->expired;
-        $balance->save();
     }
 
     /**

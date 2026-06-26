@@ -209,3 +209,35 @@ it('skips tax when the employee has no tax profile', function () {
 
     expect($payslip->tax)->toBe(0);
 });
+
+it('computes a percentage component from the fixed-earning base', function () {
+    // Fixed earnings: GAPOK 8jt + TRANS 1jt + MAKAN 750k = 9.75jt.
+    $employee = seedPayrollEmployee(8_000_000, 'TK/0');
+    $tid = $this->tenant->id;
+
+    $pct = PayrollComponent::create([
+        'tenant_id' => $tid, 'code' => 'TUNJ-'.$employee->id, 'name' => 'Tunjangan Persen',
+        'type' => 'earning', 'calc_type' => 'percentage', 'formula' => null,
+        'is_taxable' => true, 'is_bpjs_base' => false,
+    ]);
+    EmployeeSalaryComponent::create([
+        'tenant_id' => $tid, 'employee_id' => $employee->id, 'component_id' => $pct->id,
+        'effective_date' => '2020-01-01', 'amount' => 0, 'rate' => 10,
+    ]);
+
+    $run = app(ProcessPayrollRunAction::class)->execute(makeRun());
+    $payslip = $run->payslips()->where('employee_id', $employee->id)->firstOrFail();
+    $line = $payslip->lines()->where('component_code', 'TUNJ-'.$employee->id)->firstOrFail();
+
+    expect((int) $line->amount)->toBe(975_000); // 10% of 9,750,000
+});
+
+it('excludes suspended employees from the run', function () {
+    $active = seedPayrollEmployee(8_000_000, 'TK/0');
+    $suspended = seedPayrollEmployee(8_000_000, 'TK/0', ['status' => 'suspended']);
+
+    $run = app(ProcessPayrollRunAction::class)->execute(makeRun());
+
+    expect($run->payslips()->where('employee_id', $active->id)->exists())->toBeTrue();
+    expect($run->payslips()->where('employee_id', $suspended->id)->exists())->toBeFalse();
+});

@@ -2,10 +2,13 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Company;
+use App\Models\Scopes\TenantScope;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Support\Features;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
@@ -48,7 +51,34 @@ class HandleInertiaRequests extends Middleware
                 'permissions' => $this->resolvePermissions($request->user()),
             ],
             'features' => $this->resolveFeatures($request->user()),
+            'org' => $this->resolveBranding($request->user()),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+        ];
+    }
+
+    /**
+     * Tenant branding (company name + logo) for the current user's tenant.
+     * Strictly scoped to the user's own tenant — never another tenant's data.
+     *
+     * @return array{name: string, logo: string|null}
+     */
+    private function resolveBranding(?User $user): array
+    {
+        $tenantId = $user?->getAttributes()['tenant_id'] ?? null;
+
+        if (! $tenantId) {
+            return ['name' => config('app.name'), 'logo' => null];
+        }
+
+        $company = Company::query()
+            ->withoutGlobalScope(TenantScope::class)
+            ->where('tenant_id', $tenantId)
+            ->orderBy('id')
+            ->first(['name', 'logo_path']);
+
+        return [
+            'name' => $company?->name ?? config('app.name'),
+            'logo' => $company?->logo_path ? Storage::url($company->logo_path) : null,
         ];
     }
 

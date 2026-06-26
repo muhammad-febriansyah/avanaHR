@@ -1,6 +1,5 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import {
-    Check,
     ChevronLeft,
     ChevronRight,
     HandCoins,
@@ -183,14 +182,6 @@ export default function EmployeeLoansIndex({
         router.delete(employeeLoans.destroy.url(id), { preserveScroll: true });
     }
 
-    function decide(id: number, decision: 'approved' | 'rejected') {
-        router.patch(
-            employeeLoans.decide.url(id),
-            { status: decision },
-            { preserveScroll: true },
-        );
-    }
-
     const principalNum = Number(form.data.principal);
     const tenorNum = Number(form.data.tenor_months);
     const installmentPreview =
@@ -207,7 +198,7 @@ export default function EmployeeLoansIndex({
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <PageHeader
                     title="Pinjaman"
-                    description="Kelola pinjaman karyawan dan cicilannya."
+                    description="Kelola pinjaman karyawan dan cicilannya. Persetujuan diproses melalui Inbox Approval."
                 >
                     <Button onClick={openCreate}>
                         <Plus />
@@ -344,48 +335,18 @@ export default function EmployeeLoansIndex({
                                                     <div className="flex items-center justify-end gap-2">
                                                         {item.status ===
                                                         'pending' ? (
-                                                            <>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    className="text-emerald-700 hover:text-emerald-700 dark:text-emerald-400"
-                                                                    onClick={() =>
-                                                                        decide(
-                                                                            item.id,
-                                                                            'approved',
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <Check />
-                                                                    Setujui
-                                                                </Button>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    className="text-red-700 hover:text-red-700 dark:text-red-400"
-                                                                    onClick={() =>
-                                                                        decide(
-                                                                            item.id,
-                                                                            'rejected',
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <X />
-                                                                    Tolak
-                                                                </Button>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    onClick={() =>
-                                                                        openEdit(
-                                                                            item,
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <Pencil />
-                                                                    Edit
-                                                                </Button>
-                                                            </>
+                                                            <Button
+                                                                size="sm"
+                                                                variant="outline"
+                                                                onClick={() =>
+                                                                    openEdit(
+                                                                        item,
+                                                                    )
+                                                                }
+                                                            >
+                                                                <Pencil />
+                                                                Edit
+                                                            </Button>
                                                         ) : null}
                                                         <ConfirmDialog
                                                             title="Hapus Pinjaman"

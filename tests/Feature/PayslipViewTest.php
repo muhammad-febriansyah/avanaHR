@@ -50,6 +50,16 @@ it('shows a payslip with its lines split by type', function () {
         );
 });
 
+it('streams the payslip as a PDF', function () {
+    $payslip = Payslip::factory()->create(['employee_id' => $this->employee->id]);
+    PayslipLine::factory()->create(['payslip_id' => $payslip->id, 'type' => 'earning']);
+
+    $response = $this->actingAs($this->admin)->get(route('payslips.print', $payslip));
+
+    $response->assertOk();
+    expect($response->headers->get('content-type'))->toContain('application/pdf');
+});
+
 it('filters payslips by employee search', function () {
     $other = Employee::where('id', '!=', $this->employee->id)->firstOrFail();
     Payslip::factory()->create(['employee_id' => $this->employee->id]);

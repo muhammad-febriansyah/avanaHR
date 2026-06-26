@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Approvals\ApprovalEngine;
 use App\Enums\RequestStatus;
-use App\Http\Requests\OvertimeRequest\DecideOvertimeRequestRequest;
 use App\Http\Requests\OvertimeRequest\StoreOvertimeRequestRequest;
 use App\Http\Requests\OvertimeRequest\UpdateOvertimeRequestRequest;
 use App\Models\Employee;
@@ -18,6 +18,8 @@ use Inertia\Response;
 class OvertimeRequestController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(private readonly ApprovalEngine $engine) {}
 
     public function index(Request $request): Response
     {
@@ -70,9 +72,18 @@ class OvertimeRequestController extends Controller
 
     public function store(StoreOvertimeRequestRequest $request): RedirectResponse
     {
-        OvertimeRequest::create($this->fromValidated($request->validated()));
+        $overtime = OvertimeRequest::create($this->fromValidated($request->validated()));
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Pengajuan lembur berhasil ditambahkan.']);
+        // Route through the approval engine: auto-approves when no flow is
+        // configured, otherwise opens a request that approvers act on via the
+        // approval inbox.
+        $approval = $this->engine->submit($overtime, $request->user());
+
+        $message = $approval === null
+            ? 'Pengajuan lembur dibuat dan disetujui otomatis (belum ada alur persetujuan).'
+            : 'Pengajuan lembur diajukan dan menunggu persetujuan.';
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
 
         return back();
     }
@@ -88,25 +99,6 @@ class OvertimeRequestController extends Controller
         $overtimeRequest->update($this->fromValidated($request->validated()));
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Pengajuan lembur berhasil diperbarui.']);
-
-        return back();
-    }
-
-    public function decide(DecideOvertimeRequestRequest $request, OvertimeRequest $overtimeRequest): RedirectResponse
-    {
-        $this->authorize('update', $overtimeRequest);
-
-        if ($overtimeRequest->status !== RequestStatus::Pending) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Pengajuan ini sudah diproses.']);
-
-            return back();
-        }
-
-        $status = RequestStatus::from($request->validated()['status']);
-        $overtimeRequest->update(['status' => $status]);
-
-        $label = $status === RequestStatus::Approved ? 'disetujui' : 'ditolak';
-        Inertia::flash('toast', ['type' => 'success', 'message' => "Pengajuan lembur {$label}."]);
 
         return back();
     }

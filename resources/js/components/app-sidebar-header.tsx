@@ -11,16 +11,28 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useInitials } from '@/hooks/use-initials';
 
-// TODO: derive from the authenticated user's tenant once HR Core / tenancy ships.
-const COMPANY_NAME = 'PT Nusantara Jaya';
-
 export function AppSidebarHeader() {
-    const { auth } = usePage().props;
+    const props = usePage().props;
+    const auth = props.auth;
+    const org = (
+        props as unknown as {
+            org?: { name: string; logo: string | null };
+        }
+    ).org;
     const getInitials = useInitials();
 
     return (
         <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-4 border-b border-sidebar-border/60 bg-card px-4 md:px-6">
             <SidebarTrigger className="-ml-1 size-9 shrink-0" />
+
+            {/* Tenant logo */}
+            {org?.logo && (
+                <img
+                    src={org.logo}
+                    alt={org.name}
+                    className="hidden h-8 w-auto max-w-[120px] object-contain sm:block"
+                />
+            )}
 
             {/* Search */}
             <div className="relative hidden max-w-md flex-1 sm:block">
@@ -65,7 +77,7 @@ export function AppSidebarHeader() {
                                     {auth.user.name}
                                 </span>
                                 <span className="block text-[11.5px] text-muted-foreground">
-                                    {COMPANY_NAME}
+                                    {org?.name ?? 'AvanaHR'}
                                 </span>
                             </span>
                             <ChevronDown className="hidden size-4 text-muted-foreground md:block" />

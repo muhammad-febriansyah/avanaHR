@@ -40,9 +40,8 @@ it('creates a flow and redirects to its editor', function () {
         ])
         ->assertRedirect();
 
-    $flow = ApprovalFlow::firstOrFail();
+    $flow = ApprovalFlow::where('name', 'Persetujuan Cuti 2 Level')->firstOrFail();
 
-    expect($flow->name)->toBe('Persetujuan Cuti 2 Level');
     expect($flow->transaction_type)->toBe('leave');
     expect($flow->is_active)->toBeTrue();
 });

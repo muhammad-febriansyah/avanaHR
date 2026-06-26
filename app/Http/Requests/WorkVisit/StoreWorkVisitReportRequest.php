@@ -21,6 +21,7 @@ class StoreWorkVisitReportRequest extends FormRequest
             'location' => ['required', 'string', 'max:150'],
             'notes' => ['nullable', 'string', 'max:1000'],
             'attachment_path' => ['nullable', 'string', 'max:500'],
+            'attachment' => ['nullable', 'file', 'mimes:pdf,png,jpg,jpeg,webp', 'max:4096'],
         ];
     }
 

@@ -6,10 +6,12 @@ use App\Http\Requests\EmployeeDocument\StoreEmployeeDocumentRequest;
 use App\Http\Requests\EmployeeDocument\UpdateEmployeeDocumentRequest;
 use App\Models\Employee;
 use App\Models\EmployeeDocument;
+use App\Support\CurrentTenant;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -57,6 +59,7 @@ class EmployeeDocumentController extends Controller
                 'expired_at' => $document->expired_at?->format('Y-m-d'),
                 'access_level' => $document->access_level,
                 'expiry_status' => $this->expiryStatus($document, $today),
+                'file_url' => $document->file_path ? Storage::url($document->file_path) : null,
             ]);
 
         return Inertia::render('employee-documents/index', [
@@ -80,7 +83,15 @@ class EmployeeDocumentController extends Controller
 
     public function store(StoreEmployeeDocumentRequest $request): RedirectResponse
     {
-        EmployeeDocument::create($request->validated());
+        $data = $request->safe()->except('file');
+
+        if ($request->hasFile('file')) {
+            // Per-tenant prefix keeps uploaded documents isolated on disk.
+            $tenantId = app(CurrentTenant::class)->id();
+            $data['file_path'] = $request->file('file')->store('documents/'.$tenantId, 'public');
+        }
+
+        EmployeeDocument::create($data);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Dokumen berhasil ditambahkan.']);
 
@@ -99,6 +110,10 @@ class EmployeeDocumentController extends Controller
     public function destroy(EmployeeDocument $employeeDocument): RedirectResponse
     {
         $this->authorize('delete', $employeeDocument);
+
+        if ($employeeDocument->file_path) {
+            Storage::disk('public')->delete($employeeDocument->file_path);
+        }
 
         $employeeDocument->delete();
 

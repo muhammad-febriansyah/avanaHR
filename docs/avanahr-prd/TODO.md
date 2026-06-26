@@ -105,6 +105,101 @@ Bikin payroll **production-safe & immutable** (BRD: "payroll period terkunci = I
 
 ---
 
+## ✅ Approval Engine Runtime — Slice 1 (2026-06-26)
+Engine generik **runtime** akhirnya dipakai transaksi (sebelumnya cuma config `approval_flows` tanpa eksekusi). Gap BRD terbesar (BR-HRC-004 workflow bertingkat) mulai ketutup.
+- **`App\Contracts\Approvable`** (`approvalType/approvalContext/approvalTitle/approvalRequesterUserId/approvalRequesterEmployee/onApproved/onRejected`) + trait **`HasApprovals`** (morphMany `approvalRequests`, pointer `approval_request_id`).
+- **`App\Approvals\ApprovalEngine`**: `submit()` (pilih flow by `transaction_type`+conditions deterministik → bikin `approval_requests` + `approval_steps_state` per langkah; **no-flow → auto-approve** jalankan `onApproved`), `act()` (approve/reject/revise, advance sequential / finalize + callback modul, tulis `approval_actions` + `audit_logs`), `canAct()`. **SoD**: pemohon ga bisa setujui sendiri. Resolver approver: `role` (dinamis hasRole), `user` (id), `manager`/`department_head` (reporting line `employee_employments.manager_id`).
+- **Wire pertama: Lembur** — `OvertimeRequest implements Approvable`; controller `store()→submit`. Tombol Setujui/Tolak inline di halaman lembur **dihapus** (route `overtime-requests.decide` + method dibuang); approval pindah ke **Inbox**.
+- **Inbox Approval** (`/approvals`) — `ApprovalController` index (filter step pending milik approver login)/show (timeline langkah + riwayat aksi)/act. FormRequest validasi (alasan wajib utk reject/revise). Permission baru **`approval.act`** (hr-admin/manager/finance/payroll-officer). Sidebar item "Inbox Approval" (grup atas, gated `approval.act`).
+- Seeder: flow demo Lembur (1 langkah role=manager) + grant `approval.act`. **`ApprovalAction` `$timestamps=false`** (tabel cuma `created_at`).
+- **18 test** (engine: auto-approve no-flow, pending+stepstate, finalize callback, reject callback, SoD block, non-approver block, multi-step advance, conditionsMatch; inbox HTTP: list eligible, approve via route, hide dari non-approver, reject butuh alasan, RBAC 403) + Playwright E2E (admin buat Lembur Amalia→Pending; manager Estiawan Inbox→Tinjau→Setujui → request+OT approved, step approved, action+audit `approval.approve` confirmed; inbox kosong). **437/437 total.**
+- **Belum (Slice 3+):** SLA + eskalasi job + notifikasi, `department_head` resolver beneran (sekarang fallback ke manager), conditions UI di config flow. (Parallel + delegasi → SELESAI Slice 2.)
+
+---
+
+## ✅ Approval Engine Runtime — Slice 4 (2026-06-26): wire 6 transaksi
+Lanjutan Slice 1. **6 transaksi lagi** sekarang lewat `ApprovalEngine` + Inbox (3 agent paralel). Tiap model `implements Approvable` + `HasApprovals`, controller `store()→submit`, tombol decide inline + route `*.decide` + method dibuang, side-effect pindah ke `onApproved()`.
+- **Cuti** (`leave`) — deduksi `leave_balances` (used+=days, recompute available) pindah ke `LeaveRequest::onApproved()`.
+- **Reimbursement** (`reimbursement`) — status only. Title pakai rupiah.
+- **Pinjaman** (`loan`) — status only (ga ada generate installment saat approve).
+- **Kunjungan Kerja** (`work_visit`) — status only; decide UI di `work-visits/show.tsx` dibuang.
+- **Klaim Benefit** (`benefit_claim`) — **veto plafon**: `BenefitClaim::onApproved()` throw `ApprovalException('Klaim melebihi sisa plafon')` kalau amount > sisa quota → engine `act()` di DB transaction → rollback, klaim tetap pending. Requester employee via nested `employeeBenefit->employee`.
+- **Koreksi Absensi** (`attendance_correction`) — set `attendance_daily.has_correction=true` di `onApproved()` (raw attendance tetap immutable).
+- Shared (aku, bukan agent): hapus 6 route `*.decide` di `web.php`; seed 6 flow demo (role=manager) di `DemoTenantSeeder`; `transaction_type` `work_visit`+`benefit_claim` ditambah ke config UI (`ApprovalFlowController`) + label Inbox; hapus 7 orphan `Decide*Request` FormRequest; fix `ApprovalFlowTest` (seeder kini banyak flow → query by name).
+- **60 test agen** (19 cuti+reimburse, 22 loan+work-visit, 19 benefit+koreksi: pending+approval_request row, approve via engine + side-effect, reject, auto-approve no-flow, plafon veto) + Playwright E2E live (Reimbursement Rp750rb: admin submit→Pending→manager Inbox→Setujui→approved, DB confirm). **440/440 total**, build hijau.
+- **Belum lewat engine (special, defer):** **Movement** (`apply` flow effective-dated, bukan decide) + **Payroll approval** (`payroll-runs.approve` punya lock/clearance gate sendiri). Wire nanti kalau perlu.
+
+---
+
+## ✅ Approval Engine Runtime — Slice 2 (2026-06-26): parallel steps + delegasi
+- **Parallel steps + `min_approvals`**: step `mode='parallel'` nunggu N approver distinct setuju baru advance (`stepSatisfied`: count distinct approve action ≥ min). Reject pertama langsung tolak request. **Double-act guard** (`hasActed`): approver yg udah aksi di step itu ga bisa aksi lagi (penting buat pool paralel) + auto-drop dari Inbox.
+- **Delegasi** (`approval_delegations`): step approver konkret (`user`/`manager`) → delegate aktif boleh aksi atas nama approver asli. `isActiveDelegate` cek from/to + window `starts_at`/`ends_at` + `transaction_types` (null=semua). **Approver asli tetap tercatat** di step state; delegate tercatat di `approval_actions` + note `[Delegasi dari user#X]`. Role step ga pakai delegasi (pool).
+- **Delegasi CRUD** (`/approval-delegations`, sidebar "Delegasi Approval", gated `approval.act`): user kelola delegasi sendiri (from=login). Controller scoped (destroy cuma punya sendiri → 403 kalau orang lain). FormRequest (ga boleh delegasi ke diri sendiri, ends≥starts). Page: form (delegasikan ke + jenis transaksi + periode) + tabel (status Aktif/Nonaktif).
+- **12 test baru** (parallel: hold sampai min_approvals, double-act block, reject-first kills; delegasi engine: delegate boleh aksi + asli tetap tercatat, delegasi expired ditolak; delegasi CRUD: render, create scoped, type→array vs all→null, anti-self, destroy own, 403 destroy orang lain, RBAC) + Playwright E2E live (Estiawan buat delegasi ke Nurul "Semua Transaksi" → row Aktif, DB from=2→to=3 confirm). **452/452 total**, build hijau.
+- (SLA + eskalasi + notifikasi → SELESAI Slice 3.)
+
+---
+
+## ✅ Approval Engine Runtime — Slice 3 (2026-06-26): SLA + eskalasi + notifikasi
+- **SLA tracking**: migration tambah `due_at`/`reminded_at`/`escalated_at` ke `approval_steps_state`. Engine `armSla()` set `due_at = now + step.sla_hours` saat step jadi current (di `submit` step-1, di `advanceOrComplete` step berikut); null kalau step tanpa `sla_hours`.
+- **Command `approvals:check-sla`** (scheduled **hourly** di `console.php`, lintas tenant pola `movements:apply-due` + set team id): scan request pending yg step current-nya lewat `due_at` → **reminder** (set `reminded_at`, notif approver) → run berikut **eskalasi** kalau `escalate_to` ada (status step `escalated`, set `escalated_at`, notif target). Idempotent (kolom marker).
+- **Eskalasi eligibility**: `canActOnStep` — step `escalated` → target `escalate_to` boleh aksi (selain approver asli). `escalate_to` = user id (numeric) atau nama role. Engine helper publik `approverUserIds()` + `escalateTargetUserIds()`.
+- **Notifikasi** (`ApprovalNotifier` → tabel `notifications` channel `inapp`): event `approval.assigned` (approver step saat submit/advance), `approval.approved`/`approval.rejected`/`approval.revision` (ke requester saat finalize), `approval.sla_reminder` (approver saat overdue), `approval.escalated` (target saat eskalasi). **Email/push/WA defer** — baris inapp tinggal dibaca dispatcher channel nanti. Bell UI belum diwire.
+- **6 test** (arm due_at saat submit, notif approver saat submit, notif requester saat final approve, reminder sekali saat overdue + ga dobel, eskalasi setelah reminder, target eskalasi bisa aksi setelah escalated) + live CLI E2E (req overdue → run1 reminder:1 + 4 notif sla_reminder, run2 eskalasi:1 + status `escalated` + notif `approval.escalated` ke hr-admin; idempotent). **458/458 total**, build hijau.
+- **Dispatcher email → SELESAI** (lihat slice Branding+Email). Push/WA + Bell UI in-app = defer. `department_head` resolver + conditions UI masih sisa.
+
+---
+
+## ✅ Payroll Lengkap — 2026-06-26 (komponen formula + slip PDF + exclude exit)
+3 gap payroll P0 ditutup:
+- **Komponen gaji persentase** — `ProcessPayrollRunAction` 2-pass: fixed dulu (akumulasi base = total penghasilan tetap prorated), lalu `calc_type='percentage'` = `rate% × base` (rate dari `employee_salary_components.rate`). Mis. Tunjangan Jabatan 10% → 10% × (GAPOK+TRANS+MAKAN). UI: form komponen gaji per karyawan render field **Persentase (%)** vs **Nominal (Rp)** otomatis sesuai `calc_type` komponen.
+- **Slip gaji PDF** — **dompdf** (`barryvdh/laravel-dompdf`, dep baru disetujui user). `PayslipController@print` → `Pdf::loadView('payslip-print')->stream()`. Blade table-layout (dompdf ga support flex/grid). Tombol **Cetak / PDF** di halaman slip (buka tab → PDF inline, bisa download). Format rupiah, split penghasilan/potongan, netto.
+- **Exclude exit otomatis** — payroll run skip karyawan `status='suspended'` (inaktif tanpa resign_date). Resign/terminate udah ke-handle `resign_date` (exclude kalau sebelum periode, prorate kalau tengah periode).
+- **3 test unit** (persentase 10% dari base 9.75jt = 975rb, exclude suspended, PDF stream content-type) + Playwright E2E live (slip PDF render: PT Avana, GAPOK 8jt→netto Rp9.202.453 match unit test Slice payroll; salary form switch ke field Persentase saat pilih komponen %). **461/461 total**, build hijau.
+- **Belum (payroll sisa):** ~~UI config BPJS param + PTKP/BPJS profil~~ → SELESAI (slice BPJS/PTKP Config). TER kategori B/C (nunggu angka regulasi), `calc_type='formula'` ekspresi kompleks (sekarang percentage cukup).
+
+---
+
+## ✅ Branding Tenant + Email Notif — 2026-06-26
+- **Branding tenant-specific** — bug: `app-sidebar-header.tsx` hardcoded `COMPANY_NAME='PT Nusantara Jaya'` (sama semua tenant). Fix: share `org` (nama + logo) dari **Company tenant sendiri** via `HandleInertiaRequests::resolveBranding` (scoped ke `tenant_id` user, `withoutGlobalScope` + where tenant_id — ga bocor antar tenant). Topbar + user chip pakai `org.name`, logo tampil di topbar. **Slip PDF** pakai company karyawan (`currentEmployment.company`) + logo.
+- **Branding settings** (`/branding`, sidebar Pengaturan, `setting.manage`) — edit nama Company + **upload logo** (public storage, path `logos/{tenant_id}/` = isolasi per tenant). Migration `companies.logo_path`. `storage:link` udah ada.
+- **Email notif (SMTP)** — `ApprovalNotifier` channel `inapp`→**`email`**. Command **`notifications:dispatch`** (scheduled everyMinute, lintas tenant, tiap row kirim ke `user.email` sendiri → isolasi) + Mailable `ApprovalNotificationMail` (markdown, subject per type) → `notifications.status='sent'`. Dev MAIL_MAILER=log, prod SMTP via env. **Push/WA defer**, Bell UI in-app defer (user: "notif paling email saja").
+- **8 test** (branding: render, update nama, upload logo ke path tenant, tolak non-image, RBAC; email: bikin row pending email, dispatch kirim+mark sent, render mailable, skip tanpa email) + Playwright E2E live (branding: upload logo "AVANA PT" → tampil topbar + nama "PT Avana Indonesia" real bukan hardcoded, DB `logos/1/`; email: submit OT → 4 notif pending → dispatch → 4 sent + email ke laravel.log). **470/470 total**, build hijau. **dompdf** dep (slip PDF).
+- **Isolasi tenant** dipegang: branding query scoped tenant user, logo path per-tenant, notif tiap row ke user/tenant sendiri.
+
+---
+
+## ✅ BPJS/PTKP Config UI — 2026-06-26 (payroll config: seed-only → admin-editable)
+3 config payroll yang dulu seed-only sekarang bisa diedit admin via UI:
+- **Parameter BPJS** (tenant, `/bpjs-parameters`, sidebar Payroll, `payroll.view`/`payroll.run`) — `BpjsParameterController` index/store/destroy. List effective-dated + tambah versi (form prefill dari `config('payroll.bpjs_defaults')`): kes rate kary/persh, plafon kes, tk_rates (JHT/JKK/JKM/JP kary+persh + plafon JP). Engine pilih param yang berlaku per periode run. Form assemble `tk_rates` json.
+- **Profil Pajak (PTKP)** per karyawan — `EmployeeTaxBpjsController` (`/employees/{id}/tax-bpjs`, link di Employee show, `payroll.view`/`payroll.run`). CRUD effective-dated: ptkp_status (TK/0..K/3), npwp, tax_method (ter/gross/nett), beginning_ytd.
+- **Profil BPJS** per karyawan (page sama, section kedua) — CRUD effective-dated: no kesehatan/tk, basis kesehatan/tk (rupiah), participation_flags (checkbox kesehatan/jht/jkk/jkm/jp → json).
+- **11 test** (BPJS param: render, store+assemble tk_rates, validasi, destroy, RBAC; tax/bpjs: render, add tax, tolak PTKP invalid, add bpjs+flags, destroy, RBAC) + Playwright E2E live (BPJS param 2025 prefill defaults→simpan, DB tk_rates assembled; tax profil 2026 TK/0 ter). **484/484 total**, build hijau.
+
+---
+
+## ✅ Effective-dated History UI — 2026-06-26
+Timeline riwayat penempatan + gaji per tanggal efektif (BRD golden rule #11 effective-dating). Data udah ada (employment versions + salary effective_date), tinggal UI.
+- **`EmployeeHistoryController@index`** (`/employees/{id}/history`, `employee.view`) — load semua `employee_employments` versi (terbaru dulu) + `employee_salary_components`. Tiap versi di-**diff** vs versi lebih lama → field yang berubah (Jabatan/Departemen/Grade/Atasan/Cost Center/Cabang/Tipe/Status); versi pertama = "Awal".
+- **Page `employees/history.tsx`** — timeline kartu per versi (effective→end, badge `Δ <field>` perubahan), **date picker "Per tanggal" (as-of)** → highlight badge "Berlaku" di versi yang aktif pada tanggal itu (effective ≤ asOf ≤ end). + tabel Riwayat Gaji (komponen, nilai fixed/persentase, tanggal berlaku). Tombol "Riwayat" di halaman Employee show.
+- **3 test** (render props, diff flag field berubah = ['Jabatan'] + versi awal = ['Awal'], RBAC 403) + Playwright E2E live (promosi emp: v1 2026-06 "Berlaku" + Δ Jabatan/Grade, v2 2022 "Awal"; ganti as-of ke 2026-03 → "Berlaku" pindah ke v2). **473/473 total**, build hijau.
+
+---
+
+## ✅ HCMS Gap Final — 2026-06-26 (5 fitur, 5 agent paralel)
+Tutup sisa gap HCMS web yang buildable. 5 agent paralel; shared route pre-added, migration tiap agent file sendiri.
+- **Org chart drag-drop** — `OrganizationController@reparent` (`PATCH organization/departments/{department}/reparent`, `employee.update`): drag node departemen → reparent (`departments.parent_id`), guard cycle + cross-company + self. Page `organization/structure.tsx` HTML5 DnD (no dep baru). 5 test.
+- **Conditions UI approval routing** — `ApprovalFlowController@updateConditions` (`PATCH approval-flows/{flow}/conditions`): editor "Kondisi Routing" di flow show (amount_min/max, grade_in, department_id, branch_id — match `conditionsMatch` engine). Kosong = semua. 5 test.
+- **department_head resolver** — migration `departments.head_employee_id`, set "Kepala" di Departemen, model `head()`. Engine `resolveApprover` `department_head` → kepala dept requester → user, fallback manager. 3 test.
+- **Binary file upload** — migration `employee_documents.file_path`. Upload dokumen → `documents/{tenant_id}/`, work-visit attachment → `visits/{tenant_id}/` (public disk, per-tenant isolasi). File input + link Unduh di page. 10 test.
+- **Security policy enforcement** — `PasswordPolicy::rules()` (baca tenant security config → min/mixedCase/numbers/symbols) wired ke `PasswordValidationRules` trait (CreateNewUser/ResetUserPassword/PasswordUpdate). Middleware `EnforceSessionTimeout` (idle logout > `session_timeout_minutes`) + enforce_2fa redirect (default off = no-op), append di `bootstrap/app.php`. Exempt security-settings/settings page. 5 test.
+- Integrasi: fix 1 (middleware 2FA redirect block `/security-settings` → exempt). **512/512 total**, build hijau. Playwright E2E spot: conditions card render, kolom Kepala, file input dokumen, auth sehat.
+- **Isolasi tenant**: semua scoped (file path per-tenant, query tenant-scoped, password policy per-tenant config).
+
+> **HCMS web AvanaHR = LENGKAP.** Sisa cuma: TER kategori B/C (nunggu angka regulasi), `calc_type=formula` ekspresi (percentage cukup), Bell UI in-app (notif via email), multi-bahasa (P2), login lockout runtime (Fortify default throttle ada). Recruitment/Performance/LMS = eksternal. ESS/MSS = Flutter.
+
+---
+
 ## ⏳ Ditunda ke Flutter (ESS/MSS — JANGAN dibuat di web)
 - Self-Service: Dashboard Saya, Profil, Slip Gaji Saya, Cuti Saya, Klaim, Status Pengajuan.
 - MSS approval mobile: Inbox Approval, Tim Saya, Kalender Tim.
@@ -175,4 +270,4 @@ Bikin payroll **production-safe & immutable** (BRD: "payroll period terkunci = I
 ### Catatan integrasi lintas modul (BRD)
 - Perubahan status employee harus mengalir ke modul terkait via **effective date** — ✅ via Employee Movement Management (Slice 1+2): apply resign/terminate → employment row baru + `employees.status` + cabut akses `User.status='inactive'`. Sisa: payroll exclude otomatis (tinggal filter employment status di payroll run) + scheduler future-dated.
 - Payroll final tidak boleh jalan sebelum **clearance** — clearance/exit belum ada.
-- Workflow Approval engine ada (config), tapi **belum dipakai runtime** oleh transaksi (cuti/lembur/dll masih decide langsung, bukan lewat ApprovalEngine generik).
+- Workflow Approval engine **runtime jalan (Slice 1+4, 2026-06-26)** — 7 transaksi lewat `ApprovalEngine` + Inbox: lembur, cuti, reimburse, pinjaman, kunjungan kerja, klaim benefit, koreksi absensi. **Belum di-wire:** Movement (apply effective-dated) + Payroll approval (lock/clearance gate sendiri) — defer.

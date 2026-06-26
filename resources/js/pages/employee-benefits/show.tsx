@@ -1,6 +1,5 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { ArrowLeft, CheckCircle, Plus, Trash2, X } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import type { FormEvent, ReactNode } from 'react';
 import employeeBenefits from '@/actions/App/Http/Controllers/EmployeeBenefitController';
 import ConfirmDialog from '@/components/confirm-dialog';
@@ -15,13 +14,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useFlashToast } from '@/hooks/use-flash-toast';
@@ -37,7 +29,6 @@ type Claim = {
     decided_by: string | null;
     decided_at: string | null;
     decision_note: string | null;
-    can_decide: boolean;
 };
 
 type EmployeeBenefit = {
@@ -92,13 +83,6 @@ const emptyClaim: ClaimForm = {
 export default function EmployeeBenefitsShow({ employeeBenefit }: ShowProps) {
     useFlashToast();
 
-    const [rejectClaimId, setRejectClaimId] = useState<number | null>(null);
-
-    const rejectForm = useForm<{ status: string; decision_note: string }>({
-        status: 'rejected',
-        decision_note: '',
-    });
-
     const claimForm = useForm<ClaimForm>(emptyClaim);
 
     const usedPercent =
@@ -110,36 +94,6 @@ export default function EmployeeBenefitsShow({ employeeBenefit }: ShowProps) {
                   ),
               )
             : 0;
-
-    function approveClaim(claimId: number) {
-        router.patch(
-            employeeBenefits.decideClaim.url(claimId),
-            { status: 'approved' },
-            { preserveScroll: true },
-        );
-    }
-
-    function openReject(claimId: number) {
-        rejectForm.reset();
-        rejectForm.clearErrors();
-        setRejectClaimId(claimId);
-    }
-
-    function submitReject(event: FormEvent) {
-        event.preventDefault();
-
-        if (rejectClaimId === null) {
-            return;
-        }
-
-        rejectForm.patch(employeeBenefits.decideClaim.url(rejectClaimId), {
-            preserveScroll: true,
-            onSuccess: () => {
-                rejectForm.reset();
-                setRejectClaimId(null);
-            },
-        });
-    }
 
     function handleDelete() {
         router.delete(employeeBenefits.destroy.url(employeeBenefit.id));
@@ -271,6 +225,10 @@ export default function EmployeeBenefitsShow({ employeeBenefit }: ShowProps) {
                             <CardTitle className="text-base text-navy">
                                 Klaim Benefit
                             </CardTitle>
+                            <p className="text-xs text-muted-foreground">
+                                Klaim baru diajukan untuk persetujuan melalui Inbox
+                                Approval.
+                            </p>
                         </CardHeader>
                         <CardContent className="flex flex-col gap-4">
                             <div className="flex flex-col gap-2">
@@ -328,35 +286,6 @@ export default function EmployeeBenefitsShow({ employeeBenefit }: ShowProps) {
                                             )}
 
                                             <div className="flex flex-wrap items-center gap-2">
-                                                {claim.can_decide && (
-                                                    <>
-                                                        <Button
-                                                            size="sm"
-                                                            variant="success"
-                                                            onClick={() =>
-                                                                approveClaim(
-                                                                    claim.id,
-                                                                )
-                                                            }
-                                                        >
-                                                            <CheckCircle />
-                                                            Setujui
-                                                        </Button>
-                                                        <Button
-                                                            size="sm"
-                                                            variant="outline"
-                                                            className="text-red-700 hover:text-red-700 dark:text-red-400"
-                                                            onClick={() =>
-                                                                openReject(
-                                                                    claim.id,
-                                                                )
-                                                            }
-                                                        >
-                                                            <X />
-                                                            Tolak
-                                                        </Button>
-                                                    </>
-                                                )}
                                                 <ConfirmDialog
                                                     title="Hapus Klaim"
                                                     description={`Yakin ingin menghapus klaim "${claim.description}"?`}
@@ -481,69 +410,6 @@ export default function EmployeeBenefitsShow({ employeeBenefit }: ShowProps) {
                     </Card>
                 </div>
             </div>
-
-            <Dialog
-                open={rejectClaimId !== null}
-                onOpenChange={(value) => {
-                    if (!value) {
-                        setRejectClaimId(null);
-                    }
-                }}
-            >
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Tolak Klaim Benefit</DialogTitle>
-                    </DialogHeader>
-
-                    <form
-                        id="reject-claim-form"
-                        onSubmit={submitReject}
-                        className="grid gap-4"
-                    >
-                        <div className="grid gap-2">
-                            <Label htmlFor="decision_note">
-                                Alasan Penolakan
-                            </Label>
-                            <textarea
-                                id="decision_note"
-                                value={rejectForm.data.decision_note}
-                                onChange={(e) =>
-                                    rejectForm.setData(
-                                        'decision_note',
-                                        e.target.value,
-                                    )
-                                }
-                                rows={3}
-                                placeholder="Alasan penolakan (opsional)"
-                                className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
-                            />
-                            <InputError
-                                message={rejectForm.errors.decision_note}
-                            />
-                        </div>
-                    </form>
-
-                    <DialogFooter>
-                        <Button
-                            variant="outline"
-                            type="button"
-                            onClick={() => setRejectClaimId(null)}
-                        >
-                            <X />
-                            Batal
-                        </Button>
-                        <Button
-                            type="submit"
-                            form="reject-claim-form"
-                            variant="destructive"
-                            disabled={rejectForm.processing}
-                        >
-                            <X />
-                            Tolak
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </>
     );
 }

@@ -28,7 +28,9 @@ class EmployeeSalaryComponentController extends Controller
                 'component_code' => $salaryComponent->component?->code,
                 'component_name' => $salaryComponent->component?->name,
                 'type' => $salaryComponent->component?->type,
+                'calc_type' => $salaryComponent->component?->calc_type,
                 'amount' => (int) $salaryComponent->amount,
+                'rate' => (float) $salaryComponent->rate,
                 'effective_date' => $salaryComponent->effective_date?->format('Y-m-d'),
             ]);
 
@@ -39,6 +41,7 @@ class EmployeeSalaryComponentController extends Controller
                 'code' => $component->code,
                 'name' => $component->name,
                 'type' => $component->type,
+                'calc_type' => $component->calc_type,
             ]);
 
         return Inertia::render('employees/salary', [

@@ -1,6 +1,10 @@
 <?php
 
+use App\Approvals\ApprovalEngine;
+use App\Enums\ApprovalActionType;
+use App\Enums\ApprovalStatus;
 use App\Enums\RequestStatus;
+use App\Models\ApprovalFlow;
 use App\Models\Employee;
 use App\Models\Tenant;
 use App\Models\User;
@@ -21,6 +25,9 @@ beforeEach(function () {
     app(PermissionRegistrar::class)->setPermissionsTeamId($this->tenant->id);
     $this->admin = User::where('email', 'admin@avanahr.id')->firstOrFail();
     $this->employee = Employee::query()->first();
+    $this->manager = User::query()
+        ->whereHas('roles', fn ($q) => $q->where('name', 'manager'))
+        ->firstOrFail();
 });
 
 /**
@@ -86,7 +93,7 @@ it('renders the create page', function () {
         );
 });
 
-it('creates a pending work visit', function () {
+it('creates a pending work visit and opens an approval request', function () {
     $this->actingAs($this->admin)
         ->post(route('work-visits.store'), workVisitPayload())
         ->assertRedirect();
@@ -97,6 +104,15 @@ it('creates a pending work visit', function () {
         'employee_id' => $this->employee->id,
         'tenant_id' => $this->tenant->id,
     ]);
+
+    $visit = WorkVisit::firstOrFail();
+
+    $this->assertDatabaseHas('approval_requests', [
+        'approvable_type' => $visit->getMorphClass(),
+        'approvable_id' => $visit->id,
+        'status' => 'pending',
+    ]);
+    expect($visit->pendingApprovalRequest())->not->toBeNull();
 });
 
 it('fails validation without required fields', function () {
@@ -114,42 +130,48 @@ it('rejects an end date before the start date', function () {
         ->assertSessionHasErrors(['end_date']);
 });
 
-it('approves a work visit', function () {
-    $visit = makeWorkVisit();
-
+it('approves a work visit through the approval engine', function () {
     $this->actingAs($this->admin)
-        ->patch(route('work-visits.decide', $visit), [
-            'status' => 'approved',
-            'decision_note' => 'OK',
-        ])
+        ->post(route('work-visits.store'), workVisitPayload())
         ->assertRedirect();
 
-    $this->assertDatabaseHas('work_visits', [
-        'id' => $visit->id,
-        'status' => 'approved',
-    ]);
+    $visit = WorkVisit::firstOrFail();
+    $request = $visit->pendingApprovalRequest();
 
-    expect($visit->fresh()->decided_by)->not->toBeNull();
+    expect($request)->not->toBeNull();
+    expect($request->status)->toBe(ApprovalStatus::Pending);
+
+    app(ApprovalEngine::class)->act($request, $this->manager, ApprovalActionType::Approve);
+
+    expect($request->fresh()->status)->toBe(ApprovalStatus::Approved);
+    expect($visit->fresh()->status)->toBe(RequestStatus::Approved);
 });
 
-it('rejects a work visit', function () {
-    $visit = makeWorkVisit();
-
+it('rejects a work visit through the approval engine', function () {
     $this->actingAs($this->admin)
-        ->patch(route('work-visits.decide', $visit), ['status' => 'rejected'])
+        ->post(route('work-visits.store'), workVisitPayload())
         ->assertRedirect();
 
+    $visit = WorkVisit::firstOrFail();
+    $request = $visit->pendingApprovalRequest();
+
+    app(ApprovalEngine::class)->act($request, $this->manager, ApprovalActionType::Reject, 'tidak perlu');
+
+    expect($request->fresh()->status)->toBe(ApprovalStatus::Rejected);
     expect($visit->fresh()->status)->toBe(RequestStatus::Rejected);
 });
 
-it('does not re-decide an already decided visit', function () {
-    $visit = makeWorkVisit(['status' => 'approved']);
+it('auto-approves a work visit when no flow is configured', function () {
+    ApprovalFlow::where('transaction_type', 'work_visit')->delete();
 
     $this->actingAs($this->admin)
-        ->patch(route('work-visits.decide', $visit), ['status' => 'rejected'])
+        ->post(route('work-visits.store'), workVisitPayload())
         ->assertRedirect();
 
-    expect($visit->fresh()->status)->toBe(RequestStatus::Approved);
+    $visit = WorkVisit::firstOrFail();
+
+    expect($visit->status)->toBe(RequestStatus::Approved);
+    expect($visit->pendingApprovalRequest())->toBeNull();
 });
 
 it('adds a visit report', function () {

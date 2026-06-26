@@ -6,6 +6,7 @@ use App\Http\Requests\Department\StoreDepartmentRequest;
 use App\Http\Requests\Department\UpdateDepartmentRequest;
 use App\Models\Company;
 use App\Models\Department;
+use App\Models\Employee;
 use App\Models\JobGrade;
 use App\Models\JobLevel;
 use App\Models\Position;
@@ -24,15 +25,17 @@ class DepartmentController extends Controller
 
         $departments = Department::query()
             ->withCount('positions')
-            ->with('parent:id,name')
+            ->with(['parent:id,name', 'head:id,first_name,last_name'])
             ->orderBy('code')
-            ->get(['id', 'code', 'name', 'parent_id'])
+            ->get(['id', 'code', 'name', 'parent_id', 'head_employee_id'])
             ->map(fn (Department $department): array => [
                 'id' => $department->id,
                 'code' => $department->code,
                 'name' => $department->name,
                 'parent_id' => $department->parent_id,
                 'parent_name' => $department->parent?->name,
+                'head_employee_id' => $department->head_employee_id,
+                'head_name' => $department->head?->fullName(),
                 'positions_count' => $department->positions_count,
             ]);
 
@@ -61,6 +64,14 @@ class DepartmentController extends Controller
             'positions' => $positions,
             'options' => [
                 'departments' => Department::orderBy('name')->get(['id', 'name']),
+                'employees' => Employee::query()
+                    ->orderBy('first_name')
+                    ->orderBy('last_name')
+                    ->get(['id', 'first_name', 'last_name'])
+                    ->map(fn (Employee $employee): array => [
+                        'id' => $employee->id,
+                        'name' => $employee->fullName(),
+                    ]),
                 'jobLevels' => JobLevel::orderBy('name')->get(['id', 'name']),
                 'jobGrades' => JobGrade::orderBy('name')->get(['id', 'name']),
             ],

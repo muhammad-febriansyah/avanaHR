@@ -18,6 +18,9 @@ class ApprovalStepState extends Model
     {
         return [
             'acted_at' => 'datetime',
+            'due_at' => 'datetime',
+            'reminded_at' => 'datetime',
+            'escalated_at' => 'datetime',
         ];
     }
 

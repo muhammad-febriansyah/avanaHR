@@ -1,5 +1,10 @@
 <?php
 
+use App\Approvals\ApprovalEngine;
+use App\Approvals\ApprovalException;
+use App\Enums\ApprovalActionType;
+use App\Enums\RequestStatus;
+use App\Models\ApprovalFlow;
 use App\Models\BenefitClaim;
 use App\Models\BenefitType;
 use App\Models\Employee;
@@ -19,8 +24,12 @@ beforeEach(function () {
     $this->tenant = Tenant::firstOrFail();
     app(CurrentTenant::class)->set($this->tenant);
     app(PermissionRegistrar::class)->setPermissionsTeamId($this->tenant->id);
+    $this->engine = app(ApprovalEngine::class);
     $this->admin = User::where('email', 'admin@avanahr.id')->firstOrFail();
     $this->employee = Employee::query()->first();
+    $this->manager = User::query()
+        ->whereHas('roles', fn ($q) => $q->where('name', 'manager'))
+        ->firstOrFail();
 });
 
 /**
@@ -175,7 +184,7 @@ it('rejects a duplicate benefit assignment', function () {
         ->assertSessionHasErrors();
 });
 
-it('adds a claim against an allocation', function () {
+it('adds a claim against an allocation and opens an approval request', function () {
     $benefit = makeEmployeeBenefit(['quota' => 5000000]);
 
     $this->actingAs($this->admin)
@@ -191,54 +200,72 @@ it('adds a claim against an allocation', function () {
         'amount' => 1000000,
         'status' => 'pending',
     ]);
+
+    $claim = BenefitClaim::query()->where('employee_benefit_id', $benefit->id)->firstOrFail();
+
+    $this->assertDatabaseHas('approval_requests', [
+        'approvable_type' => $claim->getMorphClass(),
+        'approvable_id' => $claim->id,
+        'status' => 'pending',
+    ]);
 });
 
-it('approves a claim within the remaining quota', function () {
+it('approves a claim within the remaining quota via the engine', function () {
     $benefit = makeEmployeeBenefit(['quota' => 5000000]);
     $claim = makeBenefitClaim($benefit, ['amount' => 1000000]);
 
-    $this->actingAs($this->admin)
-        ->patch(route('employee-benefits.claims.decide', $claim), [
-            'status' => 'approved',
-        ])
-        ->assertRedirect();
+    $request = $this->engine->submit($claim, $this->admin);
+    $this->engine->act($request, $this->manager, ApprovalActionType::Approve);
 
-    $this->assertDatabaseHas('benefit_claims', [
-        'id' => $claim->id,
-        'status' => 'approved',
-    ]);
-
+    expect($claim->fresh()->status)->toBe(RequestStatus::Approved);
     expect($benefit->fresh()->remainingQuota())->toBe(4000000);
 });
 
-it('blocks approving a claim exceeding the remaining quota', function () {
+it('blocks approving a claim exceeding the remaining plafond', function () {
     $benefit = makeEmployeeBenefit(['quota' => 1000000]);
     $claim = makeBenefitClaim($benefit, ['amount' => 2000000]);
 
-    $this->actingAs($this->admin)
-        ->patch(route('employee-benefits.claims.decide', $claim), [
-            'status' => 'approved',
-        ]);
+    $request = $this->engine->submit($claim, $this->admin);
 
+    expect(fn () => $this->engine->act($request, $this->manager, ApprovalActionType::Approve))
+        ->toThrow(ApprovalException::class, 'Klaim melebihi sisa plafon');
+
+    expect($claim->fresh()->status)->toBe(RequestStatus::Pending);
     $this->assertDatabaseHas('benefit_claims', [
         'id' => $claim->id,
         'status' => 'pending',
     ]);
 });
 
-it('rejects a claim', function () {
+it('rejects a claim via the engine', function () {
     $benefit = makeEmployeeBenefit(['quota' => 5000000]);
     $claim = makeBenefitClaim($benefit, ['amount' => 1000000]);
 
+    $request = $this->engine->submit($claim, $this->admin);
+    $this->engine->act($request, $this->manager, ApprovalActionType::Reject, 'tidak valid');
+
+    expect($claim->fresh()->status)->toBe(RequestStatus::Rejected);
+});
+
+it('auto-approves a within-plafond claim when no flow exists', function () {
+    ApprovalFlow::where('transaction_type', 'benefit_claim')->delete();
+
+    $benefit = makeEmployeeBenefit(['quota' => 5000000]);
+
     $this->actingAs($this->admin)
-        ->patch(route('employee-benefits.claims.decide', $claim), [
-            'status' => 'rejected',
+        ->post(route('employee-benefits.claims.store', $benefit), [
+            'claim_date' => now()->toDateString(),
+            'amount' => 1000000,
+            'description' => 'Beli obat',
         ])
         ->assertRedirect();
 
-    $this->assertDatabaseHas('benefit_claims', [
-        'id' => $claim->id,
-        'status' => 'rejected',
+    $claim = BenefitClaim::query()->where('employee_benefit_id', $benefit->id)->firstOrFail();
+
+    expect($claim->status)->toBe(RequestStatus::Approved);
+    $this->assertDatabaseMissing('approval_requests', [
+        'approvable_type' => $claim->getMorphClass(),
+        'approvable_id' => $claim->id,
     ]);
 });
 

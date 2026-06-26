@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Approvals\ApprovalEngine;
 use App\Enums\RequestStatus;
-use App\Http\Requests\Reimbursement\DecideReimbursementRequest;
 use App\Http\Requests\Reimbursement\StoreReimbursementRequest;
 use App\Http\Requests\Reimbursement\UpdateReimbursementRequest;
 use App\Models\Employee;
@@ -17,6 +17,8 @@ use Inertia\Response;
 class ReimbursementController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(private readonly ApprovalEngine $engine) {}
 
     public function index(Request $request): Response
     {
@@ -69,12 +71,21 @@ class ReimbursementController extends Controller
 
     public function store(StoreReimbursementRequest $request): RedirectResponse
     {
-        Reimbursement::create([
+        $reimbursement = Reimbursement::create([
             ...$request->validated(),
             'status' => RequestStatus::Pending,
         ]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Reimbursement berhasil ditambahkan.']);
+        // Route through the approval engine: auto-approves when no flow is
+        // configured, otherwise opens a request that approvers act on via the
+        // approval inbox.
+        $approval = $this->engine->submit($reimbursement, $request->user());
+
+        $message = $approval === null
+            ? 'Reimbursement dibuat dan disetujui otomatis (belum ada alur persetujuan).'
+            : 'Reimbursement diajukan dan menunggu persetujuan.';
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
 
         return back();
     }
@@ -90,25 +101,6 @@ class ReimbursementController extends Controller
         $reimbursement->update($request->validated());
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Reimbursement berhasil diperbarui.']);
-
-        return back();
-    }
-
-    public function decide(DecideReimbursementRequest $request, Reimbursement $reimbursement): RedirectResponse
-    {
-        $this->authorize('update', $reimbursement);
-
-        if ($reimbursement->status !== RequestStatus::Pending) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Reimbursement ini sudah diproses.']);
-
-            return back();
-        }
-
-        $status = RequestStatus::from($request->validated()['status']);
-        $reimbursement->update(['status' => $status]);
-
-        $label = $status === RequestStatus::Approved ? 'disetujui' : 'ditolak';
-        Inertia::flash('toast', ['type' => 'success', 'message' => "Reimbursement {$label}."]);
 
         return back();
     }

@@ -28,6 +28,7 @@ class StoreEmployeeDocumentRequest extends FormRequest
             'expired_at' => ['nullable', 'date', 'after_or_equal:issued_at'],
             'reminder_days' => ['nullable', 'integer', 'min:0', 'max:365'],
             'access_level' => ['required', Rule::in(['public', 'internal', 'confidential'])],
+            'file' => ['nullable', 'file', 'mimes:pdf,png,jpg,jpeg,webp', 'max:4096'],
         ];
     }
 

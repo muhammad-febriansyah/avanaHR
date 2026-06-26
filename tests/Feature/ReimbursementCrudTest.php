@@ -1,6 +1,9 @@
 <?php
 
+use App\Approvals\ApprovalEngine;
+use App\Enums\ApprovalActionType;
 use App\Enums\RequestStatus;
+use App\Models\ApprovalFlow;
 use App\Models\Employee;
 use App\Models\Reimbursement;
 use App\Models\Tenant;
@@ -20,6 +23,9 @@ beforeEach(function () {
     app(PermissionRegistrar::class)->setPermissionsTeamId($this->tenant->id);
     $this->admin = User::where('email', 'admin@avanahr.id')->firstOrFail();
     $this->employee = Employee::firstOrFail();
+    $this->manager = User::query()
+        ->whereHas('roles', fn ($q) => $q->where('name', 'manager'))
+        ->firstOrFail();
 });
 
 function reimbursementPayload(array $overrides = []): array
@@ -46,7 +52,7 @@ it('renders the reimbursements index', function () {
         );
 });
 
-it('creates a reimbursement as pending', function () {
+it('creates a reimbursement as pending routed to approval', function () {
     $this->actingAs($this->admin)
         ->post(route('reimbursements.store'), reimbursementPayload())
         ->assertRedirect();
@@ -57,6 +63,14 @@ it('creates a reimbursement as pending', function () {
         'category' => 'medical',
         'amount' => 500000,
         'status' => RequestStatus::Pending->value,
+    ]);
+
+    $reimbursement = Reimbursement::firstOrFail();
+
+    $this->assertDatabaseHas('approval_requests', [
+        'approvable_type' => $reimbursement->getMorphClass(),
+        'approvable_id' => $reimbursement->id,
+        'status' => 'pending',
     ]);
 });
 
@@ -72,24 +86,44 @@ it('rejects a zero amount', function () {
         ->assertSessionHasErrors('amount');
 });
 
-it('approves a pending reimbursement', function () {
-    $reimbursement = Reimbursement::factory()->create(['employee_id' => $this->employee->id]);
+it('approves a pending reimbursement through the engine', function () {
+    $reimbursement = Reimbursement::factory()->create([
+        'employee_id' => $this->employee->id,
+        'status' => RequestStatus::Pending,
+    ]);
 
-    $this->actingAs($this->admin)
-        ->patch(route('reimbursements.decide', $reimbursement), ['status' => 'approved'])
-        ->assertRedirect();
+    $engine = app(ApprovalEngine::class);
+    $request = $engine->submit($reimbursement, $this->admin);
+
+    expect($request)->not->toBeNull();
+    expect($reimbursement->fresh()->status)->toBe(RequestStatus::Pending);
+
+    $engine->act($request, $this->manager, ApprovalActionType::Approve);
 
     expect($reimbursement->fresh()->status)->toBe(RequestStatus::Approved);
 });
 
-it('does not re-decide a processed reimbursement', function () {
-    $reimbursement = Reimbursement::factory()->approved()->create(['employee_id' => $this->employee->id]);
+it('rejects a pending reimbursement through the engine', function () {
+    $reimbursement = Reimbursement::factory()->create([
+        'employee_id' => $this->employee->id,
+        'status' => RequestStatus::Pending,
+    ]);
+
+    $engine = app(ApprovalEngine::class);
+    $request = $engine->submit($reimbursement, $this->admin);
+    $engine->act($request, $this->manager, ApprovalActionType::Reject, 'tidak valid');
+
+    expect($reimbursement->fresh()->status)->toBe(RequestStatus::Rejected);
+});
+
+it('auto-approves a reimbursement when no flow is configured', function () {
+    ApprovalFlow::where('transaction_type', 'reimbursement')->delete();
 
     $this->actingAs($this->admin)
-        ->patch(route('reimbursements.decide', $reimbursement), ['status' => 'rejected'])
+        ->post(route('reimbursements.store'), reimbursementPayload())
         ->assertRedirect();
 
-    expect($reimbursement->fresh()->status)->toBe(RequestStatus::Approved);
+    expect(Reimbursement::firstOrFail()->status)->toBe(RequestStatus::Approved);
 });
 
 it('blocks editing a non-pending reimbursement', function () {

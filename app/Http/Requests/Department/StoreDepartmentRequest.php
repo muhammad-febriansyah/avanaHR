@@ -24,6 +24,7 @@ class StoreDepartmentRequest extends FormRequest
             'code' => ['required', 'string', 'max:50', Rule::unique('departments', 'code')->where('tenant_id', $tenantId)],
             'name' => ['required', 'string', 'max:150'],
             'parent_id' => ['nullable', 'integer', Rule::exists('departments', 'id')->where('tenant_id', $tenantId)],
+            'head_employee_id' => ['nullable', 'integer', Rule::exists('employees', 'id')->where('tenant_id', $tenantId)],
         ];
     }
 
@@ -37,6 +38,7 @@ class StoreDepartmentRequest extends FormRequest
             'code.unique' => 'Kode departemen sudah digunakan.',
             'name.required' => 'Nama wajib diisi.',
             'parent_id.exists' => 'Departemen induk tidak valid.',
+            'head_employee_id.exists' => 'Kepala departemen tidak valid.',
         ];
     }
 }

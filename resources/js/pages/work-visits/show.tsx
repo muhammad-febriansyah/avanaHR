@@ -1,13 +1,5 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import {
-    ArrowLeft,
-    CheckCircle,
-    Pencil,
-    Plus,
-    Trash2,
-    X,
-} from 'lucide-react';
-import { useState } from 'react';
+import { ArrowLeft, Pencil, Plus, Trash2 } from 'lucide-react';
 import type { FormEvent, ReactNode } from 'react';
 import workVisits from '@/actions/App/Http/Controllers/WorkVisitController';
 import ConfirmDialog from '@/components/confirm-dialog';
@@ -21,13 +13,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useFlashToast } from '@/hooks/use-flash-toast';
@@ -39,6 +24,7 @@ type Report = {
     location: string;
     notes: string | null;
     attachment_path: string | null;
+    attachment_url: string | null;
 };
 
 type WorkVisit = {
@@ -92,6 +78,7 @@ type ReportForm = {
     location: string;
     notes: string;
     attachment_path: string;
+    attachment: File | null;
 };
 
 const emptyReport: ReportForm = {
@@ -99,37 +86,13 @@ const emptyReport: ReportForm = {
     location: '',
     notes: '',
     attachment_path: '',
+    attachment: null,
 };
 
 export default function WorkVisitsShow({ workVisit }: ShowProps) {
     useFlashToast();
 
-    const [rejectOpen, setRejectOpen] = useState(false);
-    const rejectForm = useForm<{ status: string; decision_note: string }>({
-        status: 'rejected',
-        decision_note: '',
-    });
-
     const reportForm = useForm<ReportForm>(emptyReport);
-
-    function approve() {
-        router.patch(
-            workVisits.decide.url(workVisit.id),
-            { status: 'approved' },
-            { preserveScroll: true },
-        );
-    }
-
-    function submitReject(event: FormEvent) {
-        event.preventDefault();
-        rejectForm.patch(workVisits.decide.url(workVisit.id), {
-            preserveScroll: true,
-            onSuccess: () => {
-                rejectForm.reset();
-                setRejectOpen(false);
-            },
-        });
-    }
 
     function handleDelete() {
         router.delete(workVisits.destroy.url(workVisit.id));
@@ -139,6 +102,7 @@ export default function WorkVisitsShow({ workVisit }: ShowProps) {
         event.preventDefault();
         reportForm.post(workVisits.storeReport.url(workVisit.id), {
             preserveScroll: true,
+            forceFormData: true,
             onSuccess: () => reportForm.reset(),
         });
     }
@@ -158,29 +122,16 @@ export default function WorkVisitsShow({ workVisit }: ShowProps) {
             <Head title={`Kunjungan — ${workVisit.destination}`} />
 
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
-                <PageHeader title={`Kunjungan — ${workVisit.destination}`}>
+                <PageHeader
+                    title={`Kunjungan — ${workVisit.destination}`}
+                    description="Persetujuan diproses melalui Inbox Approval."
+                >
                     <Button asChild variant="outline">
                         <Link href={workVisits.index.url()}>
                             <ArrowLeft />
                             Kembali
                         </Link>
                     </Button>
-                    {workVisit.can_decide && (
-                        <>
-                            <Button variant="success" onClick={approve}>
-                                <CheckCircle />
-                                Setujui
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="text-red-700 hover:text-red-700 dark:text-red-400"
-                                onClick={() => setRejectOpen(true)}
-                            >
-                                <X />
-                                Tolak
-                            </Button>
-                        </>
-                    )}
                     {workVisit.can_edit && (
                         <>
                             <Button asChild variant="outline">
@@ -316,10 +267,10 @@ export default function WorkVisitsShow({ workVisit }: ShowProps) {
                                                         {report.notes}
                                                     </span>
                                                 )}
-                                                {report.attachment_path && (
+                                                {report.attachment_url && (
                                                     <a
                                                         href={
-                                                            report.attachment_path
+                                                            report.attachment_url
                                                         }
                                                         target="_blank"
                                                         rel="noopener noreferrer"
@@ -421,7 +372,7 @@ export default function WorkVisitsShow({ workVisit }: ShowProps) {
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="attachment_path">
-                                        Bukti / Foto
+                                        Bukti / Foto (Link)
                                     </Label>
                                     <Input
                                         id="attachment_path"
@@ -440,6 +391,29 @@ export default function WorkVisitsShow({ workVisit }: ShowProps) {
                                         }
                                     />
                                 </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="attachment">
+                                        Unggah Berkas (opsional)
+                                    </Label>
+                                    <Input
+                                        id="attachment"
+                                        type="file"
+                                        accept=".pdf,.png,.jpg,.jpeg,.webp"
+                                        onChange={(e) =>
+                                            reportForm.setData(
+                                                'attachment',
+                                                e.target.files?.[0] ?? null,
+                                            )
+                                        }
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Maks. 4 MB. PDF, PNG, JPG, WEBP. Mengganti
+                                        link bila diunggah.
+                                    </p>
+                                    <InputError
+                                        message={reportForm.errors.attachment}
+                                    />
+                                </div>
                                 <div className="flex justify-end">
                                     <Button
                                         type="submit"
@@ -455,62 +429,6 @@ export default function WorkVisitsShow({ workVisit }: ShowProps) {
                     </Card>
                 </div>
             </div>
-
-            <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Tolak Kunjungan Kerja</DialogTitle>
-                    </DialogHeader>
-
-                    <form
-                        id="reject-form"
-                        onSubmit={submitReject}
-                        className="grid gap-4"
-                    >
-                        <div className="grid gap-2">
-                            <Label htmlFor="decision_note">
-                                Alasan Penolakan
-                            </Label>
-                            <textarea
-                                id="decision_note"
-                                value={rejectForm.data.decision_note}
-                                onChange={(e) =>
-                                    rejectForm.setData(
-                                        'decision_note',
-                                        e.target.value,
-                                    )
-                                }
-                                rows={3}
-                                placeholder="Alasan penolakan (opsional)"
-                                className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
-                            />
-                            <InputError
-                                message={rejectForm.errors.decision_note}
-                            />
-                        </div>
-                    </form>
-
-                    <DialogFooter>
-                        <Button
-                            variant="outline"
-                            type="button"
-                            onClick={() => setRejectOpen(false)}
-                        >
-                            <X />
-                            Batal
-                        </Button>
-                        <Button
-                            type="submit"
-                            form="reject-form"
-                            variant="destructive"
-                            disabled={rejectForm.processing}
-                        >
-                            <X />
-                            Tolak
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </>
     );
 }

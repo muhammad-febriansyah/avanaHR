@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Approvals\ApprovalEngine;
 use App\Enums\RequestStatus;
-use App\Http\Requests\EmployeeLoan\DecideEmployeeLoanRequest;
 use App\Http\Requests\EmployeeLoan\StoreEmployeeLoanRequest;
 use App\Http\Requests\EmployeeLoan\UpdateEmployeeLoanRequest;
 use App\Models\Employee;
@@ -17,6 +17,8 @@ use Inertia\Response;
 class EmployeeLoanController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(private readonly ApprovalEngine $engine) {}
 
     public function index(Request $request): Response
     {
@@ -69,14 +71,23 @@ class EmployeeLoanController extends Controller
     {
         $data = $request->validated();
 
-        EmployeeLoan::create([
+        $loan = EmployeeLoan::create([
             ...$data,
             'installment' => $this->monthlyInstallment($data['principal'], $data['tenor_months']),
             'outstanding' => $data['principal'],
             'status' => RequestStatus::Pending,
         ]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Pinjaman berhasil ditambahkan.']);
+        // Route through the approval engine: auto-approves when no flow is
+        // configured, otherwise opens a request that approvers act on via the
+        // approval inbox.
+        $approval = $this->engine->submit($loan, $request->user());
+
+        $message = $approval === null
+            ? 'Pinjaman dibuat dan disetujui otomatis (belum ada alur persetujuan).'
+            : 'Pinjaman diajukan dan menunggu persetujuan.';
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
 
         return back();
     }
@@ -98,25 +109,6 @@ class EmployeeLoanController extends Controller
         ]);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Pinjaman berhasil diperbarui.']);
-
-        return back();
-    }
-
-    public function decide(DecideEmployeeLoanRequest $request, EmployeeLoan $employeeLoan): RedirectResponse
-    {
-        $this->authorize('update', $employeeLoan);
-
-        if ($employeeLoan->status !== RequestStatus::Pending) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Pinjaman ini sudah diproses.']);
-
-            return back();
-        }
-
-        $status = RequestStatus::from($request->validated()['status']);
-        $employeeLoan->update(['status' => $status]);
-
-        $label = $status === RequestStatus::Approved ? 'disetujui' : 'ditolak';
-        Inertia::flash('toast', ['type' => 'success', 'message' => "Pinjaman {$label}."]);
 
         return back();
     }

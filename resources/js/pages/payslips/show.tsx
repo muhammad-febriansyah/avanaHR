@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Printer } from 'lucide-react';
 import payslips from '@/actions/App/Http/Controllers/PayslipController';
 import PageHeader from '@/components/page-header';
 import { Button } from '@/components/ui/button';
@@ -68,12 +68,24 @@ export default function PayslipShow({ payslip }: ShowProps) {
                     title="Slip Gaji"
                     description={`${payslip.run_no ?? '-'} · ${payslip.period_code ?? '-'}`}
                 >
-                    <Button variant="outline" asChild>
-                        <Link href={payslips.index.url()}>
-                            <ArrowLeft />
-                            Kembali
-                        </Link>
-                    </Button>
+                    <div className="flex items-center gap-2">
+                        <Button asChild>
+                            <a
+                                href={`/payslips/${payslip.id}/print`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <Printer />
+                                Cetak / PDF
+                            </a>
+                        </Button>
+                        <Button variant="outline" asChild>
+                            <Link href={payslips.index.url()}>
+                                <ArrowLeft />
+                                Kembali
+                            </Link>
+                        </Button>
+                    </div>
                 </PageHeader>
 
                 <Card className="gap-0 py-0">

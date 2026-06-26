@@ -1,11 +1,5 @@
 import { Head, router } from '@inertiajs/react';
-import {
-    Check,
-    ChevronLeft,
-    ChevronRight,
-    PencilRuler,
-    X,
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight, PencilRuler } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import attendanceCorrections from '@/actions/App/Http/Controllers/AttendanceCorrectionController';
 import PageHeader from '@/components/page-header';
@@ -102,14 +96,6 @@ export default function AttendanceCorrectionsIndex({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
-    function decide(id: number, decision: 'approved' | 'rejected') {
-        router.patch(
-            attendanceCorrections.decide.url(id),
-            { status: decision },
-            { preserveScroll: true },
-        );
-    }
-
     const rows = paginator.data;
 
     return (
@@ -119,7 +105,7 @@ export default function AttendanceCorrectionsIndex({
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <PageHeader
                     title="Koreksi Absensi"
-                    description="Tinjau dan setujui pengajuan koreksi kehadiran dari karyawan."
+                    description="Tinjau pengajuan koreksi kehadiran. Persetujuan dilakukan melalui Inbox Approval."
                 />
 
                 <Card className="gap-0 py-0">
@@ -170,13 +156,12 @@ export default function AttendanceCorrectionsIndex({
                                         <TableHead>Usulan Keluar</TableHead>
                                         <TableHead>Alasan</TableHead>
                                         <TableHead>Status</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={7} className="py-12">
+                                            <TableCell colSpan={6} className="py-12">
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <PencilRuler className="size-6" />
@@ -216,46 +201,6 @@ export default function AttendanceCorrectionsIndex({
                                                         {STATUS_LABELS[item.status] ??
                                                             item.status}
                                                     </Badge>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <div className="flex items-center justify-end gap-2">
-                                                        {item.status === 'pending' ? (
-                                                            <>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    className="text-emerald-700 hover:text-emerald-700 dark:text-emerald-400"
-                                                                    onClick={() =>
-                                                                        decide(
-                                                                            item.id,
-                                                                            'approved',
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <Check />
-                                                                    Setujui
-                                                                </Button>
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="outline"
-                                                                    className="text-red-700 hover:text-red-700 dark:text-red-400"
-                                                                    onClick={() =>
-                                                                        decide(
-                                                                            item.id,
-                                                                            'rejected',
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <X />
-                                                                    Tolak
-                                                                </Button>
-                                                            </>
-                                                        ) : (
-                                                            <span className="text-xs text-muted-foreground">
-                                                                Selesai
-                                                            </span>
-                                                        )}
-                                                    </div>
                                                 </TableCell>
                                             </TableRow>
                                         ))

@@ -1,9 +1,10 @@
-import { Head } from '@inertiajs/react';
-import { Building2, Minus, Network, Plus, Users } from 'lucide-react';
-import { useState } from 'react';
+import OrganizationController from '@/actions/App/Http/Controllers/OrganizationController';
 import PageHeader from '@/components/page-header';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { Head, router } from '@inertiajs/react';
+import { Building2, Minus, Network, Plus, Users } from 'lucide-react';
+import { createContext, useContext, useState, type DragEvent } from 'react';
 
 type OrgNode = {
     id: number;
@@ -18,18 +19,105 @@ type StructureProps = {
     tree: OrgNode[];
 };
 
+type DragState = {
+    draggingId: number | null;
+    setDraggingId: (id: number | null) => void;
+    onDropOn: (target: OrgNode) => void;
+};
+
+const DragContext = createContext<DragState | null>(null);
+
+function useDrag(): DragState {
+    const context = useContext(DragContext);
+
+    if (!context) {
+        throw new Error('useDrag must be used within a DragContext provider');
+    }
+
+    return context;
+}
+
 function NodeBox({ node }: { node: OrgNode }) {
     const [open, setOpen] = useState(true);
+    const [isDragOver, setIsDragOver] = useState(false);
+    const drag = useDrag();
     const hasChildren = node.children.length > 0;
     const isCompany = node.type === 'company';
+    const isDepartment = node.type === 'department';
+
+    // A department dragged onto itself or onto its current dragging source is a no-op.
+    const isDragSource = isDepartment && drag.draggingId === node.id;
+    // Anything is a valid drop target while a department is being dragged,
+    // except the dragged node itself (server still guards cross-company/cycles).
+    const canDrop = drag.draggingId !== null && drag.draggingId !== node.id;
+
+    function handleDragStart(event: DragEvent<HTMLDivElement>) {
+        if (!isDepartment) {
+            return;
+        }
+
+        event.stopPropagation();
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', String(node.id));
+        drag.setDraggingId(node.id);
+    }
+
+    function handleDragEnd() {
+        drag.setDraggingId(null);
+        setIsDragOver(false);
+    }
+
+    function handleDragOver(event: DragEvent<HTMLDivElement>) {
+        if (!canDrop) {
+            return;
+        }
+
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }
+
+    function handleDragEnter(event: DragEvent<HTMLDivElement>) {
+        if (!canDrop) {
+            return;
+        }
+
+        event.preventDefault();
+        setIsDragOver(true);
+    }
+
+    function handleDragLeave() {
+        setIsDragOver(false);
+    }
+
+    function handleDrop(event: DragEvent<HTMLDivElement>) {
+        if (!canDrop) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        setIsDragOver(false);
+        drag.onDropOn(node);
+    }
 
     return (
         <li>
             <div className="org-node">
                 <div
+                    draggable={isDepartment}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                    onDragOver={handleDragOver}
+                    onDragEnter={handleDragEnter}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    aria-grabbed={isDragSource}
                     className={cn(
-                        'relative flex w-56 flex-col items-center gap-2 rounded-xl border bg-card px-4 py-4 text-center shadow-sm',
+                        'relative flex w-56 flex-col items-center gap-2 rounded-xl border bg-card px-4 py-4 text-center shadow-sm transition-all',
                         isCompany ? 'border-primary/30' : 'border-border',
+                        isDepartment && 'cursor-grab active:cursor-grabbing',
+                        isDragSource && 'opacity-40',
+                        isDragOver && canDrop && 'border-primary ring-2 ring-primary/40',
                     )}
                 >
                     <span
@@ -97,6 +185,32 @@ function NodeBox({ node }: { node: OrgNode }) {
 }
 
 export default function OrganizationStructure({ tree }: StructureProps) {
+    const [draggingId, setDraggingId] = useState<number | null>(null);
+
+    function handleDropOn(target: OrgNode) {
+        if (draggingId === null || draggingId === target.id) {
+            return;
+        }
+
+        // Dropping on a company root moves the department to the top level
+        // (parent_id = null); dropping on a department nests it underneath.
+        const parentId = target.type === 'company' ? null : target.id;
+
+        router.patch(
+            OrganizationController.reparent.url(draggingId),
+            { parent_id: parentId },
+            { preserveScroll: true },
+        );
+
+        setDraggingId(null);
+    }
+
+    const dragState: DragState = {
+        draggingId,
+        setDraggingId,
+        onDropOn: handleDropOn,
+    };
+
     return (
         <>
             <Head title="Struktur Organisasi" />
@@ -106,7 +220,7 @@ export default function OrganizationStructure({ tree }: StructureProps) {
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <PageHeader
                     title="Struktur Organisasi"
-                    description="Hierarki perusahaan, departemen, dan jumlah karyawan aktif."
+                    description="Hierarki perusahaan, departemen, dan jumlah karyawan aktif. Seret departemen untuk memindahkan posisinya."
                 />
 
                 <Card>
@@ -121,16 +235,18 @@ export default function OrganizationStructure({ tree }: StructureProps) {
                                 </p>
                             </div>
                         ) : (
-                            <div className="org-tree overflow-x-auto pb-4">
-                                <ul>
-                                    {tree.map((node) => (
-                                        <NodeBox
-                                            key={`${node.type}-${node.id}`}
-                                            node={node}
-                                        />
-                                    ))}
-                                </ul>
-                            </div>
+                            <DragContext.Provider value={dragState}>
+                                <div className="org-tree overflow-x-auto pb-4">
+                                    <ul>
+                                        {tree.map((node) => (
+                                            <NodeBox
+                                                key={`${node.type}-${node.id}`}
+                                                node={node}
+                                            />
+                                        ))}
+                                    </ul>
+                                </div>
+                            </DragContext.Provider>
                         )}
                     </CardContent>
                 </Card>

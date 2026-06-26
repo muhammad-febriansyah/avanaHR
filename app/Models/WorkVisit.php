@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use App\Contracts\Approvable;
 use App\Enums\RequestStatus;
 use App\Models\Concerns\BelongsToTenant;
+use App\Models\Concerns\HasApprovals;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class WorkVisit extends Model
+class WorkVisit extends Model implements Approvable
 {
-    use BelongsToTenant, HasFactory;
+    use BelongsToTenant, HasApprovals, HasFactory;
 
     protected $guarded = ['id'];
 
@@ -44,5 +46,54 @@ class WorkVisit extends Model
     public function isPending(): bool
     {
         return $this->status === RequestStatus::Pending;
+    }
+
+    public function approvalType(): string
+    {
+        return 'work_visit';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function approvalContext(): array
+    {
+        $employment = $this->employee?->currentEmployment;
+
+        return [
+            'amount' => $this->estimated_cost !== null ? (int) $this->estimated_cost : null,
+            'destination' => $this->destination,
+            'start_date' => $this->start_date?->format('Y-m-d'),
+            'end_date' => $this->end_date?->format('Y-m-d'),
+            'department_id' => $employment?->department_id,
+            'branch_id' => $employment?->branch_id,
+        ];
+    }
+
+    public function approvalTitle(): string
+    {
+        $name = $this->employee?->fullName() ?? 'Karyawan';
+
+        return "Kunjungan Kerja {$name} — {$this->destination}";
+    }
+
+    public function approvalRequesterUserId(): ?int
+    {
+        return $this->employee?->user?->id;
+    }
+
+    public function approvalRequesterEmployee(): ?Employee
+    {
+        return $this->employee;
+    }
+
+    public function onApproved(): void
+    {
+        $this->update(['status' => RequestStatus::Approved]);
+    }
+
+    public function onRejected(): void
+    {
+        $this->update(['status' => RequestStatus::Rejected]);
     }
 }

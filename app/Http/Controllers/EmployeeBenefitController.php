@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Approvals\ApprovalEngine;
 use App\Enums\RequestStatus;
-use App\Http\Requests\EmployeeBenefit\DecideBenefitClaimRequest;
 use App\Http\Requests\EmployeeBenefit\StoreBenefitClaimRequest;
 use App\Http\Requests\EmployeeBenefit\StoreEmployeeBenefitRequest;
 use App\Models\BenefitClaim;
@@ -20,6 +20,8 @@ use Inertia\Response;
 class EmployeeBenefitController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(private readonly ApprovalEngine $engine) {}
 
     public function index(Request $request): Response
     {
@@ -118,7 +120,6 @@ class EmployeeBenefitController extends Controller
                     'decided_by' => $claim->decidedBy?->name,
                     'decided_at' => $claim->decided_at?->format('Y-m-d H:i'),
                     'decision_note' => $claim->decision_note,
-                    'can_decide' => $claim->isPending(),
                 ])->all(),
             ],
         ]);
@@ -139,45 +140,20 @@ class EmployeeBenefitController extends Controller
     {
         $this->authorize('update', $employeeBenefit);
 
-        $employeeBenefit->claims()->create([
+        $claim = $employeeBenefit->claims()->create([
             ...$request->validated(),
             'status' => RequestStatus::Pending,
         ]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Klaim benefit ditambahkan.']);
+        // Route through the approval engine: opens a request approvers act on via
+        // the approval inbox. The plafond guard lives in BenefitClaim::onApproved.
+        $approval = $this->engine->submit($claim, $request->user());
 
-        return back();
-    }
+        $message = $approval === null
+            ? 'Klaim benefit ditambahkan dan disetujui otomatis (belum ada alur persetujuan).'
+            : 'Klaim benefit diajukan dan menunggu persetujuan.';
 
-    public function decideClaim(DecideBenefitClaimRequest $request, BenefitClaim $benefitClaim): RedirectResponse
-    {
-        $this->authorize('update', $benefitClaim->employeeBenefit);
-
-        if (! $benefitClaim->isPending()) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Klaim sudah diproses.']);
-
-            return back();
-        }
-
-        $validated = $request->validated();
-        $status = RequestStatus::from($validated['status']);
-
-        if ($status === RequestStatus::Approved
-            && (int) $benefitClaim->amount > $benefitClaim->employeeBenefit->remainingQuota()) {
-            Inertia::flash('toast', ['type' => 'error', 'message' => 'Klaim melebihi sisa plafon.']);
-
-            return back();
-        }
-
-        $benefitClaim->update([
-            'status' => $status,
-            'decided_by' => $request->user()->id,
-            'decided_at' => now(),
-            'decision_note' => $validated['decision_note'] ?? null,
-        ]);
-
-        $label = $status === RequestStatus::Approved ? 'disetujui' : 'ditolak';
-        Inertia::flash('toast', ['type' => 'success', 'message' => "Klaim benefit {$label}."]);
+        Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
 
         return back();
     }

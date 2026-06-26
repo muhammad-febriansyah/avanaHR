@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ApprovalFlow;
 use App\Models\AuditLog;
 use App\Models\Backup;
 use App\Models\BenefitClaim;
@@ -62,6 +63,7 @@ class DemoTenantSeeder extends Seeder
         TenantSubscription::factory()->create(['tenant_id' => $tid]);
 
         $this->seedRbac($tid);
+        $this->seedApprovalFlows($tid);
 
         // Organization
         $company = Company::factory()->create([
@@ -682,6 +684,7 @@ class DemoTenantSeeder extends Seeder
             'payroll.view', 'payroll.run', 'payroll.approve',
             'report.view', 'report.export',
             'setting.manage',
+            'approval.act',
         ];
 
         foreach ($permissions as $permission) {
@@ -697,15 +700,50 @@ class DemoTenantSeeder extends Seeder
             // Tenant-level configurator: roles, permissions, workflow, layout/menu.
             'tenant-admin' => ['setting.manage', 'employee.view', 'report.view'],
             'hr-admin' => $permissions,
-            'payroll-officer' => ['payroll.view', 'payroll.run', 'attendance.view', 'employee.view'],
-            'finance' => ['payroll.view', 'payroll.approve', 'report.view', 'report.export'],
-            'manager' => ['employee.view', 'attendance.view', 'leave.view', 'leave.approve'],
+            'payroll-officer' => ['payroll.view', 'payroll.run', 'attendance.view', 'employee.view', 'approval.act'],
+            'finance' => ['payroll.view', 'payroll.approve', 'report.view', 'report.export', 'approval.act'],
+            'manager' => ['employee.view', 'attendance.view', 'leave.view', 'leave.approve', 'approval.act'],
             'employee' => ['leave.view'],
             'auditor' => ['employee.view', 'payroll.view', 'report.view'],
         ];
 
         foreach ($roles as $role => $grants) {
             Role::findOrCreate($role, 'web')->syncPermissions($grants);
+        }
+    }
+
+    /**
+     * Seed a demo approval flow so overtime submissions route to a manager
+     * (single sequential step) instead of auto-approving.
+     */
+    private function seedApprovalFlows(int $tid): void
+    {
+        $flows = [
+            'overtime' => 'Persetujuan Lembur',
+            'leave' => 'Persetujuan Cuti',
+            'reimbursement' => 'Persetujuan Reimbursement',
+            'loan' => 'Persetujuan Pinjaman',
+            'work_visit' => 'Persetujuan Kunjungan Kerja',
+            'benefit_claim' => 'Persetujuan Klaim Benefit',
+            'attendance_correction' => 'Persetujuan Koreksi Absensi',
+        ];
+
+        foreach ($flows as $type => $name) {
+            $flow = ApprovalFlow::create([
+                'tenant_id' => $tid,
+                'transaction_type' => $type,
+                'name' => $name,
+                'is_active' => true,
+            ]);
+
+            $flow->steps()->create([
+                'order' => 1,
+                'mode' => 'sequential',
+                'approver_type' => 'role',
+                'approver_ref' => 'manager',
+                'min_approvals' => 1,
+                'allow_delegate' => true,
+            ]);
         }
     }
 

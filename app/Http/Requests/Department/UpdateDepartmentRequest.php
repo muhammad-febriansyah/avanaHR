@@ -36,6 +36,7 @@ class UpdateDepartmentRequest extends FormRequest
                     }
                 },
             ],
+            'head_employee_id' => ['nullable', 'integer', Rule::exists('employees', 'id')->where('tenant_id', $tenantId)],
         ];
     }
 
@@ -49,6 +50,7 @@ class UpdateDepartmentRequest extends FormRequest
             'code.unique' => 'Kode departemen sudah digunakan.',
             'name.required' => 'Nama wajib diisi.',
             'parent_id.exists' => 'Departemen induk tidak valid.',
+            'head_employee_id.exists' => 'Kepala departemen tidak valid.',
         ];
     }
 }
