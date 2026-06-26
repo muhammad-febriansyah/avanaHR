@@ -56,6 +56,7 @@ import {
 import { index as approvalDelegationsIndex } from '@/routes/approval-delegations';
 import { index as approvalFlowsIndex } from '@/routes/approval-flows';
 import { index as approvalsIndex } from '@/routes/approvals';
+import { index as auditLogsIndex } from '@/routes/audit-logs';
 import { index as benefitTypesIndex } from '@/routes/benefit-types';
 import { index as bpjsParametersIndex } from '@/routes/bpjs-parameters';
 import { edit as brandingEdit } from '@/routes/branding';
@@ -332,6 +333,12 @@ const navGroups: NavGroup[] = [
     {
         label: 'Sistem',
         items: [
+            {
+                title: 'Audit Log',
+                href: auditLogsIndex(),
+                icon: ScrollText,
+                permission: 'audit.view',
+            },
             {
                 title: 'Laporan',
                 href: '#',

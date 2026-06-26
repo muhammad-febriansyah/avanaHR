@@ -6,6 +6,7 @@ use App\Http\Controllers\ApprovalDelegationController;
 use App\Http\Controllers\ApprovalFlowController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceCorrectionController;
+use App\Http\Controllers\AuditLogController as TenantAuditLogController;
 use App\Http\Controllers\BankFileController;
 use App\Http\Controllers\BenefitTypeController;
 use App\Http\Controllers\BpjsParameterController;
@@ -42,6 +43,7 @@ use App\Http\Controllers\PayslipController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Platform\AuditLogController;
 use App\Http\Controllers\Platform\BackupController;
+use App\Http\Controllers\Platform\ImpersonationController;
 use App\Http\Controllers\Platform\ProvisioningController;
 use App\Http\Controllers\Platform\SecurityEventController;
 use App\Http\Controllers\Platform\SubscriptionController;
@@ -77,6 +79,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('roles', RoleController::class)->except(['show']);
     Route::resource('users', UserController::class)->only(['index', 'edit', 'update']);
     Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::get('audit-logs', [TenantAuditLogController::class, 'index'])->name('audit-logs.index');
+    Route::post('impersonate/stop', [ImpersonationController::class, 'stop'])->name('impersonate.stop');
     Route::post('notifications/read-all', [NotificationController::class, 'markAllRead'])
         ->name('notifications.read-all');
     Route::post('notifications/{notification}/read', [NotificationController::class, 'markRead'])
@@ -270,6 +274,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('platform.')
         ->group(function () {
             Route::resource('tenants', TenantController::class);
+            Route::post('tenants/{tenant}/impersonate', [ImpersonationController::class, 'start'])
+                ->name('tenants.impersonate');
             Route::get('audit-logs', [AuditLogController::class, 'index'])
                 ->name('audit-logs.index');
             Route::get('security-events', [SecurityEventController::class, 'index'])
@@ -280,6 +286,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->name('provisioning.apply');
             Route::get('subscriptions', [SubscriptionController::class, 'index'])
                 ->name('subscriptions.index');
+            Route::put('subscriptions/{tenant}', [SubscriptionController::class, 'update'])
+                ->name('subscriptions.update');
             Route::get('backups', [BackupController::class, 'index'])->name('backups.index');
             Route::post('backups', [BackupController::class, 'store'])->name('backups.store');
             Route::get('backups/{backup}/download', [BackupController::class, 'download'])

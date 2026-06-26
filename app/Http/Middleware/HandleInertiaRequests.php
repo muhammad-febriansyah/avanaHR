@@ -54,6 +54,9 @@ class HandleInertiaRequests extends Middleware
             'features' => $this->resolveFeatures($request->user()),
             'org' => $this->resolveBranding($request->user()),
             'notifications' => $this->resolveNotifications($request->user()),
+            'impersonating' => $request->session()->has('impersonator_id')
+                ? ['name' => $request->user()?->name]
+                : null,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

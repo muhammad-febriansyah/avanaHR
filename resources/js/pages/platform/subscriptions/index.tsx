@@ -201,13 +201,14 @@ export default function SubscriptionsIndex({
                                         <TableHead>Fitur Aktif</TableHead>
                                         <TableHead>Mulai</TableHead>
                                         <TableHead>Berakhir</TableHead>
+                                        <TableHead>Ubah Paket</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={7}
+                                                colSpan={8}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -266,6 +267,46 @@ export default function SubscriptionsIndex({
                                                 <TableCell className="text-xs text-muted-foreground tabular-nums">
                                                     {row.ends_at ??
                                                         'Tanpa batas'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Select
+                                                        value={row.tier ?? ''}
+                                                        onValueChange={(
+                                                            value,
+                                                        ) =>
+                                                            router.put(
+                                                                subscriptions.update.url(
+                                                                    row.id,
+                                                                ),
+                                                                { tier: value },
+                                                                {
+                                                                    preserveScroll: true,
+                                                                },
+                                                            )
+                                                        }
+                                                    >
+                                                        <SelectTrigger className="h-8 w-36">
+                                                            <SelectValue placeholder="Pilih paket" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {tiers.map(
+                                                                (option) => (
+                                                                    <SelectItem
+                                                                        key={
+                                                                            option.value
+                                                                        }
+                                                                        value={
+                                                                            option.value
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            option.label
+                                                                        }
+                                                                    </SelectItem>
+                                                                ),
+                                                            )}
+                                                        </SelectContent>
+                                                    </Select>
                                                 </TableCell>
                                             </TableRow>
                                         ))

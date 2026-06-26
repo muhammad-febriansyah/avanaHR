@@ -685,6 +685,7 @@ class DemoTenantSeeder extends Seeder
             'report.view', 'report.export',
             'setting.manage',
             'approval.act',
+            'audit.view',
         ];
 
         foreach ($permissions as $permission) {
@@ -698,13 +699,13 @@ class DemoTenantSeeder extends Seeder
 
         $roles = [
             // Tenant-level configurator: roles, permissions, workflow, layout/menu.
-            'tenant-admin' => ['setting.manage', 'employee.view', 'report.view'],
+            'tenant-admin' => ['setting.manage', 'employee.view', 'report.view', 'audit.view'],
             'hr-admin' => $permissions,
             'payroll-officer' => ['payroll.view', 'payroll.run', 'attendance.view', 'employee.view', 'approval.act'],
-            'finance' => ['payroll.view', 'payroll.approve', 'report.view', 'report.export', 'approval.act'],
+            'finance' => ['payroll.view', 'payroll.approve', 'report.view', 'report.export', 'approval.act', 'employee.view'],
             'manager' => ['employee.view', 'attendance.view', 'leave.view', 'leave.approve', 'approval.act'],
             'employee' => ['leave.view'],
-            'auditor' => ['employee.view', 'payroll.view', 'report.view'],
+            'auditor' => ['employee.view', 'payroll.view', 'report.view', 'audit.view'],
         ];
 
         foreach ($roles as $role => $grants) {

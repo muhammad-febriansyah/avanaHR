@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use App\Models\TenantSubscription;
 use App\Support\Features;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -52,6 +54,28 @@ class SubscriptionController extends Controller
             'tiers' => $this->tierOptions(),
             'summary' => $this->summary(),
         ]);
+    }
+
+    /**
+     * Change a tenant's subscription tier (paket).
+     */
+    public function update(Request $request, Tenant $tenant): RedirectResponse
+    {
+        $data = $request->validate([
+            'tier' => ['required', Rule::enum(SubscriptionTier::class)],
+        ]);
+
+        $subscription = $tenant->subscription;
+
+        if ($subscription !== null) {
+            $subscription->update(['tier' => $data['tier'], 'status' => 'active']);
+        } else {
+            $tenant->subscription()->create(['tier' => $data['tier'], 'status' => 'active']);
+        }
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => "Paket {$tenant->name} diubah ke ".ucfirst($data['tier']).'.']);
+
+        return back();
     }
 
     /**

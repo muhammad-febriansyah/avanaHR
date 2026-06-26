@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import {
     ArrowLeft,
     Building2,
@@ -6,6 +6,7 @@ import {
     CreditCard,
     Globe,
     Pencil,
+    UserCog,
     Users,
 } from 'lucide-react';
 import tenants from '@/actions/App/Http/Controllers/Platform/TenantController';
@@ -86,6 +87,17 @@ export default function TenantsShow({ tenant }: ShowProps) {
                             <Pencil />
                             Edit
                         </Link>
+                    </Button>
+                    <Button
+                        variant="outline"
+                        onClick={() =>
+                            router.post(
+                                `/platform/tenants/${tenant.id}/impersonate`,
+                            )
+                        }
+                    >
+                        <UserCog />
+                        Masuk sebagai Tenant
                     </Button>
                 </PageHeader>
 
