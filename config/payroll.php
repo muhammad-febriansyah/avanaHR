@@ -94,8 +94,17 @@ return [
     'overtime' => [
         'enabled' => true,
         'hours_divisor' => 173,
-        'workday_first_hour_multiplier' => 1.5,
-        'workday_subsequent_multiplier' => 2.0,
+
+        // Tiered multipliers per day type: [up_to_hour, multiplier], cumulative;
+        // last row up_to_hour = null (no ceiling).
+        //  - workday  : jam ke-1 1.5x, berikutnya 2x.
+        //  - holiday  : hari libur/istirahat (asumsi 5 hari kerja) jam 1–8 2x,
+        //               jam ke-9 3x, jam ke-10–11 4x. (Kepmenaker 102/2004)
+        'tiers' => [
+            'workday' => [[1, 1.5], [null, 2.0]],
+            'holiday' => [[8, 2.0], [9, 3.0], [null, 4.0]],
+        ],
+
         'base_components' => 'fixed_earnings',
         'component_code' => 'LEMBUR',
         'component_name' => 'Uang Lembur',

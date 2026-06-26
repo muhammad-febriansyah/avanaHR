@@ -1,6 +1,6 @@
-import { usePage } from '@inertiajs/react';
-import { Bell, ChevronDown, Search } from 'lucide-react';
-import { toast } from 'sonner';
+import { router, usePage } from '@inertiajs/react';
+import { Bell, CheckCheck, ChevronDown, Search } from 'lucide-react';
+import notifications from '@/actions/App/Http/Controllers/NotificationController';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,6 +11,13 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useInitials } from '@/hooks/use-initials';
 
+type NotificationItem = {
+    id: number;
+    title: string;
+    read: boolean;
+    at: string | null;
+};
+
 export function AppSidebarHeader() {
     const props = usePage().props;
     const auth = props.auth;
@@ -19,6 +26,11 @@ export function AppSidebarHeader() {
             org?: { name: string; logo: string | null };
         }
     ).org;
+    const notif = (
+        props as unknown as {
+            notifications?: { unread: number; items: NotificationItem[] };
+        }
+    ).notifications ?? { unread: 0, items: [] };
     const getInitials = useInitials();
 
     return (
@@ -48,15 +60,76 @@ export function AppSidebarHeader() {
             <div className="flex-1" />
 
             {/* Notifications */}
-            <button
-                type="button"
-                aria-label="Notifikasi"
-                onClick={() => toast.info('Tidak ada notifikasi baru')}
-                className="relative flex size-10 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-muted"
-            >
-                <Bell className="size-[18px]" />
-                <span className="absolute top-1.5 right-1.5 size-[7px] rounded-full border-[1.5px] border-background bg-destructive" />
-            </button>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <button
+                        type="button"
+                        aria-label="Notifikasi"
+                        className="relative flex size-10 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-muted"
+                    >
+                        <Bell className="size-[18px]" />
+                        {notif.unread > 0 && (
+                            <span className="absolute -top-1 -right-1 flex min-w-[18px] items-center justify-center rounded-full border-[1.5px] border-background bg-destructive px-1 text-[10px] font-semibold text-white">
+                                {notif.unread > 9 ? '9+' : notif.unread}
+                            </span>
+                        )}
+                    </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-80 p-0">
+                    <div className="flex items-center justify-between border-b border-border px-3 py-2">
+                        <span className="text-sm font-semibold text-navy">
+                            Notifikasi
+                        </span>
+                        {notif.unread > 0 && (
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    router.post(
+                                        notifications.markAllRead.url(),
+                                        {},
+                                        { preserveScroll: true },
+                                    )
+                                }
+                                className="flex items-center gap-1 text-xs text-primary hover:underline"
+                            >
+                                <CheckCheck className="size-3.5" />
+                                Tandai dibaca
+                            </button>
+                        )}
+                    </div>
+                    <div className="max-h-80 overflow-y-auto">
+                        {notif.items.length === 0 ? (
+                            <p className="px-3 py-6 text-center text-sm text-muted-foreground">
+                                Tidak ada notifikasi
+                            </p>
+                        ) : (
+                            notif.items.map((item) => (
+                                <button
+                                    key={item.id}
+                                    type="button"
+                                    onClick={() =>
+                                        router.post(
+                                            notifications.markRead.url(item.id),
+                                            {},
+                                            { preserveScroll: true },
+                                        )
+                                    }
+                                    className={`flex w-full flex-col gap-0.5 border-b border-border/50 px-3 py-2 text-left transition-colors hover:bg-muted ${item.read ? 'opacity-60' : 'bg-primary/5'}`}
+                                >
+                                    <span className="text-sm text-navy">
+                                        {item.title}
+                                    </span>
+                                    {item.at && (
+                                        <span className="text-xs text-muted-foreground">
+                                            {item.at}
+                                        </span>
+                                    )}
+                                </button>
+                            ))
+                        )}
+                    </div>
+                </DropdownMenuContent>
+            </DropdownMenu>
 
             <div className="h-7 w-px bg-border" />
 

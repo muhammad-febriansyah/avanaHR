@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Company;
+use App\Models\Notification;
 use App\Models\Scopes\TenantScope;
 use App\Models\Tenant;
 use App\Models\User;
@@ -52,8 +53,53 @@ class HandleInertiaRequests extends Middleware
             ],
             'features' => $this->resolveFeatures($request->user()),
             'org' => $this->resolveBranding($request->user()),
+            'notifications' => $this->resolveNotifications($request->user()),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
+    }
+
+    /**
+     * The current user's recent in-app notifications + unread count for the
+     * topbar bell. Tenant-scoped via the model's global scope.
+     *
+     * @return array{unread: int, items: array<int, array<string, mixed>>}
+     */
+    private function resolveNotifications(?User $user): array
+    {
+        if ($user === null || ($user->getAttributes()['tenant_id'] ?? null) === null) {
+            return ['unread' => 0, 'items' => []];
+        }
+
+        $items = Notification::query()
+            ->where('user_id', $user->id)
+            ->latest('id')
+            ->limit(10)
+            ->get(['id', 'type', 'payload', 'read_at', 'created_at']);
+
+        return [
+            'unread' => Notification::query()->where('user_id', $user->id)->whereNull('read_at')->count(),
+            'items' => $items->map(fn (Notification $n): array => [
+                'id' => $n->id,
+                'title' => $n->payload['title'] ?? $this->notificationTitle($n->type),
+                'read' => $n->read_at !== null,
+                'at' => $n->created_at?->diffForHumans(),
+            ])->all(),
+        ];
+    }
+
+    private function notificationTitle(string $type): string
+    {
+        return match ($type) {
+            'approval.assigned' => 'Pengajuan menunggu persetujuan Anda',
+            'approval.approved' => 'Pengajuan Anda disetujui',
+            'approval.rejected' => 'Pengajuan Anda ditolak',
+            'approval.revision' => 'Pengajuan Anda perlu revisi',
+            'approval.sla_reminder' => 'Persetujuan melewati SLA',
+            'approval.escalated' => 'Persetujuan dieskalasi ke Anda',
+            'document.expiring' => 'Dokumen akan kedaluwarsa',
+            'contract.expiring' => 'Kontrak akan berakhir',
+            default => 'Notifikasi',
+        };
     }
 
     /**

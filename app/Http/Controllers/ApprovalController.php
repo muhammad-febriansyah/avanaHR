@@ -16,6 +16,7 @@ use App\Models\EmployeeLoan;
 use App\Models\LeaveRequest;
 use App\Models\OvertimeRequest;
 use App\Models\Reimbursement;
+use App\Models\ShiftSwap;
 use App\Models\WorkVisit;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\RedirectResponse;
@@ -138,6 +139,7 @@ class ApprovalController extends Controller
             Reimbursement::class => ['employee'],
             EmployeeLoan::class => ['employee'],
             EmployeeChangeRequest::class => ['employee'],
+            ShiftSwap::class => ['requester', 'target'],
             AttendanceCorrection::class => ['employee'],
             BenefitClaim::class => ['employeeBenefit.employee', 'employeeBenefit.benefitType'],
         ]);

@@ -214,6 +214,7 @@ class ApprovalFlowController extends Controller
             ['value' => 'work_visit', 'label' => 'Kunjungan Kerja'],
             ['value' => 'benefit_claim', 'label' => 'Klaim Benefit'],
             ['value' => 'attendance_correction', 'label' => 'Koreksi Absensi'],
+            ['value' => 'shift_swap', 'label' => 'Tukar Shift'],
             ['value' => 'employee_change', 'label' => 'Perubahan Data Karyawan'],
             ['value' => 'lifecycle', 'label' => 'Perubahan Data'],
             ['value' => 'payroll', 'label' => 'Payroll'],

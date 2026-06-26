@@ -122,6 +122,7 @@ class OvertimeRequestController extends Controller
                 'date' => $overtimeRequest->date?->format('Y-m-d'),
                 'start_time' => $overtimeRequest->planned_start?->format('H:i'),
                 'end_time' => $overtimeRequest->planned_end?->format('H:i'),
+                'day_type' => $overtimeRequest->day_type ?? 'workday',
                 'reason' => $overtimeRequest->reason,
             ],
         ]);
@@ -171,6 +172,7 @@ class OvertimeRequestController extends Controller
             'planned_start' => $start,
             'planned_end' => $end,
             'planned_minutes' => $start->diffInMinutes($end),
+            'day_type' => $data['day_type'] ?? 'workday',
             'reason' => $data['reason'] ?? null,
         ];
     }

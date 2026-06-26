@@ -42,3 +42,18 @@ it('applies the tiered multiplier per occurrence, not on the lump sum', function
     expect($this->calc->totalPay($this->base, [60, 60]))->toBe(169_076)
         ->and($this->calc->totalPay($this->base, [120]))->toBe(197_254);
 });
+
+it('applies holiday (rest-day) tiers 2x/3x/4x', function () {
+    // 8h holiday: 8h @ 2x = 16 * 56,358.3815 = 901,734.
+    expect($this->calc->payForMinutes($this->base, 480, 'holiday'))->toBe(901_734)
+        // 10h holiday: 8h@2x (16) + 1h@3x (3) + 1h@4x (4) = 23 * 56,358.3815 = 1,296,243.
+        ->and($this->calc->payForMinutes($this->base, 600, 'holiday'))->toBe(1_296_243)
+        // Same minutes on a workday is cheaper than on a holiday.
+        ->and($this->calc->payForMinutes($this->base, 480, 'workday'))
+        ->toBeLessThan($this->calc->payForMinutes($this->base, 480, 'holiday'));
+});
+
+it('reads day_type from occurrence arrays in totalPay', function () {
+    expect($this->calc->totalPay($this->base, [['minutes' => 480, 'day_type' => 'holiday']]))->toBe(901_734)
+        ->and($this->calc->totalPay($this->base, [['minutes' => 120, 'day_type' => 'workday']]))->toBe(197_254);
+});

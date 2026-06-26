@@ -10,6 +10,13 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 
 type OvertimeRequest = {
@@ -19,6 +26,7 @@ type OvertimeRequest = {
     date: string | null;
     start_time: string | null;
     end_time: string | null;
+    day_type: string | null;
     reason: string | null;
 };
 
@@ -30,6 +38,7 @@ type OvertimeForm = {
     date: string;
     start_time: string;
     end_time: string;
+    day_type: string;
     reason: string;
 };
 
@@ -40,6 +49,7 @@ export default function OvertimeRequestsEdit({ overtimeRequest }: EditProps) {
         date: overtimeRequest.date ?? '',
         start_time: overtimeRequest.start_time ?? '',
         end_time: overtimeRequest.end_time ?? '',
+        day_type: overtimeRequest.day_type ?? 'workday',
         reason: overtimeRequest.reason ?? '',
     });
 
@@ -134,6 +144,36 @@ export default function OvertimeRequestsEdit({ overtimeRequest }: EditProps) {
                                     />
                                     <InputError
                                         message={form.errors.end_time}
+                                    />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="day_type">
+                                        Jenis Hari <RequiredMark />
+                                    </Label>
+                                    <Select
+                                        value={form.data.day_type}
+                                        onValueChange={(value) =>
+                                            form.setData('day_type', value)
+                                        }
+                                    >
+                                        <SelectTrigger
+                                            id="day_type"
+                                            className="w-full"
+                                        >
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="workday">
+                                                Hari Kerja (1.5x / 2x)
+                                            </SelectItem>
+                                            <SelectItem value="holiday">
+                                                Hari Libur (2x / 3x / 4x)
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <InputError
+                                        message={form.errors.day_type}
                                     />
                                 </div>
 

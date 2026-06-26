@@ -187,20 +187,23 @@ class ProcessPayrollRunAction
         // Taxable earning; not part of the BPJS wage base in this engine.
         $overtimePay = 0;
         if (config('payroll.overtime.enabled', true)) {
-            $overtimeMinutes = OvertimeRequest::query()
+            $occurrences = OvertimeRequest::query()
                 ->where('employee_id', $employee->id)
                 ->where('status', RequestStatus::Approved)
                 ->whereBetween('date', [$periodStart->toDateString(), $periodEnd->toDateString()])
                 ->get()
-                ->map(function (OvertimeRequest $ot): int {
+                ->map(function (OvertimeRequest $ot): array {
                     // Prefer logged actual minutes; fall back to planned when not yet recorded.
                     $actual = (int) ($ot->actual_minutes ?? 0);
 
-                    return $actual > 0 ? $actual : (int) ($ot->planned_minutes ?? 0);
+                    return [
+                        'minutes' => $actual > 0 ? $actual : (int) ($ot->planned_minutes ?? 0),
+                        'day_type' => $ot->day_type ?? 'workday',
+                    ];
                 })
                 ->all();
 
-            $overtimePay = $this->overtime->totalPay($monthlyFixedEarning, $overtimeMinutes);
+            $overtimePay = $this->overtime->totalPay($monthlyFixedEarning, $occurrences);
         }
 
         if ($overtimePay > 0) {
@@ -278,13 +281,16 @@ class ProcessPayrollRunAction
 
         if ($ptkp !== null) {
             if ($isDecemberCorrection) {
-                [$ytdTaxable, $ytdWithheld] = $this->priorYearWithholding($employee, (int) $period->year);
+                [$ytdTaxable, $ytdWithheld, $ytdPension] = $this->priorYearWithholding($employee, (int) $period->year);
                 // beginning_ytd carries prior-employer cumulative taxable income.
                 $annualTaxable = $ytdTaxable + (int) ($taxProfile->beginning_ytd ?? 0) + $taxableGross;
-                $annualTax = $this->annualTax->annualTax($annualTaxable, $ptkp);
+                // Employee pension (JHT + JP) is deductible from annual gross.
+                $annualPension = $ytdPension + (int) ($bpjs['jht_employee'] ?? 0) + (int) ($bpjs['jp_employee'] ?? 0);
+                $annualTax = $this->annualTax->annualTax($annualTaxable, $ptkp, $annualPension);
                 $tax = $annualTax - $ytdWithheld; // December withholding (may be a refund)
                 $annualSummary = [
                     'annual_taxable' => $annualTaxable,
+                    'annual_pension' => $annualPension,
                     'annual_tax' => $annualTax,
                     'ytd_withheld' => $ytdWithheld,
                     'december_correction' => $tax,
@@ -335,10 +341,11 @@ class ProcessPayrollRunAction
     }
 
     /**
-     * Cumulative taxable income + PPh 21 withheld from this year's earlier
-     * periods (Jan–Nov), used for the December annual correction.
+     * Cumulative taxable income, PPh 21 withheld, and deductible employee
+     * pension (JHT + JP) from this year's earlier periods (Jan–Nov), used for
+     * the December annual correction.
      *
-     * @return array{0:int, 1:int} [ytdTaxable, ytdWithheld]
+     * @return array{0:int, 1:int, 2:int} [ytdTaxable, ytdWithheld, ytdPension]
      */
     private function priorYearWithholding(Employee $employee, int $year): array
     {
@@ -349,12 +356,15 @@ class ProcessPayrollRunAction
 
         $taxable = 0;
         $withheld = 0;
+        $pension = 0;
         foreach ($payslips as $payslip) {
             $withheld += (int) $payslip->tax;
             $taxable += (int) ($payslip->snapshot['taxable_gross'] ?? 0);
+            $pension += (int) ($payslip->snapshot['bpjs']['jht_employee'] ?? 0)
+                + (int) ($payslip->snapshot['bpjs']['jp_employee'] ?? 0);
         }
 
-        return [$taxable, $withheld];
+        return [$taxable, $withheld, $pension];
     }
 
     /**

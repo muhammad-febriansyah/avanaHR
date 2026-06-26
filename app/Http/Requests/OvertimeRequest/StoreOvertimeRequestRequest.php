@@ -25,6 +25,7 @@ class StoreOvertimeRequestRequest extends FormRequest
             'date' => ['required', 'date'],
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
+            'day_type' => ['nullable', Rule::in(['workday', 'holiday'])],
             'reason' => ['nullable', 'string', 'max:500'],
         ];
     }

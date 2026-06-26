@@ -67,8 +67,19 @@ it('renders the 1721-A1 annual reconciliation with computed tax', function () {
         );
 });
 
-it('forbids the report for users without report.view', function () {
+it('streams the 1721-A1 as a PDF', function () {
+    $response = $this->actingAs($this->admin)
+        ->get(route('reports.annual-tax.print', ['year' => 2026]));
+
+    $response->assertOk();
+    expect($response->headers->get('content-type'))->toContain('application/pdf');
+});
+
+it('forbids the report (and PDF) for users without report.view', function () {
     $this->actingAs($this->employeeUser)
         ->get(route('reports.annual-tax'))
+        ->assertForbidden();
+    $this->actingAs($this->employeeUser)
+        ->get(route('reports.annual-tax.print'))
         ->assertForbidden();
 });

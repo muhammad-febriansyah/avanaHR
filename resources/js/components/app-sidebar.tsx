@@ -84,6 +84,7 @@ import { index as salaryStructuresIndex } from '@/routes/salary-structures';
 import { index as schedulesIndex } from '@/routes/schedules';
 import { edit as securitySettingsEdit } from '@/routes/security-settings';
 import { index as shiftPatternsIndex } from '@/routes/shift-patterns';
+import { index as shiftSwapsIndex } from '@/routes/shift-swaps';
 import { index as shiftsIndex } from '@/routes/shifts';
 import { index as thrBonusRunsIndex } from '@/routes/thr-bonus-runs';
 import { index as timesheetsIndex } from '@/routes/timesheets';
@@ -209,6 +210,11 @@ const navGroups: NavGroup[] = [
                     {
                         title: 'Roster Shift',
                         href: schedulesIndex(),
+                        permission: 'attendance.view',
+                    },
+                    {
+                        title: 'Tukar Shift',
+                        href: shiftSwapsIndex(),
                         permission: 'attendance.view',
                     },
                     {

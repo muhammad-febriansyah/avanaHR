@@ -1,7 +1,8 @@
 import { Head, router } from '@inertiajs/react';
-import { FileText, Receipt, Scale, Users } from 'lucide-react';
+import { FileText, Printer, Receipt, Scale, Users } from 'lucide-react';
 import form1721 from '@/actions/App/Http/Controllers/Form1721A1Controller';
 import PageHeader from '@/components/page-header';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
     Select,
@@ -100,6 +101,18 @@ export default function AnnualTaxReport({
                             ))}
                         </SelectContent>
                     </Select>
+                    <Button
+                        variant="outline"
+                        onClick={() =>
+                            window.open(
+                                form1721.print.url({ query: { year } }),
+                                '_blank',
+                            )
+                        }
+                    >
+                        <Printer />
+                        Cetak PDF
+                    </Button>
                 </PageHeader>
 
                 <div className="grid gap-4 md:grid-cols-4">

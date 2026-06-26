@@ -59,10 +59,20 @@ type SalaryComponent = {
     effective_date: string | null;
 };
 
+type SalaryBand = {
+    grade_code: string | null;
+    grade_name: string | null;
+    band_min: number;
+    band_max: number;
+    total_fixed: number;
+    within: boolean;
+};
+
 type SalaryProps = {
     employee: { id: number; name: string; employee_no: string };
     salaryComponents: SalaryComponent[];
     components: Component[];
+    salaryBand: SalaryBand | null;
 };
 
 type FormData = {
@@ -114,6 +124,7 @@ export default function EmployeeSalary({
     employee,
     salaryComponents,
     components,
+    salaryBand,
 }: SalaryProps) {
     useFlashToast();
 
@@ -191,6 +202,47 @@ export default function EmployeeSalary({
                         Tambah Komponen
                     </Button>
                 </PageHeader>
+
+                {salaryBand && (
+                    <Card
+                        className={`gap-0 border py-0 ${salaryBand.within ? 'border-border' : 'border-warning bg-warning/5'}`}
+                    >
+                        <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4 text-sm">
+                            <div>
+                                <span className="font-medium text-navy">
+                                    Band Grade {salaryBand.grade_code}
+                                </span>
+                                <span className="ml-2 text-muted-foreground">
+                                    {formatRupiah(salaryBand.band_min)} –{' '}
+                                    {formatRupiah(salaryBand.band_max)}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-muted-foreground">
+                                    Gaji tetap saat ini:
+                                </span>
+                                <span className="font-semibold text-navy">
+                                    {formatRupiah(salaryBand.total_fixed)}
+                                </span>
+                                {salaryBand.within ? (
+                                    <Badge
+                                        variant="secondary"
+                                        className="bg-emerald-100 text-emerald-700"
+                                    >
+                                        Dalam band
+                                    </Badge>
+                                ) : (
+                                    <Badge
+                                        variant="secondary"
+                                        className="bg-amber-100 text-amber-700"
+                                    >
+                                        Di luar band
+                                    </Badge>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
 
                 <Card className="gap-0 py-0">
                     <CardContent className="flex flex-col gap-4 p-5">

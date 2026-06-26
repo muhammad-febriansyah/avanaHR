@@ -38,6 +38,7 @@ const TYPE_LABELS: Record<string, string> = {
     work_visit: 'Kunjungan Kerja',
     benefit_claim: 'Klaim Benefit',
     attendance_correction: 'Koreksi Absensi',
+    shift_swap: 'Tukar Shift',
     employee_change: 'Perubahan Data Karyawan',
     lifecycle: 'Perubahan Data',
     payroll: 'Payroll',

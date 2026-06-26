@@ -32,6 +32,7 @@ use App\Http\Controllers\JobLevelController;
 use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveTypeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OvertimeRequestController;
 use App\Http\Controllers\PayrollComponentController;
@@ -54,6 +55,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SecuritySettingController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\ShiftPatternController;
+use App\Http\Controllers\ShiftSwapController;
 use App\Http\Controllers\ThrBonusRunController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
@@ -75,6 +77,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('roles', RoleController::class)->except(['show']);
     Route::resource('users', UserController::class)->only(['index', 'edit', 'update']);
     Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::post('notifications/read-all', [NotificationController::class, 'markAllRead'])
+        ->name('notifications.read-all');
+    Route::post('notifications/{notification}/read', [NotificationController::class, 'markRead'])
+        ->name('notifications.read');
     Route::get('organization/structure', [OrganizationController::class, 'structure'])
         ->name('organization.structure');
     Route::patch('organization/departments/{department}/reparent', [OrganizationController::class, 'reparent'])
@@ -96,6 +102,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('schedules/generate', [ScheduleController::class, 'generate'])
         ->name('schedules.generate');
     Route::resource('schedules', ScheduleController::class)
+        ->only(['index', 'store', 'destroy']);
+    Route::resource('shift-swaps', ShiftSwapController::class)
         ->only(['index', 'store', 'destroy']);
     Route::resource('payroll-components', PayrollComponentController::class)
         ->only(['index', 'store', 'update', 'destroy']);
@@ -231,6 +239,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('reports.compliance');
     Route::get('reports/annual-tax', [Form1721A1Controller::class, 'index'])
         ->name('reports.annual-tax');
+    Route::get('reports/annual-tax/print', [Form1721A1Controller::class, 'print'])
+        ->name('reports.annual-tax.print');
     Route::get('report-builder', [ReportBuilderController::class, 'index'])->name('report-builder.index');
     Route::post('report-builder', [ReportBuilderController::class, 'store'])->name('report-builder.store');
     Route::get('report-builder/{reportDefinition}/run', [ReportBuilderController::class, 'run'])

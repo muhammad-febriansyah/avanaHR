@@ -7,6 +7,7 @@ use App\Http\Requests\EmployeeSalaryComponent\UpdateEmployeeSalaryComponentReque
 use App\Models\Employee;
 use App\Models\EmployeeSalaryComponent;
 use App\Models\PayrollComponent;
+use App\Models\SalaryStructure;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -58,7 +59,53 @@ class EmployeeSalaryComponentController extends Controller
             ],
             'salaryComponents' => $salaryComponents,
             'components' => $components,
+            'salaryBand' => $this->salaryBand($employee),
         ]);
+    }
+
+    /**
+     * The grade salary band vs the employee's current fixed earnings, so the
+     * UI can flag a salary that falls outside the configured range. Null when
+     * the employee's grade has no band defined.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function salaryBand(Employee $employee): ?array
+    {
+        $gradeId = $employee->currentEmployment?->job_grade_id;
+        if ($gradeId === null) {
+            return null;
+        }
+
+        $structure = SalaryStructure::query()
+            ->with('jobGrade:id,code,name')
+            ->where('job_grade_id', $gradeId)
+            ->first();
+
+        if ($structure === null) {
+            return null;
+        }
+
+        // Current fixed earnings: latest effective amount per fixed earning component.
+        $totalFixed = (int) $employee->salaryComponents()
+            ->with('component')
+            ->get()
+            ->filter(fn (EmployeeSalaryComponent $sc): bool => $sc->component?->type === 'earning' && $sc->component?->calc_type === 'fixed')
+            ->groupBy('component_id')
+            ->map(fn ($group) => $group->sortByDesc('effective_date')->first())
+            ->sum('amount');
+
+        $min = (int) $structure->band_min;
+        $max = (int) $structure->band_max;
+
+        return [
+            'grade_code' => $structure->jobGrade?->code,
+            'grade_name' => $structure->jobGrade?->name,
+            'band_min' => $min,
+            'band_max' => $max,
+            'total_fixed' => $totalFixed,
+            'within' => $totalFixed >= $min && $totalFixed <= $max,
+        ];
     }
 
     public function store(StoreEmployeeSalaryComponentRequest $request, Employee $employee): RedirectResponse

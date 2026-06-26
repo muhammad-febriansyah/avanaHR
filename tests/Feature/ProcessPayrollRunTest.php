@@ -262,6 +262,25 @@ it('adds approved overtime pay as a taxable earning line', function () {
         ->and((int) $payslip->snapshot['overtime_pay'])->toBe(197_254);
 });
 
+it('pays holiday overtime at the higher rest-day tiers', function () {
+    // Base 9,750,000 → hourly 56,358.3815. 8h holiday @ 2x = 901,734.
+    $employee = seedPayrollEmployee(8_000_000, 'TK/0');
+
+    OvertimeRequest::factory()->approved()->create([
+        'tenant_id' => $this->tenant->id,
+        'employee_id' => $employee->id,
+        'date' => '2026-03-17',
+        'planned_minutes' => 480,
+        'actual_minutes' => 0,
+        'day_type' => 'holiday',
+    ]);
+
+    $run = app(ProcessPayrollRunAction::class)->execute(makeRun());
+    $payslip = $run->payslips()->where('employee_id', $employee->id)->firstOrFail();
+
+    expect((int) $payslip->lines()->where('component_code', 'LEMBUR')->value('amount'))->toBe(901_734);
+});
+
 it('prefers logged actual minutes over planned for overtime', function () {
     $employee = seedPayrollEmployee(8_000_000, 'TK/0');
 
@@ -442,13 +461,16 @@ it('applies the annual PPh21 correction in December', function () {
     $payslip = $run->payslips()->where('employee_id', $employee->id)->firstOrFail();
 
     $annualTaxable = 100_000_000 + (int) $payslip->snapshot['taxable_gross'];
-    $expectedAnnual = app(Pph21AnnualCalculator::class)->annualTax($annualTaxable, 'TK/0');
+    $annualPension = (int) $payslip->snapshot['annual']['annual_pension'];
+    $expectedAnnual = app(Pph21AnnualCalculator::class)->annualTax($annualTaxable, 'TK/0', $annualPension);
     $expectedDecTax = $expectedAnnual - 2_000_000;
 
     expect((int) $payslip->tax)->toBe($expectedDecTax)
         ->and((int) $payslip->tax)->not->toBe(227_547) // not the plain TER monthly figure
         ->and((int) $payslip->snapshot['annual']['annual_tax'])->toBe($expectedAnnual)
         ->and((int) $payslip->snapshot['annual']['ytd_withheld'])->toBe(2_000_000)
+        // December JHT 2% + JP 1% of 8jt basis = 240,000 deductible pension.
+        ->and((int) $payslip->snapshot['annual']['annual_pension'])->toBe(240_000)
         ->and($payslip->lines()->where('component_code', 'PPH21')->value('component_name'))->toBe('PPh 21 (Koreksi Tahunan)');
 });
 
