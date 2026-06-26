@@ -156,6 +156,7 @@ export default function ShiftsCreate() {
                                                 e.target.value,
                                             )
                                         }
+                                        placeholder="Mis. 60"
                                     />
                                     <InputError
                                         message={form.errors.break_min}
@@ -178,6 +179,7 @@ export default function ShiftsCreate() {
                                                 e.target.value,
                                             )
                                         }
+                                        placeholder="Mis. 15"
                                     />
                                     <InputError
                                         message={form.errors.late_tolerance_min}
@@ -200,6 +202,7 @@ export default function ShiftsCreate() {
                                                 e.target.value,
                                             )
                                         }
+                                        placeholder="Mis. 5"
                                     />
                                     <InputError
                                         message={form.errors.grace_min}

@@ -291,6 +291,7 @@ export default function CustomFieldsCreate({ entities, types }: CreateProps) {
                                             )
                                         }
                                         className="w-20"
+                                        placeholder="Mis. 1"
                                     />
                                 </div>
                             </div>

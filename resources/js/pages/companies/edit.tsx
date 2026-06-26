@@ -2,7 +2,7 @@ import { Head } from '@inertiajs/react';
 import PageHeader from '@/components/page-header';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import CompanyForm from '@/pages/companies/company-form';
-import type {Company} from '@/pages/companies/company-form';
+import type { Company } from '@/pages/companies/company-form';
 
 type EditProps = {
     company: Company;

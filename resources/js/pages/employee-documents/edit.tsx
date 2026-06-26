@@ -199,6 +199,7 @@ export default function EmployeeDocumentsEdit({
                                                 e.target.value,
                                             )
                                         }
+                                        placeholder="Mis. 30"
                                     />
                                     <InputError
                                         message={form.errors.reminder_days}

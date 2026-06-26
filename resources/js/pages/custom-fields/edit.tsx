@@ -191,6 +191,7 @@ export default function CustomFieldsEdit({
                                         value={form.data.key}
                                         disabled
                                         className="font-mono"
+                                        placeholder="Mis. nomor_induk"
                                     />
                                 </div>
                             </div>
@@ -278,6 +279,7 @@ export default function CustomFieldsEdit({
                                             )
                                         }
                                         className="w-20"
+                                        placeholder="Mis. 1"
                                     />
                                 </div>
                             </div>

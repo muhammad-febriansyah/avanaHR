@@ -252,6 +252,7 @@ export default function BpjsParametersIndex({
                                         onChange={(e) =>
                                             form.setData(f.key, e.target.value)
                                         }
+                                        placeholder="Mis. 0"
                                     />
                                 </div>
                             ))}
@@ -264,6 +265,7 @@ export default function BpjsParametersIndex({
                                         onChange={(value) =>
                                             form.setData(f.key, value)
                                         }
+                                        placeholder="Masukkan nilai"
                                     />
                                 </div>
                             ))}

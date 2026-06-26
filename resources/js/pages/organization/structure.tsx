@@ -1,7 +1,7 @@
 import { Head, router } from '@inertiajs/react';
 import { Building2, Minus, Network, Plus, Users } from 'lucide-react';
-import { createContext, useContext, useState  } from 'react';
-import type {DragEvent} from 'react';
+import { createContext, useContext, useState } from 'react';
+import type { DragEvent } from 'react';
 import OrganizationController from '@/actions/App/Http/Controllers/OrganizationController';
 import PageHeader from '@/components/page-header';
 import { Card, CardContent } from '@/components/ui/card';

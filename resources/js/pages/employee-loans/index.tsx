@@ -516,6 +516,7 @@ export default function EmployeeLoansIndex({
                                             event.target.value,
                                         )
                                     }
+                                    placeholder="Mis. 12"
                                 />
                                 {form.errors.tenor_months && (
                                     <p className="text-sm text-destructive">

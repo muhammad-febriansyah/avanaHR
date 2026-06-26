@@ -355,6 +355,7 @@ export default function ApprovalFlowShow({
                                                     e.target.value,
                                                 )
                                             }
+                                            placeholder="Mis. 1"
                                         />
                                     </div>
                                 </div>
@@ -375,6 +376,7 @@ export default function ApprovalFlowShow({
                                                 e.target.value,
                                             )
                                         }
+                                        placeholder="Mis. 24 (kosong = tanpa SLA)"
                                     />
                                 </div>
 

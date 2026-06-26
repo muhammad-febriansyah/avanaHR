@@ -204,6 +204,7 @@ export default function EmployeeDocumentsCreate({
                                                 e.target.value,
                                             )
                                         }
+                                        placeholder="Mis. 30"
                                     />
                                     <InputError
                                         message={form.errors.reminder_days}

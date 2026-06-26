@@ -145,6 +145,7 @@ export default function PayrollPeriodsCreate() {
                                         onChange={(e) =>
                                             form.setData('year', e.target.value)
                                         }
+                                        placeholder="Mis. 2026"
                                     />
                                     <InputError message={form.errors.year} />
                                 </div>

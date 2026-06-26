@@ -2,7 +2,10 @@ import { Head } from '@inertiajs/react';
 import PageHeader from '@/components/page-header';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import EmployeeForm from '@/pages/employees/employee-form';
-import type {CustomFieldDef, CustomFieldValues} from '@/pages/employees/employee-form';
+import type {
+    CustomFieldDef,
+    CustomFieldValues,
+} from '@/pages/employees/employee-form';
 import type { EmployeeFull, StatusOption } from '@/types/employee';
 
 type EditProps = {

@@ -100,7 +100,6 @@ export default function BenefitTypesIndex({
         }, 350);
 
         return () => clearTimeout(timer);
-         
     }, [search]);
 
     function openCreate() {

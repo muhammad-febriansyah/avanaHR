@@ -78,6 +78,7 @@ export default function SecuritySettingsEdit({ settings }: EditProps) {
                                 max="64"
                                 value={form.data.password_min_length}
                                 onChange={num('password_min_length')}
+                                placeholder="Mis. 8"
                             />
                             {form.errors.password_min_length && (
                                 <p className="text-sm text-destructive">
@@ -96,6 +97,7 @@ export default function SecuritySettingsEdit({ settings }: EditProps) {
                                 max="365"
                                 value={form.data.password_expiry_days}
                                 onChange={num('password_expiry_days')}
+                                placeholder="Mis. 90 (0 = tanpa batas)"
                             />
                         </div>
                         <div className="flex flex-col gap-2 sm:col-span-2">
@@ -151,6 +153,7 @@ export default function SecuritySettingsEdit({ settings }: EditProps) {
                                 max="1440"
                                 value={form.data.session_timeout_minutes}
                                 onChange={num('session_timeout_minutes')}
+                                placeholder="Mis. 30"
                             />
                         </div>
                         <div className="grid gap-2">
@@ -164,6 +167,7 @@ export default function SecuritySettingsEdit({ settings }: EditProps) {
                                 max="20"
                                 value={form.data.max_login_attempts}
                                 onChange={num('max_login_attempts')}
+                                placeholder="Mis. 5"
                             />
                         </div>
                         <div className="grid gap-2">
@@ -177,6 +181,7 @@ export default function SecuritySettingsEdit({ settings }: EditProps) {
                                 max="1440"
                                 value={form.data.lockout_minutes}
                                 onChange={num('lockout_minutes')}
+                                placeholder="Mis. 15"
                             />
                         </div>
                     </CardContent>

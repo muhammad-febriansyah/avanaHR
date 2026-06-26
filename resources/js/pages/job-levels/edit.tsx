@@ -2,7 +2,7 @@ import { Head } from '@inertiajs/react';
 import PageHeader from '@/components/page-header';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import JobLevelForm from '@/pages/job-levels/job-level-form';
-import type {JobLevel} from '@/pages/job-levels/job-level-form';
+import type { JobLevel } from '@/pages/job-levels/job-level-form';
 
 type EditProps = {
     jobLevel: JobLevel;

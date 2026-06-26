@@ -161,6 +161,7 @@ export default function PayrollPeriodsEdit({ period, statuses }: EditProps) {
                                         onChange={(e) =>
                                             form.setData('year', e.target.value)
                                         }
+                                        placeholder="Mis. 2026"
                                     />
                                     <InputError message={form.errors.year} />
                                 </div>

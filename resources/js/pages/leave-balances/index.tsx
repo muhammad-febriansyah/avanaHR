@@ -669,6 +669,7 @@ function NumberField({
                 step="0.5"
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
+                placeholder="Mis. 0"
             />
             {error && <p className="text-sm text-destructive">{error}</p>}
         </div>

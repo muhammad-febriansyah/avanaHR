@@ -35,6 +35,7 @@ export default function ResetPassword({ token, email, passwordRules }: Props) {
                                 value={email}
                                 className="mt-1 block w-full"
                                 readOnly
+                                placeholder="nama@perusahaan.co.id"
                             />
                             <InputError
                                 message={errors.email}

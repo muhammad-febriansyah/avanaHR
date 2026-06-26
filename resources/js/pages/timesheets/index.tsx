@@ -392,6 +392,7 @@ export default function TimesheetsIndex({
                                             event.target.value,
                                         )
                                     }
+                                    placeholder="Mis. 8"
                                 />
                                 {form.errors.hours && (
                                     <p className="text-sm text-destructive">

@@ -2,7 +2,7 @@ import { Head } from '@inertiajs/react';
 import PageHeader from '@/components/page-header';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import RoleForm from '@/pages/roles/role-form';
-import type {PermissionGroup} from '@/pages/roles/role-form';
+import type { PermissionGroup } from '@/pages/roles/role-form';
 
 type CreateProps = {
     permissionGroups: PermissionGroup[];
