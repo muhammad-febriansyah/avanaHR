@@ -74,7 +74,7 @@ export default function JobLevelForm({ jobLevel }: JobLevelFormProps) {
                         </div>
                     </CardContent>
                     <CardFooter className="flex justify-end gap-3">
-                        <Button asChild variant="outline" type="button">
+                        <Button asChild variant="secondary" type="button">
                             <Link href={jobLevels.index.url()}>
                                 <X />
                                 Batal

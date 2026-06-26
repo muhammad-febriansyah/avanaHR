@@ -1,9 +1,20 @@
 import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, Printer } from 'lucide-react';
+import {
+    ArrowLeft,
+    Banknote,
+    Minus,
+    Plus,
+    Printer,
+    Receipt,
+    Shield,
+    TrendingUp,
+} from 'lucide-react';
 import payslips from '@/actions/App/Http/Controllers/PayslipController';
+import { InfoHero } from '@/components/detail/info-hero';
+import { SectionCard } from '@/components/detail/section-card';
+import { StatTile } from '@/components/detail/stat-tile';
 import PageHeader from '@/components/page-header';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import {
     Table,
     TableBody,
@@ -12,6 +23,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { formatRupiah } from '@/lib/format';
 
 type Line = {
     id: number;
@@ -38,17 +50,22 @@ type Payslip = {
 
 type ShowProps = { payslip: Payslip };
 
-const rupiah = new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-});
-
-function SummaryRow({ label, value }: { label: string; value: number }) {
+function SummaryRow({
+    label,
+    value,
+    sign,
+}: {
+    label: string;
+    value: number;
+    sign?: '+' | '−';
+}) {
     return (
-        <div className="flex items-center justify-between py-1 text-sm">
+        <div className="flex items-center justify-between py-1.5 text-sm">
             <span className="text-muted-foreground">{label}</span>
-            <span className="font-medium">{rupiah.format(value)}</span>
+            <span className="font-medium tabular-nums">
+                {sign === '−' && value !== 0 ? '− ' : ''}
+                {formatRupiah(value)}
+            </span>
         </div>
     );
 }
@@ -59,6 +76,13 @@ export default function PayslipShow({ payslip }: ShowProps) {
         (line) => line.type === 'deduction',
     );
 
+    const initials = (payslip.employee_name ?? '?')
+        .split(' ')
+        .map((part) => part[0])
+        .slice(0, 2)
+        .join('')
+        .toUpperCase();
+
     return (
         <>
             <Head title={`Slip Gaji — ${payslip.employee_name ?? ''}`} />
@@ -68,106 +92,133 @@ export default function PayslipShow({ payslip }: ShowProps) {
                     title="Slip Gaji"
                     description={`${payslip.run_no ?? '-'} · ${payslip.period_code ?? '-'}`}
                 >
-                    <div className="flex items-center gap-2">
-                        <Button asChild>
-                            <a
-                                href={`/payslips/${payslip.id}/print`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Printer />
-                                Cetak / PDF
-                            </a>
-                        </Button>
-                        <Button variant="outline" asChild>
-                            <Link href={payslips.index.url()}>
-                                <ArrowLeft />
-                                Kembali
-                            </Link>
-                        </Button>
-                    </div>
+                    <Button variant="secondary" asChild>
+                        <Link href={payslips.index.url()}>
+                            <ArrowLeft />
+                            Kembali
+                        </Link>
+                    </Button>
+                    <Button asChild>
+                        <a
+                            href={`/payslips/${payslip.id}/print`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Printer />
+                            Cetak / PDF
+                        </a>
+                    </Button>
                 </PageHeader>
 
-                <Card className="gap-0 py-0">
-                    <CardContent className="grid gap-1 p-5 sm:grid-cols-2">
-                        <div>
-                            <p className="text-xs text-muted-foreground">
-                                Karyawan
-                            </p>
-                            <p className="font-medium">
-                                {payslip.employee_name}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                                {payslip.employee_no}
-                            </p>
-                        </div>
-                        <div className="sm:text-right">
+                <InfoHero
+                    initials={initials}
+                    title={payslip.employee_name ?? '—'}
+                    subtitle={`${payslip.employee_no ?? '-'} · ${payslip.run_no ?? '-'} · ${payslip.period_code ?? '-'}`}
+                    aside={
+                        <>
                             <p className="text-xs text-muted-foreground">
                                 Take Home Pay
                             </p>
-                            <p className="text-xl font-semibold text-primary">
-                                {rupiah.format(payslip.net)}
+                            <p className="text-2xl font-semibold text-primary">
+                                {formatRupiah(payslip.net)}
                             </p>
-                        </div>
-                    </CardContent>
-                </Card>
+                        </>
+                    }
+                />
 
-                <div className="grid gap-5 lg:grid-cols-2">
-                    <Card className="gap-0 py-0">
-                        <CardContent className="p-5">
-                            <h2 className="mb-3 text-sm font-semibold">
-                                Pendapatan
-                            </h2>
-                            <LineTable lines={earnings} emptyText="Tidak ada pendapatan" />
-                        </CardContent>
-                    </Card>
-                    <Card className="gap-0 py-0">
-                        <CardContent className="p-5">
-                            <h2 className="mb-3 text-sm font-semibold">
-                                Potongan
-                            </h2>
-                            <LineTable lines={deductions} emptyText="Tidak ada potongan" />
-                        </CardContent>
-                    </Card>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <StatTile
+                        label="Pendapatan Bruto"
+                        value={formatRupiah(payslip.gross)}
+                        icon={TrendingUp}
+                        accent="green"
+                    />
+                    <StatTile
+                        label="Total Potongan"
+                        value={formatRupiah(payslip.deductions)}
+                        icon={Minus}
+                        accent="amber"
+                    />
+                    <StatTile
+                        label="PPh 21"
+                        value={formatRupiah(payslip.tax)}
+                        icon={Receipt}
+                        accent="red"
+                    />
+                    <StatTile
+                        label="BPJS (Karyawan)"
+                        value={formatRupiah(payslip.bpjs_employee)}
+                        icon={Shield}
+                        accent="blue"
+                    />
                 </div>
 
-                <Card className="gap-0 py-0">
-                    <CardContent className="p-5">
-                        <h2 className="mb-3 text-sm font-semibold">Ringkasan</h2>
-                        <SummaryRow label="Gross" value={payslip.gross} />
-                        <SummaryRow
-                            label="Total Potongan"
-                            value={payslip.deductions}
-                        />
-                        <SummaryRow label="PPh 21" value={payslip.tax} />
-                        <SummaryRow
-                            label="BPJS (Karyawan)"
-                            value={payslip.bpjs_employee}
-                        />
-                        <SummaryRow
-                            label="BPJS (Perusahaan)"
-                            value={payslip.bpjs_company}
-                        />
-                        <div className="mt-2 flex items-center justify-between border-t pt-2 text-sm">
-                            <span className="font-semibold">Net</span>
-                            <span className="font-semibold text-primary">
-                                {rupiah.format(payslip.net)}
+                <div className="grid gap-5 lg:grid-cols-2">
+                    <SectionCard
+                        title="Pendapatan"
+                        icon={Plus}
+                        actions={
+                            <span className="text-sm font-semibold text-emerald-600 tabular-nums dark:text-emerald-400">
+                                {formatRupiah(payslip.gross)}
                             </span>
-                        </div>
-                    </CardContent>
-                </Card>
+                        }
+                    >
+                        <LineTable
+                            lines={earnings}
+                            emptyText="Tidak ada pendapatan"
+                        />
+                    </SectionCard>
+                    <SectionCard
+                        title="Potongan"
+                        icon={Minus}
+                        actions={
+                            <span className="text-sm font-semibold text-red-600 tabular-nums dark:text-red-400">
+                                {formatRupiah(payslip.deductions)}
+                            </span>
+                        }
+                    >
+                        <LineTable
+                            lines={deductions}
+                            emptyText="Tidak ada potongan"
+                        />
+                    </SectionCard>
+                </div>
+
+                <SectionCard title="Ringkasan" icon={Banknote}>
+                    <SummaryRow
+                        label="Pendapatan Bruto"
+                        value={payslip.gross}
+                    />
+                    <SummaryRow
+                        label="Total Potongan"
+                        value={payslip.deductions}
+                        sign="−"
+                    />
+                    <SummaryRow label="PPh 21" value={payslip.tax} sign="−" />
+                    <SummaryRow
+                        label="BPJS (Karyawan)"
+                        value={payslip.bpjs_employee}
+                        sign="−"
+                    />
+                    <SummaryRow
+                        label="BPJS Ditanggung Perusahaan"
+                        value={payslip.bpjs_company}
+                    />
+                    <div className="mt-2 flex items-center justify-between border-t pt-3">
+                        <span className="text-sm font-semibold">
+                            Take Home Pay
+                        </span>
+                        <span className="text-lg font-semibold text-primary tabular-nums">
+                            {formatRupiah(payslip.net)}
+                        </span>
+                    </div>
+                </SectionCard>
             </div>
         </>
     );
 }
 
-function LineTable({
-    lines,
-    emptyText,
-}: {
-    lines: Line[];
-    emptyText: string;
-}) {
+function LineTable({ lines, emptyText }: { lines: Line[]; emptyText: string }) {
     if (lines.length === 0) {
         return (
             <p className="py-6 text-center text-sm text-muted-foreground">
@@ -177,7 +228,7 @@ function LineTable({
     }
 
     return (
-        <div className="rounded-lg border">
+        <div className="overflow-hidden rounded-lg border">
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -196,8 +247,8 @@ function LineTable({
                                     {line.component_code}
                                 </div>
                             </TableCell>
-                            <TableCell className="text-right">
-                                {rupiah.format(line.amount)}
+                            <TableCell className="text-right tabular-nums">
+                                {formatRupiah(line.amount)}
                             </TableCell>
                         </TableRow>
                     ))}

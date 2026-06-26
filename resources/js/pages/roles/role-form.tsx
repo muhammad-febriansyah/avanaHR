@@ -80,7 +80,9 @@ export default function RoleForm({ permissionGroups, role }: RoleFormProps) {
                                 readOnly={isSystem}
                                 placeholder="mis. supervisor-cabang"
                                 className={
-                                    isSystem ? 'bg-muted text-muted-foreground' : ''
+                                    isSystem
+                                        ? 'bg-muted text-muted-foreground'
+                                        : ''
                                 }
                             />
                             {isSystem && (
@@ -96,8 +98,8 @@ export default function RoleForm({ permissionGroups, role }: RoleFormProps) {
                         <div className="grid gap-2">
                             <Label>Hak Akses</Label>
                             <p className="text-xs text-muted-foreground">
-                                Pilih izin yang dimiliki role ini. Menu &
-                                tombol akan menyesuaikan otomatis.
+                                Pilih izin yang dimiliki role ini. Menu & tombol
+                                akan menyesuaikan otomatis.
                             </p>
                             <InputError message={errors.permissions} />
                             <div className="grid gap-3 sm:grid-cols-2">
@@ -117,7 +119,9 @@ export default function RoleForm({ permissionGroups, role }: RoleFormProps) {
                                             <label className="flex items-center gap-2.5 border-b border-border/60 pb-2.5 text-sm font-medium">
                                                 <Checkbox
                                                     checked={allChecked}
-                                                    onCheckedChange={(checked) =>
+                                                    onCheckedChange={(
+                                                        checked,
+                                                    ) =>
                                                         toggleGroup(
                                                             group,
                                                             checked === true,
@@ -160,7 +164,7 @@ export default function RoleForm({ permissionGroups, role }: RoleFormProps) {
                         </div>
                     </CardContent>
                     <CardFooter className="flex justify-end gap-3">
-                        <Button asChild variant="outline" type="button">
+                        <Button asChild variant="secondary" type="button">
                             <Link href={roles.index.url()}>
                                 <X />
                                 Batal

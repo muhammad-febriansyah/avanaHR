@@ -7,8 +7,11 @@ import PageHeader from '@/components/page-header';
 import { RequiredMark } from '@/components/required-mark';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Combobox } from '@/components/ui/combobox';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RupiahInput } from '@/components/ui/rupiah-input';
 import {
     Select,
     SelectContent,
@@ -84,7 +87,10 @@ export default function WorkVisitsCreate({
                     description="Catat pengajuan kunjungan kerja / perjalanan dinas karyawan."
                 />
 
-                <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl">
+                <form
+                    onSubmit={handleSubmit}
+                    className="mx-auto w-full max-w-4xl"
+                >
                     <Card>
                         <CardContent className="flex flex-col gap-6">
                             <div className="grid gap-5 md:grid-cols-2">
@@ -92,29 +98,20 @@ export default function WorkVisitsCreate({
                                     <Label htmlFor="employee_id">
                                         Karyawan <RequiredMark />
                                     </Label>
-                                    <Select
+                                    <Combobox
+                                        id="employee_id"
                                         value={form.data.employee_id}
-                                        onValueChange={(value) =>
+                                        onChange={(value) =>
                                             form.setData('employee_id', value)
                                         }
-                                    >
-                                        <SelectTrigger
-                                            id="employee_id"
-                                            className="w-full"
-                                        >
-                                            <SelectValue placeholder="Pilih karyawan" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {employees.map((option) => (
-                                                <SelectItem
-                                                    key={option.id}
-                                                    value={String(option.id)}
-                                                >
-                                                    {option.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                        options={employees.map((option) => ({
+                                            value: String(option.id),
+                                            label: option.label,
+                                        }))}
+                                        placeholder="Pilih karyawan"
+                                        searchPlaceholder="Cari karyawan…"
+                                        emptyText="Karyawan tidak ditemukan"
+                                    />
                                     <InputError
                                         message={form.errors.employee_id}
                                     />
@@ -144,15 +141,11 @@ export default function WorkVisitsCreate({
                                     <Label htmlFor="start_date">
                                         Tanggal Mulai <RequiredMark />
                                     </Label>
-                                    <Input
+                                    <DatePicker
                                         id="start_date"
-                                        type="date"
                                         value={form.data.start_date}
-                                        onChange={(e) =>
-                                            form.setData(
-                                                'start_date',
-                                                e.target.value,
-                                            )
+                                        onChange={(value) =>
+                                            form.setData('start_date', value)
                                         }
                                         placeholder="Pilih tanggal"
                                     />
@@ -165,19 +158,17 @@ export default function WorkVisitsCreate({
                                     <Label htmlFor="end_date">
                                         Tanggal Selesai <RequiredMark />
                                     </Label>
-                                    <Input
+                                    <DatePicker
                                         id="end_date"
-                                        type="date"
                                         value={form.data.end_date}
-                                        onChange={(e) =>
-                                            form.setData(
-                                                'end_date',
-                                                e.target.value,
-                                            )
+                                        onChange={(value) =>
+                                            form.setData('end_date', value)
                                         }
                                         placeholder="Pilih tanggal"
                                     />
-                                    <InputError message={form.errors.end_date} />
+                                    <InputError
+                                        message={form.errors.end_date}
+                                    />
                                 </div>
 
                                 <div className="grid gap-2">
@@ -222,15 +213,13 @@ export default function WorkVisitsCreate({
                                     <Label htmlFor="estimated_cost">
                                         Estimasi Biaya (Rp)
                                     </Label>
-                                    <Input
+                                    <RupiahInput
                                         id="estimated_cost"
-                                        type="number"
-                                        min={0}
                                         value={form.data.estimated_cost}
-                                        onChange={(e) =>
+                                        onChange={(value) =>
                                             form.setData(
                                                 'estimated_cost',
-                                                e.target.value,
+                                                value,
                                             )
                                         }
                                         placeholder="Mis. 1500000"
@@ -239,7 +228,8 @@ export default function WorkVisitsCreate({
                                         message={form.errors.estimated_cost}
                                     />
                                     {form.data.estimated_cost &&
-                                        Number(form.data.estimated_cost) > 0 && (
+                                        Number(form.data.estimated_cost) >
+                                            0 && (
                                             <p className="text-xs text-muted-foreground">
                                                 {formatRupiah(
                                                     Number(
@@ -266,7 +256,7 @@ export default function WorkVisitsCreate({
                                         }
                                         rows={3}
                                         placeholder="Jelaskan keperluan kunjungan kerja"
-                                        className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
                                     />
                                     <InputError message={form.errors.purpose} />
                                 </div>
@@ -277,18 +267,21 @@ export default function WorkVisitsCreate({
                                         id="notes"
                                         value={form.data.notes}
                                         onChange={(e) =>
-                                            form.setData('notes', e.target.value)
+                                            form.setData(
+                                                'notes',
+                                                e.target.value,
+                                            )
                                         }
                                         rows={3}
                                         placeholder="Catatan tambahan (opsional)"
-                                        className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
                                     />
                                     <InputError message={form.errors.notes} />
                                 </div>
                             </div>
                         </CardContent>
                         <CardFooter className="flex justify-end gap-3">
-                            <Button asChild variant="outline" type="button">
+                            <Button asChild variant="secondary" type="button">
                                 <Link href={workVisits.index.url()}>
                                     <X />
                                     Batal

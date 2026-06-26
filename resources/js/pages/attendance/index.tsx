@@ -6,6 +6,7 @@ import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -56,11 +57,13 @@ type IndexProps = {
 const ALL_STATUS = 'all';
 
 const STATUS_STYLES: Record<string, string> = {
-    present: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    present:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
     late: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
     absent: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
     leave: 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400',
-    holiday: 'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
+    holiday:
+        'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
     off: 'bg-muted text-muted-foreground',
 };
 
@@ -72,6 +75,7 @@ function formatHours(minutes: number): string {
     if (!minutes) {
         return '-';
     }
+
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
 
@@ -133,20 +137,18 @@ export default function AttendanceIndex({
                         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                             <div className="grid gap-1.5">
                                 <Label htmlFor="att-from">Dari Tanggal</Label>
-                                <Input
+                                <DatePicker
                                     id="att-from"
-                                    type="date"
                                     value={from}
-                                    onChange={(event) => setFrom(event.target.value)}
+                                    onChange={(value) => setFrom(value)}
                                 />
                             </div>
                             <div className="grid gap-1.5">
                                 <Label htmlFor="att-to">Sampai Tanggal</Label>
-                                <Input
+                                <DatePicker
                                     id="att-to"
-                                    type="date"
                                     value={to}
-                                    onChange={(event) => setTo(event.target.value)}
+                                    onChange={(value) => setTo(value)}
                                 />
                             </div>
                             <div className="grid gap-1.5">
@@ -163,7 +165,10 @@ export default function AttendanceIndex({
                                         });
                                     }}
                                 >
-                                    <SelectTrigger id="att-status" className="w-full">
+                                    <SelectTrigger
+                                        id="att-status"
+                                        className="w-full"
+                                    >
                                         <SelectValue placeholder="Semua Status" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -182,11 +187,15 @@ export default function AttendanceIndex({
                                 </Select>
                             </div>
                             <div className="grid gap-1.5">
-                                <Label htmlFor="att-search">Cari Karyawan</Label>
+                                <Label htmlFor="att-search">
+                                    Cari Karyawan
+                                </Label>
                                 <Input
                                     id="att-search"
                                     value={search}
-                                    onChange={(event) => setSearch(event.target.value)}
+                                    onChange={(event) =>
+                                        setSearch(event.target.value)
+                                    }
                                     placeholder="Nama / NIP"
                                 />
                             </div>
@@ -196,6 +205,9 @@ export default function AttendanceIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Karyawan</TableHead>
                                         <TableHead>Tanggal</TableHead>
                                         <TableHead>Masuk</TableHead>
@@ -208,20 +220,28 @@ export default function AttendanceIndex({
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={7} className="py-12">
+                                            <TableCell
+                                                colSpan={8}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <CalendarClock className="size-6" />
                                                     </div>
                                                     <p className="text-sm text-muted-foreground">
-                                                        Tidak ada data absensi pada rentang ini
+                                                        Tidak ada data absensi
+                                                        pada rentang ini
                                                     </p>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((row) => (
+                                        rows.map((row, index) => (
                                             <TableRow key={row.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="flex items-center gap-2 font-medium">
                                                         {row.employee_name}
@@ -238,23 +258,38 @@ export default function AttendanceIndex({
                                                         {row.employee_no}
                                                     </div>
                                                 </TableCell>
-                                                <TableCell>{row.date}</TableCell>
-                                                <TableCell>{row.clock_in ?? '-'}</TableCell>
-                                                <TableCell>{row.clock_out ?? '-'}</TableCell>
+                                                <TableCell>
+                                                    {row.date}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {row.clock_in ?? '-'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {row.clock_out ?? '-'}
+                                                </TableCell>
                                                 <TableCell>
                                                     {row.late_minutes
                                                         ? `${row.late_minutes} mnt`
                                                         : '-'}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {formatHours(row.work_minutes)}
+                                                    {formatHours(
+                                                        row.work_minutes,
+                                                    )}
                                                 </TableCell>
                                                 <TableCell>
                                                     <Badge
                                                         variant="secondary"
-                                                        className={STATUS_STYLES[row.status]}
+                                                        className={
+                                                            STATUS_STYLES[
+                                                                row.status
+                                                            ]
+                                                        }
                                                     >
-                                                        {statusLabel(statuses, row.status)}
+                                                        {statusLabel(
+                                                            statuses,
+                                                            row.status,
+                                                        )}
                                                     </Badge>
                                                 </TableCell>
                                             </TableRow>
@@ -270,7 +305,7 @@ export default function AttendanceIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -278,7 +313,10 @@ export default function AttendanceIndex({
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -286,7 +324,7 @@ export default function AttendanceIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -294,7 +332,10 @@ export default function AttendanceIndex({
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >

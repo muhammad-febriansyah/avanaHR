@@ -6,6 +6,7 @@ import InputError from '@/components/input-error';
 import { RequiredMark } from '@/components/required-mark';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -25,7 +26,10 @@ export type CustomFieldDef = {
     is_required: boolean;
 };
 
-export type CustomFieldValues = Record<string, string | number | boolean | null>;
+export type CustomFieldValues = Record<
+    string,
+    string | number | boolean | null
+>;
 
 type EmployeeFormProps = {
     statuses: StatusOption[];
@@ -56,6 +60,8 @@ export default function EmployeeForm({
 
     const [gender, setGender] = useState(employee?.gender ?? '');
     const [status, setStatus] = useState(employee?.status ?? '');
+    const [birthDate, setBirthDate] = useState(employee?.birth_date ?? '');
+    const [joinDate, setJoinDate] = useState(employee?.join_date ?? '');
 
     const [customValues, setCustomValues] = useState<Record<string, string>>(
         () =>
@@ -70,6 +76,7 @@ export default function EmployeeForm({
                             : raw === null || raw === undefined
                               ? ''
                               : String(raw);
+
                     return [field.key, value];
                 }),
             ),
@@ -181,22 +188,30 @@ export default function EmployeeForm({
 
                         <div className="grid gap-2">
                             <Label htmlFor="birth_date">Tanggal Lahir</Label>
-                            <Input
-                                id="birth_date"
+                            <input
+                                type="hidden"
                                 name="birth_date"
-                                type="date"
-                                defaultValue={employee?.birth_date ?? ''}
+                                value={birthDate}
+                            />
+                            <DatePicker
+                                id="birth_date"
+                                value={birthDate}
+                                onChange={setBirthDate}
                             />
                             <InputError message={errors.birth_date} />
                         </div>
 
                         <div className="grid gap-2">
                             <Label htmlFor="join_date">Tanggal Bergabung</Label>
-                            <Input
-                                id="join_date"
+                            <input
+                                type="hidden"
                                 name="join_date"
-                                type="date"
-                                defaultValue={employee?.join_date ?? ''}
+                                value={joinDate}
+                            />
+                            <DatePicker
+                                id="join_date"
+                                value={joinDate}
+                                onChange={setJoinDate}
                             />
                             <InputError message={errors.join_date} />
                         </div>
@@ -278,7 +293,7 @@ export default function EmployeeForm({
                                 defaultValue={employee?.address ?? ''}
                                 rows={3}
                                 placeholder="Alamat lengkap"
-                                className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
                             />
                             <InputError message={errors.address} />
                         </div>
@@ -353,7 +368,9 @@ export default function EmployeeForm({
                                                             ).map((option) => (
                                                                 <SelectItem
                                                                     key={option}
-                                                                    value={option}
+                                                                    value={
+                                                                        option
+                                                                    }
                                                                 >
                                                                     {option}
                                                                 </SelectItem>
@@ -402,7 +419,7 @@ export default function EmployeeForm({
                                                     }
                                                     rows={3}
                                                     placeholder={field.label}
-                                                    className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                                                    className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
                                                 />
                                             ) : (
                                                 <Input
@@ -435,7 +452,7 @@ export default function EmployeeForm({
                         )}
                     </CardContent>
                     <CardFooter className="flex justify-end gap-3">
-                        <Button asChild variant="outline" type="button">
+                        <Button asChild variant="secondary" type="button">
                             <Link href={employees.index.url()}>
                                 <X />
                                 Batal

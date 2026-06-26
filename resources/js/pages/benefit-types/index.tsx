@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RupiahInput } from '@/components/ui/rupiah-input';
 import {
     Table,
     TableBody,
@@ -99,7 +100,7 @@ export default function BenefitTypesIndex({
         }, 350);
 
         return () => clearTimeout(timer);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+         
     }, [search]);
 
     function openCreate() {
@@ -187,6 +188,9 @@ export default function BenefitTypesIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Kode</TableHead>
                                         <TableHead>Nama</TableHead>
                                         <TableHead>Plafon Default</TableHead>
@@ -200,7 +204,7 @@ export default function BenefitTypesIndex({
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={5}
+                                                colSpan={6}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -214,8 +218,12 @@ export default function BenefitTypesIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell className="font-medium">
                                                     {item.code}
                                                 </TableCell>
@@ -250,7 +258,7 @@ export default function BenefitTypesIndex({
                                                     <div className="flex items-center justify-end gap-2">
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="success"
                                                             onClick={() =>
                                                                 openEdit(item)
                                                             }
@@ -292,7 +300,7 @@ export default function BenefitTypesIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -311,7 +319,7 @@ export default function BenefitTypesIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -389,27 +397,14 @@ export default function BenefitTypesIndex({
                             <Label htmlFor="default_quota">
                                 Plafon Default (Rp)
                             </Label>
-                            <Input
+                            <RupiahInput
                                 id="default_quota"
-                                type="number"
-                                min={0}
                                 value={form.data.default_quota}
-                                onChange={(event) =>
-                                    form.setData(
-                                        'default_quota',
-                                        event.target.value,
-                                    )
+                                onChange={(value) =>
+                                    form.setData('default_quota', value)
                                 }
                                 placeholder="Mis. 5000000 — kosongkan jika tidak ada"
                             />
-                            {form.data.default_quota &&
-                                Number(form.data.default_quota) > 0 && (
-                                    <p className="text-xs text-muted-foreground">
-                                        {formatRupiah(
-                                            Number(form.data.default_quota),
-                                        )}
-                                    </p>
-                                )}
                             {form.errors.default_quota && (
                                 <p className="text-sm text-destructive">
                                     {form.errors.default_quota}
@@ -430,7 +425,7 @@ export default function BenefitTypesIndex({
                                 }
                                 rows={3}
                                 placeholder="Deskripsi singkat (opsional)"
-                                className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
                             />
                             {form.errors.description && (
                                 <p className="text-sm text-destructive">
@@ -452,7 +447,7 @@ export default function BenefitTypesIndex({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >

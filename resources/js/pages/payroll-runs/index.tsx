@@ -72,8 +72,10 @@ const ALL_STATUS = 'all';
 
 const STATUS_STYLES: Record<string, string> = {
     draft: 'bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300',
-    calculated: 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400',
-    approved: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    calculated:
+        'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400',
+    approved:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
     paid: 'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
 };
 
@@ -227,6 +229,9 @@ export default function PayrollRunsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>No. Run</TableHead>
                                         <TableHead>Periode</TableHead>
                                         <TableHead>Tipe</TableHead>
@@ -249,7 +254,7 @@ export default function PayrollRunsIndex({
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={8}
+                                                colSpan={9}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -263,8 +268,12 @@ export default function PayrollRunsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell className="font-medium">
                                                     {item.run_no}
                                                 </TableCell>
@@ -307,7 +316,7 @@ export default function PayrollRunsIndex({
                                                         <Button
                                                             asChild
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="warning"
                                                         >
                                                             <Link
                                                                 href={payrollRuns.show.url(
@@ -320,7 +329,7 @@ export default function PayrollRunsIndex({
                                                         </Button>
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="success"
                                                             onClick={() =>
                                                                 openEdit(item)
                                                             }
@@ -362,7 +371,7 @@ export default function PayrollRunsIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -381,7 +390,7 @@ export default function PayrollRunsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -519,7 +528,7 @@ export default function PayrollRunsIndex({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >

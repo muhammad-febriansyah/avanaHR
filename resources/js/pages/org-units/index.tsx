@@ -8,6 +8,7 @@ import ConfirmDialog from '@/components/confirm-dialog';
 import PageHeader from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Combobox } from '@/components/ui/combobox';
 import {
     Dialog,
     DialogContent,
@@ -199,18 +200,21 @@ function DepartmentSection({
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead className="w-12">No</TableHead>
                                 <TableHead>Kode</TableHead>
                                 <TableHead>Nama</TableHead>
                                 <TableHead>Induk</TableHead>
                                 <TableHead>Kepala</TableHead>
                                 <TableHead>Posisi</TableHead>
-                                <TableHead className="text-right">Aksi</TableHead>
+                                <TableHead className="text-right">
+                                    Aksi
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {rows.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="py-12">
+                                    <TableCell colSpan={7} className="py-12">
                                         <EmptyState
                                             icon={
                                                 <Network className="size-6" />
@@ -220,8 +224,11 @@ function DepartmentSection({
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                rows.map((item) => (
+                                rows.map((item, index) => (
                                     <TableRow key={item.id}>
+                                        <TableCell className="text-muted-foreground tabular-nums">
+                                            {index + 1}
+                                        </TableCell>
                                         <TableCell className="font-medium">
                                             {item.code}
                                         </TableCell>
@@ -257,9 +264,7 @@ function DepartmentSection({
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            {editing
-                                ? 'Ubah Departemen'
-                                : 'Tambah Departemen'}
+                            {editing ? 'Ubah Departemen' : 'Tambah Departemen'}
                         </DialogTitle>
                     </DialogHeader>
 
@@ -286,37 +291,33 @@ function DepartmentSection({
                             error={form.errors.name}
                         />
                         <div className="grid gap-2">
-                            <Label htmlFor="dept-parent">Departemen Induk</Label>
-                            <Select
+                            <Label htmlFor="dept-parent">
+                                Departemen Induk
+                            </Label>
+                            <Combobox
+                                id="dept-parent"
                                 value={form.data.parent_id}
-                                onValueChange={(value) =>
+                                onChange={(value) =>
                                     form.setData('parent_id', value)
                                 }
-                            >
-                                <SelectTrigger id="dept-parent" className="w-full">
-                                    <SelectValue placeholder="Tanpa induk" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value={NONE}>
-                                        Tanpa induk
-                                    </SelectItem>
-                                    {parentOptions.map((option) => (
-                                        <SelectItem
-                                            key={option.id}
-                                            value={option.id.toString()}
-                                        >
-                                            {option.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                                options={[
+                                    { value: NONE, label: 'Tanpa induk' },
+                                    ...parentOptions.map((option) => ({
+                                        value: option.id.toString(),
+                                        label: option.name,
+                                    })),
+                                ]}
+                                placeholder="Tanpa induk"
+                                searchPlaceholder="Cari departemen…"
+                                emptyText="Departemen tidak ditemukan"
+                            />
                             {form.errors.parent_id && (
                                 <p className="text-sm text-destructive">
                                     {form.errors.parent_id}
                                 </p>
                             )}
                         </div>
-                        <OptionalSelect
+                        <OptionalCombobox
                             id="dept-head"
                             label="Kepala"
                             value={form.data.head_employee_id}
@@ -324,13 +325,15 @@ function DepartmentSection({
                                 form.setData('head_employee_id', value)
                             }
                             options={options.employees}
+                            searchPlaceholder="Cari karyawan…"
+                            emptyText="Karyawan tidak ditemukan"
                             error={form.errors.head_employee_id}
                         />
                     </form>
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >
@@ -426,18 +429,21 @@ function PositionSection({
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead className="w-12">No</TableHead>
                                 <TableHead>Kode</TableHead>
                                 <TableHead>Nama</TableHead>
                                 <TableHead>Departemen</TableHead>
                                 <TableHead>Level</TableHead>
                                 <TableHead>Grade</TableHead>
-                                <TableHead className="text-right">Aksi</TableHead>
+                                <TableHead className="text-right">
+                                    Aksi
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {rows.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="py-12">
+                                    <TableCell colSpan={7} className="py-12">
                                         <EmptyState
                                             icon={
                                                 <Building2 className="size-6" />
@@ -447,8 +453,11 @@ function PositionSection({
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                rows.map((item) => (
+                                rows.map((item, index) => (
                                     <TableRow key={item.id}>
+                                        <TableCell className="text-muted-foreground tabular-nums">
+                                            {index + 1}
+                                        </TableCell>
                                         <TableCell className="font-medium">
                                             {item.code}
                                         </TableCell>
@@ -512,26 +521,20 @@ function PositionSection({
                         />
                         <div className="grid gap-2">
                             <Label htmlFor="pos-dept">Departemen</Label>
-                            <Select
+                            <Combobox
+                                id="pos-dept"
                                 value={form.data.department_id}
-                                onValueChange={(value) =>
+                                onChange={(value) =>
                                     form.setData('department_id', value)
                                 }
-                            >
-                                <SelectTrigger id="pos-dept" className="w-full">
-                                    <SelectValue placeholder="Pilih departemen" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {options.departments.map((option) => (
-                                        <SelectItem
-                                            key={option.id}
-                                            value={option.id.toString()}
-                                        >
-                                            {option.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                                options={options.departments.map((option) => ({
+                                    value: option.id.toString(),
+                                    label: option.name,
+                                }))}
+                                placeholder="Pilih departemen"
+                                searchPlaceholder="Cari departemen…"
+                                emptyText="Departemen tidak ditemukan"
+                            />
                             {form.errors.department_id && (
                                 <p className="text-sm text-destructive">
                                     {form.errors.department_id}
@@ -562,7 +565,7 @@ function PositionSection({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >
@@ -654,13 +657,49 @@ function OptionalSelect({
     );
 }
 
-function EmptyState({
-    icon,
-    text,
+function OptionalCombobox({
+    id,
+    label,
+    value,
+    onChange,
+    options,
+    searchPlaceholder,
+    emptyText,
+    error,
 }: {
-    icon: React.ReactNode;
-    text: string;
+    id: string;
+    label: string;
+    value: string;
+    onChange: (value: string) => void;
+    options: Option[];
+    searchPlaceholder?: string;
+    emptyText?: string;
+    error?: string;
 }) {
+    return (
+        <div className="grid gap-2">
+            <Label htmlFor={id}>{label}</Label>
+            <Combobox
+                id={id}
+                value={value}
+                onChange={onChange}
+                options={[
+                    { value: NONE, label: 'Tidak ada' },
+                    ...options.map((option) => ({
+                        value: option.id.toString(),
+                        label: option.name,
+                    })),
+                ]}
+                placeholder="Tidak ada"
+                searchPlaceholder={searchPlaceholder}
+                emptyText={emptyText}
+            />
+            {error && <p className="text-sm text-destructive">{error}</p>}
+        </div>
+    );
+}
+
+function EmptyState({ icon, text }: { icon: React.ReactNode; text: string }) {
     return (
         <div className="flex flex-col items-center justify-center gap-3 text-center">
             <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
@@ -684,7 +723,7 @@ function RowActions({
 }) {
     return (
         <div className="flex items-center justify-end gap-2">
-            <Button size="sm" variant="outline" onClick={onEdit}>
+            <Button size="sm" variant="success" onClick={onEdit}>
                 <Pencil />
                 Edit
             </Button>

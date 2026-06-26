@@ -57,8 +57,10 @@ type IndexProps = {
 const ALL_EVENT = 'all';
 
 const EVENT_STYLES: Record<string, string> = {
-    created: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
-    updated: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
+    created:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    updated:
+        'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
     deleted: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
 };
 
@@ -131,7 +133,9 @@ export default function AuditLogsIndex({
                                     setEvent(value);
                                     go({
                                         event:
-                                            value === ALL_EVENT ? undefined : value,
+                                            value === ALL_EVENT
+                                                ? undefined
+                                                : value,
                                     });
                                 }}
                             >
@@ -158,6 +162,9 @@ export default function AuditLogsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Waktu</TableHead>
                                         <TableHead>User</TableHead>
                                         <TableHead>Aksi</TableHead>
@@ -172,7 +179,10 @@ export default function AuditLogsIndex({
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={7} className="py-12">
+                                            <TableCell
+                                                colSpan={8}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <ScrollText className="size-6" />
@@ -184,14 +194,19 @@ export default function AuditLogsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((row) => (
+                                        rows.map((row, index) => (
                                             <TableRow key={row.id}>
-                                                <TableCell className="whitespace-nowrap text-xs text-muted-foreground tabular-nums">
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
+                                                <TableCell className="text-xs whitespace-nowrap text-muted-foreground tabular-nums">
                                                     {row.created_at}
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="font-medium">
-                                                        {row.user_name ?? 'Sistem'}
+                                                        {row.user_name ??
+                                                            'Sistem'}
                                                     </div>
                                                     <div className="text-xs text-muted-foreground">
                                                         {row.user_email}
@@ -200,10 +215,15 @@ export default function AuditLogsIndex({
                                                 <TableCell>
                                                     <Badge
                                                         variant="secondary"
-                                                        className={EVENT_STYLES[row.event]}
+                                                        className={
+                                                            EVENT_STYLES[
+                                                                row.event
+                                                            ]
+                                                        }
                                                     >
-                                                        {EVENT_LABELS[row.event] ??
-                                                            row.event}
+                                                        {EVENT_LABELS[
+                                                            row.event
+                                                        ] ?? row.event}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell>
@@ -226,11 +246,17 @@ export default function AuditLogsIndex({
                                                 <TableCell className="text-right">
                                                     <Button
                                                         size="sm"
-                                                        variant="outline"
-                                                        disabled={row.changes.length === 0}
-                                                        onClick={() => setDetail(row)}
+                                                        variant="warning"
+                                                        disabled={
+                                                            row.changes
+                                                                .length === 0
+                                                        }
+                                                        onClick={() =>
+                                                            setDetail(row)
+                                                        }
                                                     >
-                                                        {row.changes.length} perubahan
+                                                        {row.changes.length}{' '}
+                                                        perubahan
                                                     </Button>
                                                 </TableCell>
                                             </TableRow>
@@ -246,7 +272,7 @@ export default function AuditLogsIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -254,7 +280,10 @@ export default function AuditLogsIndex({
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -262,7 +291,7 @@ export default function AuditLogsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -270,7 +299,10 @@ export default function AuditLogsIndex({
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -283,7 +315,10 @@ export default function AuditLogsIndex({
                 </Card>
             </div>
 
-            <Dialog open={!!detail} onOpenChange={(open) => !open && setDetail(null)}>
+            <Dialog
+                open={!!detail}
+                onOpenChange={(open) => !open && setDetail(null)}
+            >
                 <DialogContent className="max-w-2xl">
                     <DialogHeader>
                         <DialogTitle>
@@ -296,14 +331,18 @@ export default function AuditLogsIndex({
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead className="w-12">No</TableHead>
                                     <TableHead>Field</TableHead>
                                     <TableHead>Sebelum</TableHead>
                                     <TableHead>Sesudah</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {detail?.changes.map((change) => (
+                                {detail?.changes.map((change, index) => (
                                     <TableRow key={change.field}>
+                                        <TableCell className="text-muted-foreground tabular-nums">
+                                            {index + 1}
+                                        </TableCell>
                                         <TableCell className="font-medium">
                                             {change.field}
                                         </TableCell>

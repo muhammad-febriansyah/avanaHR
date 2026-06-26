@@ -56,6 +56,9 @@ export default function JobLevelsIndex({ jobLevels: rows }: IndexProps) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead className="text-right">
                                             Urutan
                                         </TableHead>
@@ -70,7 +73,7 @@ export default function JobLevelsIndex({ jobLevels: rows }: IndexProps) {
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={4}
+                                                colSpan={5}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -78,15 +81,19 @@ export default function JobLevelsIndex({ jobLevels: rows }: IndexProps) {
                                                         <Layers className="size-6" />
                                                     </div>
                                                     <p className="text-sm text-muted-foreground">
-                                                        Belum ada jenjang jabatan
+                                                        Belum ada jenjang
+                                                        jabatan
                                                     </p>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
-                                                <TableCell className="text-right tabular-nums text-muted-foreground">
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {index + 1}
+                                                </TableCell>
+                                                <TableCell className="text-right text-muted-foreground tabular-nums">
                                                     {item.order}
                                                 </TableCell>
                                                 <TableCell className="font-medium whitespace-nowrap">
@@ -100,7 +107,7 @@ export default function JobLevelsIndex({ jobLevels: rows }: IndexProps) {
                                                         <Button
                                                             asChild
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="success"
                                                         >
                                                             <Link
                                                                 href={jobLevels.edit.url(

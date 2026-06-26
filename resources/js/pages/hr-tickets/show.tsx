@@ -1,11 +1,12 @@
-import { Head, router, useForm } from '@inertiajs/react';
-import { ArrowLeft, MessageSquare, Send } from 'lucide-react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import { ArrowLeft, Clock, MessageSquare, Send, Tag, User } from 'lucide-react';
 import type { FormEvent } from 'react';
 import hrTickets from '@/actions/App/Http/Controllers/HrTicketController';
+import { DetailItem } from '@/components/detail/detail-item';
+import { SectionCard } from '@/components/detail/section-card';
 import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import {
     Select,
@@ -51,7 +52,20 @@ function label(options: Option[], value: string): string {
     return options.find((option) => option.value === value)?.label ?? value;
 }
 
-export default function HrTicketShow({ ticket, statuses, priorities }: ShowProps) {
+function initialsOf(name: string): string {
+    return name
+        .split(' ')
+        .map((part) => part[0])
+        .slice(0, 2)
+        .join('')
+        .toUpperCase();
+}
+
+export default function HrTicketShow({
+    ticket,
+    statuses,
+    priorities,
+}: ShowProps) {
     useFlashToast();
 
     const reply = useForm({ body: '' });
@@ -78,35 +92,41 @@ export default function HrTicketShow({ ticket, statuses, priorities }: ShowProps
             <Head title={`Tiket ${ticket.ticket_no}`} />
 
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
-                <PageHeader title={ticket.subject} description={ticket.ticket_no}>
-                    <Button asChild variant="outline">
-                        <a href={hrTickets.index.url()}>
+                <PageHeader
+                    title={ticket.subject}
+                    description={ticket.ticket_no}
+                >
+                    <Button asChild variant="secondary">
+                        <Link href={hrTickets.index.url()}>
                             <ArrowLeft />
                             Kembali
-                        </a>
+                        </Link>
                     </Button>
                 </PageHeader>
 
                 <div className="grid gap-5 lg:grid-cols-[1fr_320px]">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-base">
-                                <MessageSquare className="size-4" />
-                                Percakapan
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-4">
-                                {ticket.messages.map((message) => (
-                                    <div
-                                        key={message.id}
-                                        className="rounded-lg border bg-muted/30 p-3"
-                                    >
-                                        <div className="mb-1 flex items-center justify-between">
+                    <SectionCard
+                        title="Percakapan"
+                        icon={MessageSquare}
+                        actions={
+                            <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                                {ticket.messages.length} pesan
+                            </span>
+                        }
+                        contentClassName="flex flex-col gap-4"
+                    >
+                        <div className="flex flex-col gap-4">
+                            {ticket.messages.map((message) => (
+                                <div key={message.id} className="flex gap-3">
+                                    <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#2F54C9,#6E9BE6)] text-xs font-semibold text-white">
+                                        {initialsOf(message.author)}
+                                    </span>
+                                    <div className="min-w-0 flex-1 rounded-lg rounded-tl-none border bg-muted/30 p-3">
+                                        <div className="mb-1 flex items-center justify-between gap-2">
                                             <span className="text-sm font-medium text-navy">
                                                 {message.author}
                                             </span>
-                                            <span className="text-xs text-muted-foreground tabular-nums">
+                                            <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
                                                 {message.created_at}
                                             </span>
                                         </div>
@@ -114,76 +134,121 @@ export default function HrTicketShow({ ticket, statuses, priorities }: ShowProps
                                             {message.body}
                                         </p>
                                     </div>
-                                ))}
-                            </div>
-
-                            <form
-                                onSubmit={sendReply}
-                                className="flex flex-col gap-2 border-t pt-4"
-                            >
-                                <textarea
-                                    value={reply.data.body}
-                                    onChange={(e) => reply.setData('body', e.target.value)}
-                                    rows={3}
-                                    placeholder="Tulis balasan…"
-                                    className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
-                                />
-                                {reply.errors.body && (
-                                    <p className="text-sm text-destructive">
-                                        {reply.errors.body}
-                                    </p>
-                                )}
-                                <div className="flex justify-end">
-                                    <Button type="submit" disabled={reply.processing}>
-                                        <Send />
-                                        Kirim Balasan
-                                    </Button>
                                 </div>
-                            </form>
-                        </CardContent>
-                    </Card>
+                            ))}
+                        </div>
 
-                    <Card className="h-fit">
-                        <CardHeader>
-                            <CardTitle className="text-base">Detail</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex flex-col gap-4 text-sm">
-                            <div className="flex items-center justify-between">
-                                <span className="text-muted-foreground">Status</span>
-                                <Badge
-                                    variant="secondary"
-                                    className={STATUS_STYLES[ticket.status]}
+                        <form
+                            onSubmit={sendReply}
+                            className="flex flex-col gap-2 border-t pt-4"
+                        >
+                            <Label htmlFor="reply-body">Balas Tiket</Label>
+                            <textarea
+                                id="reply-body"
+                                value={reply.data.body}
+                                onChange={(e) =>
+                                    reply.setData('body', e.target.value)
+                                }
+                                rows={3}
+                                placeholder="Tulis balasan…"
+                                className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+                            />
+                            {reply.errors.body ? (
+                                <p className="text-sm text-destructive">
+                                    {reply.errors.body}
+                                </p>
+                            ) : null}
+                            <div className="flex justify-end">
+                                <Button
+                                    type="submit"
+                                    disabled={reply.processing}
                                 >
-                                    {label(statuses, ticket.status)}
-                                </Badge>
+                                    <Send />
+                                    Kirim Balasan
+                                </Button>
                             </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-muted-foreground">Prioritas</span>
-                                <Badge
-                                    variant="secondary"
-                                    className={PRIORITY_STYLES[ticket.priority]}
-                                >
-                                    {label(priorities, ticket.priority)}
-                                </Badge>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-muted-foreground">Karyawan</span>
-                                <span>{ticket.employee_name ?? '-'}</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-muted-foreground">SLA</span>
-                                <span className="tabular-nums">
-                                    {ticket.sla_due_at ?? '-'}
-                                </span>
-                            </div>
+                        </form>
+                    </SectionCard>
 
-                            <div className="grid gap-2 border-t pt-4">
+                    <div className="flex flex-col gap-5">
+                        <SectionCard
+                            title="Detail Tiket"
+                            icon={Tag}
+                            className="h-fit"
+                            contentClassName="grid gap-3"
+                        >
+                            <DetailItem
+                                label="Status"
+                                value={
+                                    <Badge
+                                        variant="secondary"
+                                        className={STATUS_STYLES[ticket.status]}
+                                    >
+                                        {label(statuses, ticket.status)}
+                                    </Badge>
+                                }
+                            />
+                            <DetailItem
+                                label="Prioritas"
+                                value={
+                                    <Badge
+                                        variant="secondary"
+                                        className={
+                                            PRIORITY_STYLES[ticket.priority]
+                                        }
+                                    >
+                                        {label(priorities, ticket.priority)}
+                                    </Badge>
+                                }
+                            />
+                            <DetailItem
+                                label="Kategori"
+                                value={ticket.category}
+                                icon={Tag}
+                            />
+                            <DetailItem
+                                label="Karyawan"
+                                value={
+                                    ticket.employee_name
+                                        ? `${ticket.employee_name}${ticket.employee_no ? ` (${ticket.employee_no})` : ''}`
+                                        : null
+                                }
+                                icon={User}
+                            />
+                            <DetailItem
+                                label="Ditangani"
+                                value={ticket.assigned_to}
+                                icon={User}
+                            />
+                            <DetailItem
+                                label="SLA"
+                                value={ticket.sla_due_at}
+                                icon={Clock}
+                            />
+                            <DetailItem
+                                label="Dibuat"
+                                value={ticket.created_at}
+                                icon={Clock}
+                            />
+                        </SectionCard>
+
+                        <SectionCard
+                            title="Kelola"
+                            className="h-fit"
+                            contentClassName="grid gap-4"
+                        >
+                            <div className="grid gap-2">
                                 <Label htmlFor="meta-status">Ubah Status</Label>
                                 <Select
                                     value={meta.data.status}
-                                    onValueChange={(value) => saveMeta({ status: value })}
+                                    onValueChange={(value) =>
+                                        saveMeta({ status: value })
+                                    }
                                 >
-                                    <SelectTrigger id="meta-status" className="w-full">
+                                    <SelectTrigger
+                                        id="meta-status"
+                                        className="w-full"
+                                    >
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -199,12 +264,19 @@ export default function HrTicketShow({ ticket, statuses, priorities }: ShowProps
                                 </Select>
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="meta-priority">Ubah Prioritas</Label>
+                                <Label htmlFor="meta-priority">
+                                    Ubah Prioritas
+                                </Label>
                                 <Select
                                     value={meta.data.priority}
-                                    onValueChange={(value) => saveMeta({ priority: value })}
+                                    onValueChange={(value) =>
+                                        saveMeta({ priority: value })
+                                    }
                                 >
-                                    <SelectTrigger id="meta-priority" className="w-full">
+                                    <SelectTrigger
+                                        id="meta-priority"
+                                        className="w-full"
+                                    >
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -219,8 +291,8 @@ export default function HrTicketShow({ ticket, statuses, priorities }: ShowProps
                                     </SelectContent>
                                 </Select>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </SectionCard>
+                    </div>
                 </div>
             </div>
         </>

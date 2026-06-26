@@ -7,7 +7,8 @@ import PageHeader from '@/components/page-header';
 import { RequiredMark } from '@/components/required-mark';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Combobox } from '@/components/ui/combobox';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
 import {
     Select,
@@ -83,7 +84,10 @@ export default function MovementsCreate({
                     description="Catat mutasi, promosi, demosi, skorsing, atau exit karyawan."
                 />
 
-                <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl">
+                <form
+                    onSubmit={handleSubmit}
+                    className="mx-auto w-full max-w-4xl"
+                >
                     <Card>
                         <CardContent className="flex flex-col gap-6">
                             <div className="flex flex-col gap-1">
@@ -97,27 +101,23 @@ export default function MovementsCreate({
                                     <Label htmlFor="employee_id">
                                         Karyawan <RequiredMark />
                                     </Label>
-                                    <Select
+                                    <Combobox
+                                        id="employee_id"
                                         value={form.data.employee_id}
-                                        onValueChange={(value) =>
+                                        onChange={(value) =>
                                             form.setData('employee_id', value)
                                         }
-                                    >
-                                        <SelectTrigger id="employee_id" className="w-full">
-                                            <SelectValue placeholder="Pilih karyawan" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {employees.map((option) => (
-                                                <SelectItem
-                                                    key={option.id}
-                                                    value={String(option.id)}
-                                                >
-                                                    {option.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <InputError message={form.errors.employee_id} />
+                                        options={employees.map((option) => ({
+                                            value: String(option.id),
+                                            label: option.label,
+                                        }))}
+                                        placeholder="Pilih karyawan"
+                                        searchPlaceholder="Cari karyawan…"
+                                        emptyText="Karyawan tidak ditemukan"
+                                    />
+                                    <InputError
+                                        message={form.errors.employee_id}
+                                    />
                                 </div>
 
                                 <div className="grid gap-2">
@@ -130,7 +130,10 @@ export default function MovementsCreate({
                                             form.setData('type', value)
                                         }
                                     >
-                                        <SelectTrigger id="type" className="w-full">
+                                        <SelectTrigger
+                                            id="type"
+                                            className="w-full"
+                                        >
                                             <SelectValue placeholder="Pilih tipe" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -151,16 +154,20 @@ export default function MovementsCreate({
                                     <Label htmlFor="effective_date">
                                         Tanggal Efektif <RequiredMark />
                                     </Label>
-                                    <Input
+                                    <DatePicker
                                         id="effective_date"
-                                        type="date"
                                         value={form.data.effective_date}
-                                        onChange={(e) =>
-                                            form.setData('effective_date', e.target.value)
+                                        onChange={(value) =>
+                                            form.setData(
+                                                'effective_date',
+                                                value,
+                                            )
                                         }
                                         placeholder="Pilih tanggal"
                                     />
-                                    <InputError message={form.errors.effective_date} />
+                                    <InputError
+                                        message={form.errors.effective_date}
+                                    />
                                 </div>
                             </div>
 
@@ -169,140 +176,152 @@ export default function MovementsCreate({
                                     Perubahan (opsional)
                                 </h3>
                                 <p className="text-xs text-muted-foreground">
-                                    Isi hanya kolom yang berubah. Biarkan "tidak diubah"
-                                    untuk mempertahankan data saat ini.
+                                    Isi hanya kolom yang berubah. Biarkan "tidak
+                                    diubah" untuk mempertahankan data saat ini.
                                 </p>
                             </div>
 
                             <div className="grid gap-5 md:grid-cols-2">
                                 <div className="grid gap-2">
                                     <Label htmlFor="position_id">Posisi</Label>
-                                    <Select
+                                    <Combobox
+                                        id="position_id"
                                         value={form.data.position_id || NONE}
-                                        onValueChange={(value) =>
+                                        onChange={(value) =>
                                             form.setData(
                                                 'position_id',
                                                 value === NONE ? '' : value,
                                             )
                                         }
-                                    >
-                                        <SelectTrigger id="position_id" className="w-full">
-                                            <SelectValue placeholder="— tidak diubah —" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value={NONE}>
-                                                — tidak diubah —
-                                            </SelectItem>
-                                            {options.positions.map((option) => (
-                                                <SelectItem
-                                                    key={option.id}
-                                                    value={String(option.id)}
-                                                >
-                                                    {option.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <InputError message={form.errors.position_id} />
+                                        options={[
+                                            {
+                                                value: NONE,
+                                                label: '— tidak diubah —',
+                                            },
+                                            ...options.positions.map(
+                                                (option) => ({
+                                                    value: String(option.id),
+                                                    label: option.label,
+                                                }),
+                                            ),
+                                        ]}
+                                        placeholder="— tidak diubah —"
+                                        searchPlaceholder="Cari posisi…"
+                                        emptyText="Posisi tidak ditemukan"
+                                    />
+                                    <InputError
+                                        message={form.errors.position_id}
+                                    />
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="department_id">Departemen</Label>
-                                    <Select
+                                    <Label htmlFor="department_id">
+                                        Departemen
+                                    </Label>
+                                    <Combobox
+                                        id="department_id"
                                         value={form.data.department_id || NONE}
-                                        onValueChange={(value) =>
+                                        onChange={(value) =>
                                             form.setData(
                                                 'department_id',
                                                 value === NONE ? '' : value,
                                             )
                                         }
-                                    >
-                                        <SelectTrigger id="department_id" className="w-full">
-                                            <SelectValue placeholder="— tidak diubah —" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value={NONE}>
-                                                — tidak diubah —
-                                            </SelectItem>
-                                            {options.departments.map((option) => (
-                                                <SelectItem
-                                                    key={option.id}
-                                                    value={String(option.id)}
-                                                >
-                                                    {option.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <InputError message={form.errors.department_id} />
+                                        options={[
+                                            {
+                                                value: NONE,
+                                                label: '— tidak diubah —',
+                                            },
+                                            ...options.departments.map(
+                                                (option) => ({
+                                                    value: String(option.id),
+                                                    label: option.label,
+                                                }),
+                                            ),
+                                        ]}
+                                        placeholder="— tidak diubah —"
+                                        searchPlaceholder="Cari departemen…"
+                                        emptyText="Departemen tidak ditemukan"
+                                    />
+                                    <InputError
+                                        message={form.errors.department_id}
+                                    />
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="job_grade_id">Job Grade</Label>
-                                    <Select
+                                    <Label htmlFor="job_grade_id">
+                                        Job Grade
+                                    </Label>
+                                    <Combobox
+                                        id="job_grade_id"
                                         value={form.data.job_grade_id || NONE}
-                                        onValueChange={(value) =>
+                                        onChange={(value) =>
                                             form.setData(
                                                 'job_grade_id',
                                                 value === NONE ? '' : value,
                                             )
                                         }
-                                    >
-                                        <SelectTrigger id="job_grade_id" className="w-full">
-                                            <SelectValue placeholder="— tidak diubah —" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value={NONE}>
-                                                — tidak diubah —
-                                            </SelectItem>
-                                            {options.jobGrades.map((option) => (
-                                                <SelectItem
-                                                    key={option.id}
-                                                    value={String(option.id)}
-                                                >
-                                                    {option.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <InputError message={form.errors.job_grade_id} />
+                                        options={[
+                                            {
+                                                value: NONE,
+                                                label: '— tidak diubah —',
+                                            },
+                                            ...options.jobGrades.map(
+                                                (option) => ({
+                                                    value: String(option.id),
+                                                    label: option.label,
+                                                }),
+                                            ),
+                                        ]}
+                                        placeholder="— tidak diubah —"
+                                        searchPlaceholder="Cari job grade…"
+                                        emptyText="Job grade tidak ditemukan"
+                                    />
+                                    <InputError
+                                        message={form.errors.job_grade_id}
+                                    />
                                 </div>
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="manager_id">Atasan</Label>
-                                    <Select
+                                    <Combobox
+                                        id="manager_id"
                                         value={form.data.manager_id || NONE}
-                                        onValueChange={(value) =>
+                                        onChange={(value) =>
                                             form.setData(
                                                 'manager_id',
                                                 value === NONE ? '' : value,
                                             )
                                         }
-                                    >
-                                        <SelectTrigger id="manager_id" className="w-full">
-                                            <SelectValue placeholder="— tidak diubah —" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value={NONE}>
-                                                — tidak diubah —
-                                            </SelectItem>
-                                            {options.managers.map((option) => (
-                                                <SelectItem
-                                                    key={option.id}
-                                                    value={String(option.id)}
-                                                >
-                                                    {option.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <InputError message={form.errors.manager_id} />
+                                        options={[
+                                            {
+                                                value: NONE,
+                                                label: '— tidak diubah —',
+                                            },
+                                            ...options.managers.map(
+                                                (option) => ({
+                                                    value: String(option.id),
+                                                    label: option.label,
+                                                }),
+                                            ),
+                                        ]}
+                                        placeholder="— tidak diubah —"
+                                        searchPlaceholder="Cari atasan…"
+                                        emptyText="Atasan tidak ditemukan"
+                                    />
+                                    <InputError
+                                        message={form.errors.manager_id}
+                                    />
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="employment_type">Tipe Kerja</Label>
+                                    <Label htmlFor="employment_type">
+                                        Tipe Kerja
+                                    </Label>
                                     <Select
-                                        value={form.data.employment_type || NONE}
+                                        value={
+                                            form.data.employment_type || NONE
+                                        }
                                         onValueChange={(value) =>
                                             form.setData(
                                                 'employment_type',
@@ -320,17 +339,21 @@ export default function MovementsCreate({
                                             <SelectItem value={NONE}>
                                                 — tidak diubah —
                                             </SelectItem>
-                                            {options.employmentTypes.map((option) => (
-                                                <SelectItem
-                                                    key={option.value}
-                                                    value={option.value}
-                                                >
-                                                    {option.label}
-                                                </SelectItem>
-                                            ))}
+                                            {options.employmentTypes.map(
+                                                (option) => (
+                                                    <SelectItem
+                                                        key={option.value}
+                                                        value={option.value}
+                                                    >
+                                                        {option.label}
+                                                    </SelectItem>
+                                                ),
+                                            )}
                                         </SelectContent>
                                     </Select>
-                                    <InputError message={form.errors.employment_type} />
+                                    <InputError
+                                        message={form.errors.employment_type}
+                                    />
                                 </div>
 
                                 <div className="grid gap-2 md:col-span-2">
@@ -339,18 +362,21 @@ export default function MovementsCreate({
                                         id="reason"
                                         value={form.data.reason}
                                         onChange={(e) =>
-                                            form.setData('reason', e.target.value)
+                                            form.setData(
+                                                'reason',
+                                                e.target.value,
+                                            )
                                         }
                                         rows={3}
                                         placeholder="Catatan / dasar keputusan (opsional)"
-                                        className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
                                     />
                                     <InputError message={form.errors.reason} />
                                 </div>
                             </div>
                         </CardContent>
                         <CardFooter className="flex justify-end gap-3">
-                            <Button asChild variant="outline" type="button">
+                            <Button asChild variant="secondary" type="button">
                                 <Link href={movements.index.url()}>
                                     <X />
                                     Batal

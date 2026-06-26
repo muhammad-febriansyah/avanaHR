@@ -42,13 +42,50 @@ class ShiftController extends Controller
         ]);
     }
 
+    public function create(): Response
+    {
+        $this->authorize('create', Shift::class);
+
+        return Inertia::render('shifts/create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Jadwal & Shift', 'href' => route('shifts.index')],
+                ['title' => 'Tambah', 'href' => route('shifts.create')],
+            ],
+        ]);
+    }
+
     public function store(StoreShiftRequest $request): RedirectResponse
     {
         Shift::create($request->validated());
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Shift berhasil ditambahkan.']);
 
-        return back();
+        return redirect()->route('shifts.index');
+    }
+
+    public function edit(Shift $shift): Response
+    {
+        $this->authorize('update', $shift);
+
+        return Inertia::render('shifts/edit', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Jadwal & Shift', 'href' => route('shifts.index')],
+                ['title' => 'Edit', 'href' => route('shifts.edit', $shift)],
+            ],
+            'shift' => [
+                'id' => $shift->id,
+                'code' => $shift->code,
+                'name' => $shift->name,
+                'start_time' => substr((string) $shift->start_time, 0, 5),
+                'end_time' => substr((string) $shift->end_time, 0, 5),
+                'break_min' => $shift->break_min,
+                'is_overnight' => (bool) $shift->is_overnight,
+                'late_tolerance_min' => $shift->late_tolerance_min,
+                'grace_min' => $shift->grace_min,
+            ],
+        ]);
     }
 
     public function update(UpdateShiftRequest $request, Shift $shift): RedirectResponse
@@ -57,7 +94,7 @@ class ShiftController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Shift berhasil diperbarui.']);
 
-        return back();
+        return redirect()->route('shifts.index');
     }
 
     public function destroy(Shift $shift): RedirectResponse

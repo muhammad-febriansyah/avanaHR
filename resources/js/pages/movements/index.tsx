@@ -1,11 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import {
-    ChevronLeft,
-    ChevronRight,
-    Eye,
-    Plus,
-    Shuffle,
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight, Eye, Plus, Shuffle } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import movements from '@/actions/App/Http/Controllers/EmployeeMovementController';
 import PageHeader from '@/components/page-header';
@@ -58,17 +52,23 @@ const ALL = 'all';
 
 const TYPE_STYLES: Record<string, string> = {
     promotion: 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400',
-    demotion: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
-    transfer: 'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
-    mutation: 'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
-    suspension: 'bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-400',
+    demotion:
+        'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
+    transfer:
+        'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
+    mutation:
+        'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
+    suspension:
+        'bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-400',
     exit: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
 };
 
 const STATUS_STYLES: Record<string, string> = {
     draft: 'bg-slate-100 text-slate-600 dark:bg-slate-500/15 dark:text-slate-300',
-    scheduled: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400',
-    applied: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    scheduled:
+        'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400',
+    applied:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
     cancelled: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
 };
 
@@ -143,16 +143,23 @@ export default function MovementsIndex({
                                 value={type}
                                 onValueChange={(value) => {
                                     setType(value);
-                                    go({ type: value === ALL ? undefined : value });
+                                    go({
+                                        type: value === ALL ? undefined : value,
+                                    });
                                 }}
                             >
                                 <SelectTrigger className="w-full sm:w-48">
                                     <SelectValue placeholder="Semua Tipe" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value={ALL}>Semua Tipe</SelectItem>
+                                    <SelectItem value={ALL}>
+                                        Semua Tipe
+                                    </SelectItem>
                                     {types.map((option) => (
-                                        <SelectItem key={option.value} value={option.value}>
+                                        <SelectItem
+                                            key={option.value}
+                                            value={option.value}
+                                        >
                                             {option.label}
                                         </SelectItem>
                                     ))}
@@ -162,16 +169,24 @@ export default function MovementsIndex({
                                 value={status}
                                 onValueChange={(value) => {
                                     setStatus(value);
-                                    go({ status: value === ALL ? undefined : value });
+                                    go({
+                                        status:
+                                            value === ALL ? undefined : value,
+                                    });
                                 }}
                             >
                                 <SelectTrigger className="w-full sm:w-48">
                                     <SelectValue placeholder="Semua Status" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value={ALL}>Semua Status</SelectItem>
+                                    <SelectItem value={ALL}>
+                                        Semua Status
+                                    </SelectItem>
                                     {statuses.map((option) => (
-                                        <SelectItem key={option.value} value={option.value}>
+                                        <SelectItem
+                                            key={option.value}
+                                            value={option.value}
+                                        >
                                             {option.label}
                                         </SelectItem>
                                     ))}
@@ -183,17 +198,25 @@ export default function MovementsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Karyawan</TableHead>
                                         <TableHead>Tipe</TableHead>
                                         <TableHead>Tanggal Efektif</TableHead>
                                         <TableHead>Status</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
+                                        <TableHead className="text-right">
+                                            Aksi
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="py-12">
+                                            <TableCell
+                                                colSpan={6}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <Shuffle className="size-6" />
@@ -205,8 +228,12 @@ export default function MovementsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="font-medium">
                                                         {item.employee_name}
@@ -218,7 +245,11 @@ export default function MovementsIndex({
                                                 <TableCell>
                                                     <Badge
                                                         variant="secondary"
-                                                        className={TYPE_STYLES[item.type]}
+                                                        className={
+                                                            TYPE_STYLES[
+                                                                item.type
+                                                            ]
+                                                        }
                                                     >
                                                         {item.type_label}
                                                     </Badge>
@@ -229,14 +260,26 @@ export default function MovementsIndex({
                                                 <TableCell>
                                                     <Badge
                                                         variant="secondary"
-                                                        className={STATUS_STYLES[item.status]}
+                                                        className={
+                                                            STATUS_STYLES[
+                                                                item.status
+                                                            ]
+                                                        }
                                                     >
                                                         {item.status_label}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell className="text-right">
-                                                    <Button asChild size="sm" variant="outline">
-                                                        <Link href={movements.show.url(item.id)}>
+                                                    <Button
+                                                        asChild
+                                                        size="sm"
+                                                        variant="warning"
+                                                    >
+                                                        <Link
+                                                            href={movements.show.url(
+                                                                item.id,
+                                                            )}
+                                                        >
                                                             <Eye />
                                                             Detail
                                                         </Link>
@@ -255,7 +298,7 @@ export default function MovementsIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -263,7 +306,10 @@ export default function MovementsIndex({
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -271,7 +317,7 @@ export default function MovementsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -279,7 +325,10 @@ export default function MovementsIndex({
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >

@@ -145,6 +145,9 @@ export default function PayrollComponentsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Kode</TableHead>
                                         <TableHead>Nama</TableHead>
                                         <TableHead>Tipe</TableHead>
@@ -160,7 +163,7 @@ export default function PayrollComponentsIndex({
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={7}
+                                                colSpan={8}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -174,8 +177,11 @@ export default function PayrollComponentsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {index + 1}
+                                                </TableCell>
                                                 <TableCell className="font-medium">
                                                     {item.code}
                                                 </TableCell>
@@ -216,7 +222,7 @@ export default function PayrollComponentsIndex({
                                                     <div className="flex items-center justify-end gap-2">
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="success"
                                                             onClick={() =>
                                                                 openEdit(item)
                                                             }
@@ -383,7 +389,7 @@ export default function PayrollComponentsIndex({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >

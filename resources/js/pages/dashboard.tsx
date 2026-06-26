@@ -282,16 +282,16 @@ export default function Dashboard() {
                     </div>
                     <div className="flex gap-2.5">
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             onClick={() =>
-                                toast.success('Export dimulai', {
+                                toast.success('Ekspor dimulai', {
                                     description:
                                         'Laporan akan diunduh setelah selesai.',
                                 })
                             }
                         >
                             <Download />
-                            Export
+                            Ekspor
                         </Button>
                         <Button
                             onClick={() =>

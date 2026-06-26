@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -61,12 +62,22 @@ class OvertimeRequestController extends Controller
             'filters' => (object) $filters,
             'statuses' => $this->statusOptions(),
             'options' => [
-                'employees' => Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'employee_no'])
-                    ->map(fn (Employee $employee): array => [
-                        'id' => $employee->id,
-                        'label' => $employee->fullName().' ('.$employee->employee_no.')',
-                    ]),
+                'employees' => $this->employeeOptions(),
             ],
+        ]);
+    }
+
+    public function create(): Response
+    {
+        $this->authorize('create', OvertimeRequest::class);
+
+        return Inertia::render('overtime-requests/create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Lembur', 'href' => route('overtime-requests.index')],
+                ['title' => 'Ajukan', 'href' => route('overtime-requests.create')],
+            ],
+            'employees' => $this->employeeOptions(),
         ]);
     }
 
@@ -86,6 +97,34 @@ class OvertimeRequestController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
 
         return back();
+    }
+
+    public function edit(OvertimeRequest $overtimeRequest): Response|RedirectResponse
+    {
+        $this->authorize('update', $overtimeRequest);
+
+        if ($overtimeRequest->status !== RequestStatus::Pending) {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Hanya pengajuan berstatus pending yang dapat diubah.']);
+
+            return back();
+        }
+
+        return Inertia::render('overtime-requests/edit', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Lembur', 'href' => route('overtime-requests.index')],
+                ['title' => 'Edit', 'href' => route('overtime-requests.edit', $overtimeRequest)],
+            ],
+            'overtimeRequest' => [
+                'id' => $overtimeRequest->id,
+                'employee_name' => $overtimeRequest->employee?->fullName(),
+                'employee_no' => $overtimeRequest->employee?->employee_no,
+                'date' => $overtimeRequest->date?->format('Y-m-d'),
+                'start_time' => $overtimeRequest->planned_start?->format('H:i'),
+                'end_time' => $overtimeRequest->planned_end?->format('H:i'),
+                'reason' => $overtimeRequest->reason,
+            ],
+        ]);
     }
 
     public function update(UpdateOvertimeRequestRequest $request, OvertimeRequest $overtimeRequest): RedirectResponse
@@ -134,6 +173,18 @@ class OvertimeRequestController extends Controller
             'planned_minutes' => $start->diffInMinutes($end),
             'reason' => $data['reason'] ?? null,
         ];
+    }
+
+    /**
+     * @return Collection<int, array{id: int, label: string}>
+     */
+    private function employeeOptions(): Collection
+    {
+        return Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'employee_no'])
+            ->map(fn (Employee $employee): array => [
+                'id' => $employee->id,
+                'label' => $employee->fullName().' ('.$employee->employee_no.')',
+            ]);
     }
 
     /**

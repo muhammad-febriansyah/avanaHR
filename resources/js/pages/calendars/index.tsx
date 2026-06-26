@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { DatePicker } from '@/components/ui/date-picker';
 import {
     Dialog,
     DialogContent,
@@ -80,7 +81,11 @@ export default function CalendarsIndex({
         router.get(
             workCalendars.index.url({ query: { calendar: id } }),
             {},
-            { preserveScroll: true, preserveState: true, only: ['holidays', 'selectedCalendarId'] },
+            {
+                preserveScroll: true,
+                preserveState: true,
+                only: ['holidays', 'selectedCalendarId'],
+            },
         );
     }
 
@@ -183,7 +188,10 @@ function CalendarList({
                                 tabIndex={0}
                                 onClick={() => onSelect(item.id)}
                                 onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
+                                    if (
+                                        event.key === 'Enter' ||
+                                        event.key === ' '
+                                    ) {
                                         event.preventDefault();
                                         onSelect(item.id);
                                     }
@@ -216,7 +224,7 @@ function CalendarList({
                                     {!item.is_default && (
                                         <Button
                                             size="sm"
-                                            variant="outline"
+                                            variant="secondary"
                                             onClick={(event) => {
                                                 event.stopPropagation();
                                                 setDefault(item.id);
@@ -228,7 +236,7 @@ function CalendarList({
                                     )}
                                     <Button
                                         size="sm"
-                                        variant="outline"
+                                        variant="success"
                                         onClick={(event) => {
                                             event.stopPropagation();
                                             openEdit(item);
@@ -242,7 +250,9 @@ function CalendarList({
                                             title="Hapus Kalender"
                                             description={`Yakin ingin menghapus "${item.name}"? Semua hari libur di kalender ini akan ikut terhapus.`}
                                             confirmLabel="Hapus"
-                                            onConfirm={() => handleDelete(item.id)}
+                                            onConfirm={() =>
+                                                handleDelete(item.id)
+                                            }
                                             trigger={
                                                 <Button
                                                     size="sm"
@@ -308,7 +318,7 @@ function CalendarList({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >
@@ -349,6 +359,7 @@ function HolidayPanel({
         if (!calendar) {
             return;
         }
+
         setEditing(null);
         form.setDefaults({
             calendar_id: calendar.id,
@@ -386,7 +397,9 @@ function HolidayPanel({
     }
 
     function handleDelete(id: number) {
-        router.delete(holidaysActions.destroy.url(id), { preserveScroll: true });
+        router.delete(holidaysActions.destroy.url(id), {
+            preserveScroll: true,
+        });
     }
 
     return (
@@ -411,16 +424,19 @@ function HolidayPanel({
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead className="w-12">No</TableHead>
                                 <TableHead>Tanggal</TableHead>
                                 <TableHead>Nama</TableHead>
                                 <TableHead>Nasional</TableHead>
-                                <TableHead className="text-right">Aksi</TableHead>
+                                <TableHead className="text-right">
+                                    Aksi
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {holidays.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={4} className="py-12">
+                                    <TableCell colSpan={5} className="py-12">
                                         <EmptyState
                                             icon={
                                                 <CalendarOff className="size-6" />
@@ -434,8 +450,11 @@ function HolidayPanel({
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                holidays.map((item) => (
+                                holidays.map((item, index) => (
                                     <TableRow key={item.id}>
+                                        <TableCell className="text-muted-foreground tabular-nums">
+                                            {index + 1}
+                                        </TableCell>
                                         <TableCell className="font-medium">
                                             {formatDate(item.date)}
                                         </TableCell>
@@ -451,8 +470,10 @@ function HolidayPanel({
                                             <div className="flex items-center justify-end gap-2">
                                                 <Button
                                                     size="sm"
-                                                    variant="outline"
-                                                    onClick={() => openEdit(item)}
+                                                    variant="success"
+                                                    onClick={() =>
+                                                        openEdit(item)
+                                                    }
                                                 >
                                                     <Pencil />
                                                     Edit
@@ -499,14 +520,12 @@ function HolidayPanel({
                     >
                         <div className="grid gap-2">
                             <Label htmlFor="holiday-date">Tanggal</Label>
-                            <Input
+                            <DatePicker
                                 id="holiday-date"
-                                type="date"
                                 value={form.data.date}
-                                onChange={(event) =>
-                                    form.setData('date', event.target.value)
+                                onChange={(value) =>
+                                    form.setData('date', value)
                                 }
-                                autoFocus
                             />
                             {form.errors.date && (
                                 <p className="text-sm text-destructive">
@@ -545,7 +564,7 @@ function HolidayPanel({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >
@@ -566,13 +585,7 @@ function HolidayPanel({
     );
 }
 
-function EmptyState({
-    icon,
-    text,
-}: {
-    icon: React.ReactNode;
-    text: string;
-}) {
+function EmptyState({ icon, text }: { icon: React.ReactNode; text: string }) {
     return (
         <div className="flex flex-col items-center justify-center gap-3 py-8 text-center">
             <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">

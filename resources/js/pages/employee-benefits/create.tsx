@@ -7,8 +7,10 @@ import PageHeader from '@/components/page-header';
 import { RequiredMark } from '@/components/required-mark';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Combobox } from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RupiahInput } from '@/components/ui/rupiah-input';
 import {
     Select,
     SelectContent,
@@ -58,9 +60,7 @@ export default function EmployeeBenefitsCreate({
     function handleBenefitTypeChange(value: string) {
         form.setData('benefit_type_id', value);
 
-        const selected = benefitTypes.find(
-            (type) => String(type.id) === value,
-        );
+        const selected = benefitTypes.find((type) => String(type.id) === value);
 
         if (
             selected &&
@@ -98,7 +98,10 @@ export default function EmployeeBenefitsCreate({
                     description="Tetapkan plafon benefit untuk karyawan pada periode tertentu."
                 />
 
-                <form onSubmit={handleSubmit} className="mx-auto w-full max-w-4xl">
+                <form
+                    onSubmit={handleSubmit}
+                    className="mx-auto w-full max-w-4xl"
+                >
                     <Card>
                         <CardContent className="flex flex-col gap-6">
                             <div className="grid gap-5 md:grid-cols-2">
@@ -106,29 +109,20 @@ export default function EmployeeBenefitsCreate({
                                     <Label htmlFor="employee_id">
                                         Karyawan <RequiredMark />
                                     </Label>
-                                    <Select
+                                    <Combobox
+                                        id="employee_id"
                                         value={form.data.employee_id}
-                                        onValueChange={(value) =>
+                                        onChange={(value) =>
                                             form.setData('employee_id', value)
                                         }
-                                    >
-                                        <SelectTrigger
-                                            id="employee_id"
-                                            className="w-full"
-                                        >
-                                            <SelectValue placeholder="Pilih karyawan" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {employees.map((option) => (
-                                                <SelectItem
-                                                    key={option.id}
-                                                    value={String(option.id)}
-                                                >
-                                                    {option.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                        options={employees.map((option) => ({
+                                            value: String(option.id),
+                                            label: option.label,
+                                        }))}
+                                        placeholder="Pilih karyawan"
+                                        searchPlaceholder="Cari karyawan…"
+                                        emptyText="Karyawan tidak ditemukan"
+                                    />
                                     <InputError
                                         message={form.errors.employee_id}
                                     />
@@ -189,13 +183,11 @@ export default function EmployeeBenefitsCreate({
                                     <Label htmlFor="quota">
                                         Plafon (Rp) <RequiredMark />
                                     </Label>
-                                    <Input
+                                    <RupiahInput
                                         id="quota"
-                                        type="number"
-                                        min={0}
                                         value={form.data.quota}
-                                        onChange={(e) =>
-                                            form.setData('quota', e.target.value)
+                                        onChange={(value) =>
+                                            form.setData('quota', value)
                                         }
                                         placeholder="Mis. 5000000"
                                     />
@@ -216,18 +208,21 @@ export default function EmployeeBenefitsCreate({
                                         id="notes"
                                         value={form.data.notes}
                                         onChange={(e) =>
-                                            form.setData('notes', e.target.value)
+                                            form.setData(
+                                                'notes',
+                                                e.target.value,
+                                            )
                                         }
                                         rows={3}
                                         placeholder="Catatan tambahan (opsional)"
-                                        className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
                                     />
                                     <InputError message={form.errors.notes} />
                                 </div>
                             </div>
                         </CardContent>
                         <CardFooter className="flex justify-end gap-3">
-                            <Button asChild variant="outline" type="button">
+                            <Button asChild variant="secondary" type="button">
                                 <Link href={employeeBenefits.index.url()}>
                                     <X />
                                     Batal

@@ -1,7 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { CalendarOff, Pencil, Plus, Trash2, X } from 'lucide-react';
-import {  useState } from 'react';
-import type {FormEvent} from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import leaveTypes from '@/actions/App/Http/Controllers/LeaveTypeController';
 import ConfirmDialog from '@/components/confirm-dialog';
 import PageHeader from '@/components/page-header';
@@ -132,6 +132,9 @@ export default function LeaveTypesIndex({ leaveTypes: rows }: IndexProps) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Kode</TableHead>
                                         <TableHead>Nama</TableHead>
                                         <TableHead>Dibayar</TableHead>
@@ -146,7 +149,7 @@ export default function LeaveTypesIndex({ leaveTypes: rows }: IndexProps) {
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={6}
+                                                colSpan={7}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -160,8 +163,11 @@ export default function LeaveTypesIndex({ leaveTypes: rows }: IndexProps) {
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {index + 1}
+                                                </TableCell>
                                                 <TableCell className="font-medium">
                                                     {item.code}
                                                 </TableCell>
@@ -185,7 +191,7 @@ export default function LeaveTypesIndex({ leaveTypes: rows }: IndexProps) {
                                                     <div className="flex items-center justify-end gap-2">
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="success"
                                                             onClick={() =>
                                                                 openEdit(item)
                                                             }
@@ -323,7 +329,7 @@ export default function LeaveTypesIndex({ leaveTypes: rows }: IndexProps) {
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >

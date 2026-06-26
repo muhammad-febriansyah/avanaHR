@@ -23,7 +23,11 @@ type RunProps = {
     rows: Paginator<Row>;
 };
 
-export default function ReportRun({ report, columns, rows: paginator }: RunProps) {
+export default function ReportRun({
+    report,
+    columns,
+    rows: paginator,
+}: RunProps) {
     const rows = paginator.data;
 
     return (
@@ -31,8 +35,11 @@ export default function ReportRun({ report, columns, rows: paginator }: RunProps
             <Head title={report.name} />
 
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
-                <PageHeader title={report.name} description={`Sumber: ${report.source_label}`}>
-                    <Button asChild variant="outline">
+                <PageHeader
+                    title={report.name}
+                    description={`Sumber: ${report.source_label}`}
+                >
+                    <Button asChild variant="secondary">
                         <a href={reportBuilder.index.url()}>
                             <ArrowLeft />
                             Kembali
@@ -46,6 +53,9 @@ export default function ReportRun({ report, columns, rows: paginator }: RunProps
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         {columns.map((column) => (
                                             <TableHead key={column.key}>
                                                 {column.label}
@@ -57,7 +67,12 @@ export default function ReportRun({ report, columns, rows: paginator }: RunProps
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={Math.max(1, columns.length)}
+                                                colSpan={
+                                                    Math.max(
+                                                        1,
+                                                        columns.length,
+                                                    ) + 1
+                                                }
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -73,6 +88,10 @@ export default function ReportRun({ report, columns, rows: paginator }: RunProps
                                     ) : (
                                         rows.map((row, index) => (
                                             <TableRow key={index}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 {columns.map((column) => (
                                                     <TableCell key={column.key}>
                                                         {row[column.key]}
@@ -91,7 +110,7 @@ export default function ReportRun({ report, columns, rows: paginator }: RunProps
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -99,7 +118,10 @@ export default function ReportRun({ report, columns, rows: paginator }: RunProps
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -107,7 +129,7 @@ export default function ReportRun({ report, columns, rows: paginator }: RunProps
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -115,7 +137,10 @@ export default function ReportRun({ report, columns, rows: paginator }: RunProps
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >

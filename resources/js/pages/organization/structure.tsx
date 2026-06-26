@@ -1,10 +1,11 @@
+import { Head, router } from '@inertiajs/react';
+import { Building2, Minus, Network, Plus, Users } from 'lucide-react';
+import { createContext, useContext, useState  } from 'react';
+import type {DragEvent} from 'react';
 import OrganizationController from '@/actions/App/Http/Controllers/OrganizationController';
 import PageHeader from '@/components/page-header';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Head, router } from '@inertiajs/react';
-import { Building2, Minus, Network, Plus, Users } from 'lucide-react';
-import { createContext, useContext, useState, type DragEvent } from 'react';
 
 type OrgNode = {
     id: number;
@@ -117,7 +118,9 @@ function NodeBox({ node }: { node: OrgNode }) {
                         isCompany ? 'border-primary/30' : 'border-border',
                         isDepartment && 'cursor-grab active:cursor-grabbing',
                         isDragSource && 'opacity-40',
-                        isDragOver && canDrop && 'border-primary ring-2 ring-primary/40',
+                        isDragOver &&
+                            canDrop &&
+                            'border-primary ring-2 ring-primary/40',
                     )}
                 >
                     <span
@@ -151,7 +154,7 @@ function NodeBox({ node }: { node: OrgNode }) {
 
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/40 px-2.5 py-1 text-xs font-medium text-muted-foreground">
                         <Users className="size-3.5" />
-                        <span className="tabular-nums text-foreground">
+                        <span className="text-foreground tabular-nums">
                             {node.headcount}
                         </span>
                     </span>
@@ -176,7 +179,10 @@ function NodeBox({ node }: { node: OrgNode }) {
             {hasChildren && open && (
                 <ul>
                     {node.children.map((child) => (
-                        <NodeBox key={`${child.type}-${child.id}`} node={child} />
+                        <NodeBox
+                            key={`${child.type}-${child.id}`}
+                            node={child}
+                        />
                     ))}
                 </ul>
             )}

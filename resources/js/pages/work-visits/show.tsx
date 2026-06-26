@@ -1,18 +1,28 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { ArrowLeft, Pencil, Plus, Trash2 } from 'lucide-react';
-import type { FormEvent, ReactNode } from 'react';
+import {
+    ArrowLeft,
+    Banknote,
+    CalendarRange,
+    Car,
+    ClipboardList,
+    FileText,
+    MapPin,
+    Pencil,
+    Plus,
+    Trash2,
+} from 'lucide-react';
+import type { FormEvent } from 'react';
 import workVisits from '@/actions/App/Http/Controllers/WorkVisitController';
 import ConfirmDialog from '@/components/confirm-dialog';
+import { DetailItem } from '@/components/detail/detail-item';
+import { InfoHero } from '@/components/detail/info-hero';
+import { SectionCard } from '@/components/detail/section-card';
+import { StatTile } from '@/components/detail/stat-tile';
 import InputError from '@/components/input-error';
 import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useFlashToast } from '@/hooks/use-flash-toast';
@@ -53,25 +63,14 @@ type ShowProps = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
-    pending: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
-    approved: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    pending:
+        'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
+    approved:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
     rejected: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
-    cancelled: 'bg-slate-100 text-slate-600 dark:bg-slate-500/15 dark:text-slate-300',
+    cancelled:
+        'bg-slate-100 text-slate-600 dark:bg-slate-500/15 dark:text-slate-300',
 };
-
-function DetailRow({ label, value }: { label: string; value: ReactNode }) {
-    const display =
-        value === null || value === undefined || value === '' ? '-' : value;
-
-    return (
-        <div className="flex flex-col gap-1 border-b border-border/50 pb-3 last:border-0 last:pb-0">
-            <span className="text-xs text-muted-foreground">{label}</span>
-            <span className="text-sm font-medium text-foreground">
-                {display}
-            </span>
-        </div>
-    );
-}
 
 type ReportForm = {
     visited_at: string;
@@ -88,6 +87,21 @@ const emptyReport: ReportForm = {
     attachment_path: '',
     attachment: null,
 };
+
+/** Inclusive day count between two ISO dates. */
+function durationDays(start: string, end: string): string {
+    const a = new Date(start);
+    const b = new Date(end);
+
+    if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) {
+        return '—';
+    }
+
+    const days =
+        Math.round((b.getTime() - a.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+    return `${days} hari`;
+}
 
 export default function WorkVisitsShow({ workVisit }: ShowProps) {
     useFlashToast();
@@ -123,18 +137,18 @@ export default function WorkVisitsShow({ workVisit }: ShowProps) {
 
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <PageHeader
-                    title={`Kunjungan — ${workVisit.destination}`}
+                    title="Detail Kunjungan Kerja"
                     description="Persetujuan diproses melalui Inbox Approval."
                 >
-                    <Button asChild variant="outline">
+                    <Button asChild variant="secondary">
                         <Link href={workVisits.index.url()}>
                             <ArrowLeft />
                             Kembali
                         </Link>
                     </Button>
-                    {workVisit.can_edit && (
+                    {workVisit.can_edit ? (
                         <>
-                            <Button asChild variant="outline">
+                            <Button asChild variant="success">
                                 <Link href={workVisits.edit.url(workVisit.id)}>
                                     <Pencil />
                                     Edit
@@ -153,18 +167,82 @@ export default function WorkVisitsShow({ workVisit }: ShowProps) {
                                 }
                             />
                         </>
-                    )}
+                    ) : null}
                 </PageHeader>
 
+                <InfoHero
+                    icon={MapPin}
+                    title={workVisit.destination}
+                    subtitle={`${workVisit.employee_name} · ${workVisit.employee_no}`}
+                    badges={
+                        <Badge
+                            variant="secondary"
+                            className={STATUS_STYLES[workVisit.status]}
+                        >
+                            {workVisit.status_label}
+                        </Badge>
+                    }
+                    aside={
+                        <>
+                            <p className="text-xs text-muted-foreground">
+                                Periode
+                            </p>
+                            <p className="text-sm font-semibold text-navy">
+                                {formatDateID(workVisit.start_date)} –{' '}
+                                {formatDateID(workVisit.end_date)}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                                {durationDays(
+                                    workVisit.start_date,
+                                    workVisit.end_date,
+                                )}
+                            </p>
+                        </>
+                    }
+                />
+
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <StatTile
+                        label="Durasi"
+                        value={durationDays(
+                            workVisit.start_date,
+                            workVisit.end_date,
+                        )}
+                        icon={CalendarRange}
+                        accent="blue"
+                    />
+                    <StatTile
+                        label="Transportasi"
+                        value={workVisit.transport_mode ?? '—'}
+                        icon={Car}
+                        accent="violet"
+                    />
+                    <StatTile
+                        label="Estimasi Biaya"
+                        value={
+                            workVisit.estimated_cost !== null
+                                ? formatRupiah(workVisit.estimated_cost)
+                                : '—'
+                        }
+                        icon={Banknote}
+                        accent="amber"
+                    />
+                    <StatTile
+                        label="Laporan"
+                        value={workVisit.reports.length}
+                        icon={FileText}
+                        accent="green"
+                    />
+                </div>
+
                 <div className="grid gap-5 lg:grid-cols-2">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-base text-navy">
-                                Ringkasan
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="grid gap-3">
-                            <DetailRow
+                    <div className="flex flex-col gap-5">
+                        <SectionCard
+                            title="Ringkasan"
+                            icon={ClipboardList}
+                            contentClassName="grid gap-3"
+                        >
+                            <DetailItem
                                 label="Karyawan"
                                 value={
                                     <span>
@@ -175,258 +253,254 @@ export default function WorkVisitsShow({ workVisit }: ShowProps) {
                                     </span>
                                 }
                             />
-                            <DetailRow
+                            <DetailItem
                                 label="Tujuan"
                                 value={workVisit.destination}
+                                icon={MapPin}
                             />
-                            <DetailRow
+                            <DetailItem
                                 label="Keperluan"
                                 value={workVisit.purpose}
                             />
-                            <DetailRow
+                            <DetailItem
                                 label="Tanggal"
                                 value={`${formatDateID(workVisit.start_date)} – ${formatDateID(workVisit.end_date)}`}
+                                icon={CalendarRange}
                             />
-                            <DetailRow
+                            <DetailItem
                                 label="Transportasi"
-                                value={workVisit.transport_mode ?? '-'}
+                                value={workVisit.transport_mode}
+                                icon={Car}
                             />
-                            <DetailRow
+                            <DetailItem
                                 label="Estimasi Biaya"
                                 value={
                                     workVisit.estimated_cost !== null
                                         ? formatRupiah(workVisit.estimated_cost)
-                                        : '-'
+                                        : null
                                 }
+                                icon={Banknote}
                             />
-                            <DetailRow
-                                label="Status"
-                                value={
-                                    <Badge
-                                        variant="secondary"
-                                        className={
-                                            STATUS_STYLES[workVisit.status]
-                                        }
-                                    >
-                                        {workVisit.status_label}
-                                    </Badge>
-                                }
-                            />
-                            <DetailRow
+                            <DetailItem
                                 label="Catatan"
-                                value={workVisit.notes ?? '-'}
+                                value={workVisit.notes}
                             />
-                            <DetailRow
-                                label="Diputuskan oleh"
-                                value={workVisit.decided_by ?? '-'}
-                            />
-                            <DetailRow
-                                label="Diputuskan pada"
-                                value={
-                                    workVisit.decided_at
-                                        ? formatDateTimeID(workVisit.decided_at)
-                                        : '-'
-                                }
-                            />
-                            <DetailRow
-                                label="Alasan keputusan"
-                                value={workVisit.decision_note ?? '-'}
-                            />
-                        </CardContent>
-                    </Card>
+                        </SectionCard>
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-base text-navy">
-                                Laporan Kunjungan
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-2">
-                                {workVisit.reports.length === 0 ? (
-                                    <p className="text-sm text-muted-foreground">
-                                        Belum ada laporan kunjungan.
-                                    </p>
-                                ) : (
-                                    workVisit.reports.map((report) => (
-                                        <div
-                                            key={report.id}
-                                            className="flex flex-col gap-2 rounded-md border border-border/50 px-3 py-3 sm:flex-row sm:items-start sm:justify-between"
-                                        >
-                                            <div className="flex flex-col gap-1">
-                                                <span className="text-sm font-medium text-foreground">
-                                                    {report.location}
-                                                </span>
-                                                <span className="text-xs text-muted-foreground">
-                                                    {formatDateID(
-                                                        report.visited_at,
-                                                    )}
-                                                </span>
-                                                {report.notes && (
-                                                    <span className="text-xs text-muted-foreground">
-                                                        {report.notes}
-                                                    </span>
-                                                )}
-                                                {report.attachment_url && (
-                                                    <a
-                                                        href={
-                                                            report.attachment_url
-                                                        }
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-xs font-medium text-primary underline-offset-2 hover:underline"
-                                                    >
-                                                        Lihat bukti / foto
-                                                    </a>
-                                                )}
-                                            </div>
-                                            <ConfirmDialog
-                                                title="Hapus Laporan"
-                                                description={`Yakin ingin menghapus laporan kunjungan di "${report.location}"?`}
-                                                confirmLabel="Hapus"
-                                                onConfirm={() =>
-                                                    deleteReport(report.id)
-                                                }
-                                                trigger={
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="shrink-0 text-red-700 hover:text-red-700 dark:text-red-400"
-                                                    >
-                                                        <Trash2 />
-                                                        Hapus
-                                                    </Button>
-                                                }
-                                            />
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-
-                            <form
-                                onSubmit={submitReport}
-                                className="flex flex-col gap-3 border-t border-border/50 pt-4"
+                        {workVisit.decided_by ||
+                        workVisit.decided_at ||
+                        workVisit.decision_note ? (
+                            <SectionCard
+                                title="Keputusan"
+                                icon={ClipboardList}
+                                contentClassName="grid gap-3"
                             >
-                                <p className="text-sm font-semibold text-navy">
-                                    Tambah Laporan
+                                <DetailItem
+                                    label="Diputuskan oleh"
+                                    value={workVisit.decided_by}
+                                />
+                                <DetailItem
+                                    label="Diputuskan pada"
+                                    value={
+                                        workVisit.decided_at
+                                            ? formatDateTimeID(
+                                                  workVisit.decided_at,
+                                              )
+                                            : null
+                                    }
+                                />
+                                <DetailItem
+                                    label="Alasan keputusan"
+                                    value={workVisit.decision_note}
+                                />
+                            </SectionCard>
+                        ) : null}
+                    </div>
+
+                    <SectionCard
+                        title="Laporan Kunjungan"
+                        icon={FileText}
+                        actions={
+                            <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                                {workVisit.reports.length}
+                            </span>
+                        }
+                        contentClassName="flex flex-col gap-4"
+                    >
+                        <div className="flex flex-col gap-2">
+                            {workVisit.reports.length === 0 ? (
+                                <p className="text-sm text-muted-foreground">
+                                    Belum ada laporan kunjungan.
                                 </p>
-                                <div className="grid gap-3 sm:grid-cols-2">
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="visited_at">
-                                            Tanggal Kunjungan
-                                        </Label>
-                                        <Input
-                                            id="visited_at"
-                                            type="date"
-                                            value={reportForm.data.visited_at}
-                                            onChange={(e) =>
-                                                reportForm.setData(
-                                                    'visited_at',
-                                                    e.target.value,
-                                                )
-                                            }
-                                            placeholder="Pilih tanggal"
-                                        />
-                                        <InputError
-                                            message={
-                                                reportForm.errors.visited_at
-                                            }
-                                        />
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="location">Lokasi</Label>
-                                        <Input
-                                            id="location"
-                                            value={reportForm.data.location}
-                                            onChange={(e) =>
-                                                reportForm.setData(
-                                                    'location',
-                                                    e.target.value,
-                                                )
-                                            }
-                                            placeholder="Mis. Kantor Cabang Surabaya"
-                                        />
-                                        <InputError
-                                            message={reportForm.errors.location}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="report_notes">Catatan</Label>
-                                    <textarea
-                                        id="report_notes"
-                                        value={reportForm.data.notes}
-                                        onChange={(e) =>
-                                            reportForm.setData(
-                                                'notes',
-                                                e.target.value,
-                                            )
-                                        }
-                                        rows={2}
-                                        placeholder="Catatan kunjungan (opsional)"
-                                        className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
-                                    />
-                                    <InputError
-                                        message={reportForm.errors.notes}
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="attachment_path">
-                                        Bukti / Foto (Link)
-                                    </Label>
-                                    <Input
-                                        id="attachment_path"
-                                        value={reportForm.data.attachment_path}
-                                        onChange={(e) =>
-                                            reportForm.setData(
-                                                'attachment_path',
-                                                e.target.value,
-                                            )
-                                        }
-                                        placeholder="Link bukti / foto (opsional)"
-                                    />
-                                    <InputError
-                                        message={
-                                            reportForm.errors.attachment_path
-                                        }
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="attachment">
-                                        Unggah Berkas (opsional)
-                                    </Label>
-                                    <Input
-                                        id="attachment"
-                                        type="file"
-                                        accept=".pdf,.png,.jpg,.jpeg,.webp"
-                                        onChange={(e) =>
-                                            reportForm.setData(
-                                                'attachment',
-                                                e.target.files?.[0] ?? null,
-                                            )
-                                        }
-                                    />
-                                    <p className="text-xs text-muted-foreground">
-                                        Maks. 4 MB. PDF, PNG, JPG, WEBP. Mengganti
-                                        link bila diunggah.
-                                    </p>
-                                    <InputError
-                                        message={reportForm.errors.attachment}
-                                    />
-                                </div>
-                                <div className="flex justify-end">
-                                    <Button
-                                        type="submit"
-                                        size="sm"
-                                        disabled={reportForm.processing}
+                            ) : (
+                                workVisit.reports.map((report) => (
+                                    <div
+                                        key={report.id}
+                                        className="flex flex-col gap-2 rounded-md border border-border/50 px-3 py-3 sm:flex-row sm:items-start sm:justify-between"
                                     >
-                                        <Plus />
-                                        Tambah Laporan
-                                    </Button>
+                                        <div className="flex flex-col gap-1">
+                                            <span className="text-sm font-medium text-foreground">
+                                                {report.location}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground">
+                                                {formatDateID(
+                                                    report.visited_at,
+                                                )}
+                                            </span>
+                                            {report.notes ? (
+                                                <span className="text-xs text-muted-foreground">
+                                                    {report.notes}
+                                                </span>
+                                            ) : null}
+                                            {report.attachment_url ? (
+                                                <a
+                                                    href={report.attachment_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-xs font-medium text-primary underline-offset-2 hover:underline"
+                                                >
+                                                    Lihat bukti / foto
+                                                </a>
+                                            ) : null}
+                                        </div>
+                                        <ConfirmDialog
+                                            title="Hapus Laporan"
+                                            description={`Yakin ingin menghapus laporan kunjungan di "${report.location}"?`}
+                                            confirmLabel="Hapus"
+                                            onConfirm={() =>
+                                                deleteReport(report.id)
+                                            }
+                                            trigger={
+                                                <Button
+                                                    size="sm"
+                                                    variant="destructive"
+                                                    className="shrink-0"
+                                                >
+                                                    <Trash2 />
+                                                    Hapus
+                                                </Button>
+                                            }
+                                        />
+                                    </div>
+                                ))
+                            )}
+                        </div>
+
+                        <form
+                            onSubmit={submitReport}
+                            className="flex flex-col gap-3 border-t border-border/50 pt-4"
+                        >
+                            <p className="text-sm font-semibold text-navy">
+                                Tambah Laporan
+                            </p>
+                            <div className="grid gap-3 sm:grid-cols-2">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="visited_at">
+                                        Tanggal Kunjungan
+                                    </Label>
+                                    <DatePicker
+                                        id="visited_at"
+                                        value={reportForm.data.visited_at}
+                                        onChange={(value) =>
+                                            reportForm.setData(
+                                                'visited_at',
+                                                value,
+                                            )
+                                        }
+                                    />
+                                    <InputError
+                                        message={reportForm.errors.visited_at}
+                                    />
                                 </div>
-                            </form>
-                        </CardContent>
-                    </Card>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="location">Lokasi</Label>
+                                    <Input
+                                        id="location"
+                                        value={reportForm.data.location}
+                                        onChange={(e) =>
+                                            reportForm.setData(
+                                                'location',
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="Mis. Kantor Cabang Surabaya"
+                                    />
+                                    <InputError
+                                        message={reportForm.errors.location}
+                                    />
+                                </div>
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="report_notes">Catatan</Label>
+                                <textarea
+                                    id="report_notes"
+                                    value={reportForm.data.notes}
+                                    onChange={(e) =>
+                                        reportForm.setData(
+                                            'notes',
+                                            e.target.value,
+                                        )
+                                    }
+                                    rows={2}
+                                    placeholder="Catatan kunjungan (opsional)"
+                                    className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
+                                />
+                                <InputError message={reportForm.errors.notes} />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="attachment_path">
+                                    Bukti / Foto (Link)
+                                </Label>
+                                <Input
+                                    id="attachment_path"
+                                    value={reportForm.data.attachment_path}
+                                    onChange={(e) =>
+                                        reportForm.setData(
+                                            'attachment_path',
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="Link bukti / foto (opsional)"
+                                />
+                                <InputError
+                                    message={reportForm.errors.attachment_path}
+                                />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="attachment">
+                                    Unggah Berkas (opsional)
+                                </Label>
+                                <Input
+                                    id="attachment"
+                                    type="file"
+                                    accept=".pdf,.png,.jpg,.jpeg,.webp"
+                                    onChange={(e) =>
+                                        reportForm.setData(
+                                            'attachment',
+                                            e.target.files?.[0] ?? null,
+                                        )
+                                    }
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    Maks. 4 MB. PDF, PNG, JPG, WEBP. Mengganti
+                                    link bila diunggah.
+                                </p>
+                                <InputError
+                                    message={reportForm.errors.attachment}
+                                />
+                            </div>
+                            <div className="flex justify-end">
+                                <Button
+                                    type="submit"
+                                    size="sm"
+                                    disabled={reportForm.processing}
+                                >
+                                    <Plus />
+                                    Tambah Laporan
+                                </Button>
+                            </div>
+                        </form>
+                    </SectionCard>
                 </div>
             </div>
         </>

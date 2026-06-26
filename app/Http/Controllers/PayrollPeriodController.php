@@ -44,10 +44,21 @@ class PayrollPeriodController extends Controller
                 ['title' => 'Periode Payroll', 'href' => route('payroll-periods.index')],
             ],
             'periods' => $periods,
-            'statuses' => array_map(
-                fn (PayrollPeriodStatus $status): array => ['value' => $status->value, 'label' => ucfirst($status->value)],
-                PayrollPeriodStatus::cases(),
-            ),
+            'statuses' => $this->statusOptions(),
+        ]);
+    }
+
+    public function create(): Response
+    {
+        $this->authorize('create', PayrollPeriod::class);
+
+        return Inertia::render('payroll-periods/create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Periode Payroll', 'href' => route('payroll-periods.index')],
+                ['title' => 'Tambah', 'href' => route('payroll-periods.create')],
+            ],
+            'statuses' => $this->statusOptions(),
         ]);
     }
 
@@ -60,7 +71,30 @@ class PayrollPeriodController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Periode payroll berhasil ditambahkan.']);
 
-        return back();
+        return redirect()->route('payroll-periods.index');
+    }
+
+    public function edit(PayrollPeriod $payrollPeriod): Response
+    {
+        $this->authorize('update', $payrollPeriod);
+
+        return Inertia::render('payroll-periods/edit', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Periode Payroll', 'href' => route('payroll-periods.index')],
+                ['title' => 'Edit', 'href' => route('payroll-periods.edit', $payrollPeriod)],
+            ],
+            'period' => [
+                'id' => $payrollPeriod->id,
+                'code' => $payrollPeriod->code,
+                'month' => (int) $payrollPeriod->month,
+                'year' => (int) $payrollPeriod->year,
+                'cutoff_date' => $payrollPeriod->cutoff_date?->format('Y-m-d'),
+                'pay_date' => $payrollPeriod->pay_date?->format('Y-m-d'),
+                'status' => $payrollPeriod->status->value,
+            ],
+            'statuses' => $this->statusOptions(),
+        ]);
     }
 
     public function update(UpdatePayrollPeriodRequest $request, PayrollPeriod $payrollPeriod): RedirectResponse
@@ -69,7 +103,7 @@ class PayrollPeriodController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Periode payroll berhasil diperbarui.']);
 
-        return back();
+        return redirect()->route('payroll-periods.index');
     }
 
     public function destroy(PayrollPeriod $payrollPeriod): RedirectResponse
@@ -127,5 +161,16 @@ class PayrollPeriodController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Periode dibuka kembali.']);
 
         return back();
+    }
+
+    /**
+     * @return list<array{value: string, label: string}>
+     */
+    private function statusOptions(): array
+    {
+        return array_map(
+            fn (PayrollPeriodStatus $status): array => ['value' => $status->value, 'label' => ucfirst($status->value)],
+            PayrollPeriodStatus::cases(),
+        );
     }
 }

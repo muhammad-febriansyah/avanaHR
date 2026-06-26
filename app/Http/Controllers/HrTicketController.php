@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -49,13 +50,22 @@ class HrTicketController extends Controller
             'statuses' => $this->statusOptions(),
             'priorities' => $this->priorityOptions(),
             'categories' => $this->categoryOptions(),
-            'options' => [
-                'employees' => Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'employee_no'])
-                    ->map(fn (Employee $employee): array => [
-                        'id' => $employee->id,
-                        'label' => $employee->fullName().' ('.$employee->employee_no.')',
-                    ]),
+        ]);
+    }
+
+    public function create(): Response
+    {
+        $this->authorize('create', HrTicket::class);
+
+        return Inertia::render('hr-tickets/create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Tiket HR', 'href' => route('hr-tickets.index')],
+                ['title' => 'Buat', 'href' => route('hr-tickets.create')],
             ],
+            'categories' => $this->categoryOptions(),
+            'priorities' => $this->priorityOptions(),
+            'employees' => $this->employeeOptions(),
         ]);
     }
 
@@ -187,6 +197,18 @@ class HrTicketController extends Controller
         };
 
         return Carbon::now()->addHours($hours);
+    }
+
+    /**
+     * @return Collection<int, array{id: int, label: string}>
+     */
+    private function employeeOptions(): Collection
+    {
+        return Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'employee_no'])
+            ->map(fn (Employee $employee): array => [
+                'id' => $employee->id,
+                'label' => $employee->fullName().' ('.$employee->employee_no.')',
+            ]);
     }
 
     /**

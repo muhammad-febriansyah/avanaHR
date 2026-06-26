@@ -42,7 +42,33 @@ it('renders the document index', function () {
             ->component('employee-documents/index')
             ->has('documents.data')
             ->has('types')
-            ->has('options.employees'),
+            ->has('accessLevels'),
+        );
+});
+
+it('renders the document create page', function () {
+    $this->actingAs($this->admin)
+        ->get(route('employee-documents.create'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('employee-documents/create')
+            ->has('employees')
+            ->has('types')
+            ->has('accessLevels'),
+        );
+});
+
+it('renders the document edit page with the serialized document', function () {
+    $document = EmployeeDocument::factory()->create(['employee_id' => $this->employee->id]);
+
+    $this->actingAs($this->admin)
+        ->get(route('employee-documents.edit', $document))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('employee-documents/edit')
+            ->where('document.id', $document->id)
+            ->has('types')
+            ->has('accessLevels'),
         );
 });
 

@@ -46,6 +46,9 @@ export default function UsersIndex({ users: rows }: IndexProps) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Nama</TableHead>
                                         <TableHead>Email</TableHead>
                                         <TableHead>NIK</TableHead>
@@ -59,7 +62,7 @@ export default function UsersIndex({ users: rows }: IndexProps) {
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={5}
+                                                colSpan={6}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -73,8 +76,11 @@ export default function UsersIndex({ users: rows }: IndexProps) {
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {index + 1}
+                                                </TableCell>
                                                 <TableCell className="font-medium whitespace-nowrap">
                                                     {item.name}
                                                 </TableCell>
@@ -111,7 +117,7 @@ export default function UsersIndex({ users: rows }: IndexProps) {
                                                         <Button
                                                             asChild
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="success"
                                                         >
                                                             <Link
                                                                 href={users.edit.url(

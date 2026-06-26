@@ -101,22 +101,30 @@ export default function SecuritySettingsEdit({ settings }: EditProps) {
                         <div className="flex flex-col gap-2 sm:col-span-2">
                             <label className="flex items-center gap-2 text-sm">
                                 <Checkbox
-                                    checked={form.data.password_require_uppercase}
-                                    onCheckedChange={toggle('password_require_uppercase')}
+                                    checked={
+                                        form.data.password_require_uppercase
+                                    }
+                                    onCheckedChange={toggle(
+                                        'password_require_uppercase',
+                                    )}
                                 />
                                 Wajib huruf kapital
                             </label>
                             <label className="flex items-center gap-2 text-sm">
                                 <Checkbox
                                     checked={form.data.password_require_number}
-                                    onCheckedChange={toggle('password_require_number')}
+                                    onCheckedChange={toggle(
+                                        'password_require_number',
+                                    )}
                                 />
                                 Wajib angka
                             </label>
                             <label className="flex items-center gap-2 text-sm">
                                 <Checkbox
                                     checked={form.data.password_require_symbol}
-                                    onCheckedChange={toggle('password_require_symbol')}
+                                    onCheckedChange={toggle(
+                                        'password_require_symbol',
+                                    )}
                                 />
                                 Wajib simbol
                             </label>
@@ -133,7 +141,9 @@ export default function SecuritySettingsEdit({ settings }: EditProps) {
                     </CardHeader>
                     <CardContent className="grid gap-5 sm:grid-cols-3">
                         <div className="grid gap-2">
-                            <Label htmlFor="timeout">Timeout sesi (menit)</Label>
+                            <Label htmlFor="timeout">
+                                Timeout sesi (menit)
+                            </Label>
                             <Input
                                 id="timeout"
                                 type="number"
@@ -144,7 +154,9 @@ export default function SecuritySettingsEdit({ settings }: EditProps) {
                             />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="attempts">Maks. percobaan login</Label>
+                            <Label htmlFor="attempts">
+                                Maks. percobaan login
+                            </Label>
                             <Input
                                 id="attempts"
                                 type="number"
@@ -155,7 +167,9 @@ export default function SecuritySettingsEdit({ settings }: EditProps) {
                             />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="lockout">Durasi kunci (menit)</Label>
+                            <Label htmlFor="lockout">
+                                Durasi kunci (menit)
+                            </Label>
                             <Input
                                 id="lockout"
                                 type="number"
@@ -167,7 +181,6 @@ export default function SecuritySettingsEdit({ settings }: EditProps) {
                         </div>
                     </CardContent>
                 </Card>
-
             </form>
         </>
     );

@@ -2,11 +2,7 @@ import { Head } from '@inertiajs/react';
 import PageHeader from '@/components/page-header';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import TenantForm from '@/pages/platform/tenants/tenant-form';
-import type {
-    FeatureOption,
-    StatusOption,
-    TenantFull,
-} from '@/types/tenant';
+import type { FeatureOption, StatusOption, TenantFull } from '@/types/tenant';
 
 type EditProps = {
     tenant: TenantFull;

@@ -66,7 +66,10 @@ type BuilderForm = {
     columns: string[];
 };
 
-export default function ReportBuilderIndex({ definitions: paginator, sources }: IndexProps) {
+export default function ReportBuilderIndex({
+    definitions: paginator,
+    sources,
+}: IndexProps) {
     useFlashToast();
 
     const [open, setOpen] = useState(false);
@@ -82,7 +85,11 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
     );
 
     function openCreate() {
-        form.setData({ name: '', source: sources[0]?.value ?? '', columns: [] });
+        form.setData({
+            name: '',
+            source: sources[0]?.value ?? '',
+            columns: [],
+        });
         form.clearErrors();
         setOpen(true);
     }
@@ -98,7 +105,9 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
 
     function handleSubmit(event: FormEvent) {
         event.preventDefault();
-        form.post(reportBuilder.store.url(), { onSuccess: () => setOpen(false) });
+        form.post(reportBuilder.store.url(), {
+            onSuccess: () => setOpen(false),
+        });
     }
 
     function handleDelete(id: number) {
@@ -128,30 +137,43 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Nama Laporan</TableHead>
                                         <TableHead>Sumber Data</TableHead>
                                         <TableHead>Kolom</TableHead>
                                         <TableHead>Dibuat</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
+                                        <TableHead className="text-right">
+                                            Aksi
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="py-12">
+                                            <TableCell
+                                                colSpan={6}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <Wrench className="size-6" />
                                                     </div>
                                                     <p className="text-sm text-muted-foreground">
-                                                        Belum ada laporan tersimpan
+                                                        Belum ada laporan
+                                                        tersimpan
                                                     </p>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell className="font-medium">
                                                     {item.name}
                                                 </TableCell>
@@ -169,7 +191,6 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
                                                         <Button
                                                             asChild
                                                             size="sm"
-                                                            variant="outline"
                                                         >
                                                             <Link
                                                                 href={reportBuilder.run.url(
@@ -185,7 +206,9 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
                                                             description={`Yakin hapus laporan "${item.name}"?`}
                                                             confirmLabel="Hapus"
                                                             onConfirm={() =>
-                                                                handleDelete(item.id)
+                                                                handleDelete(
+                                                                    item.id,
+                                                                )
                                                             }
                                                             trigger={
                                                                 <Button
@@ -212,7 +235,7 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -220,7 +243,10 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -228,7 +254,7 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -236,7 +262,10 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -255,13 +284,19 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
                         <DialogTitle>Laporan Baru</DialogTitle>
                     </DialogHeader>
 
-                    <form id="report-form" onSubmit={handleSubmit} className="grid gap-4">
+                    <form
+                        id="report-form"
+                        onSubmit={handleSubmit}
+                        className="grid gap-4"
+                    >
                         <div className="grid gap-2">
                             <Label htmlFor="rb-name">Nama Laporan</Label>
                             <Input
                                 id="rb-name"
                                 value={form.data.name}
-                                onChange={(e) => form.setData('name', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('name', e.target.value)
+                                }
                                 placeholder="Mis. Daftar Karyawan Aktif"
                             />
                             {form.errors.name && (
@@ -283,7 +318,10 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
                                     })
                                 }
                             >
-                                <SelectTrigger id="rb-source" className="w-full">
+                                <SelectTrigger
+                                    id="rb-source"
+                                    className="w-full"
+                                >
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -332,14 +370,18 @@ export default function ReportBuilderIndex({ definitions: paginator, sources }: 
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >
                             <X />
                             Batal
                         </Button>
-                        <Button type="submit" form="report-form" disabled={form.processing}>
+                        <Button
+                            type="submit"
+                            form="report-form"
+                            disabled={form.processing}
+                        >
                             Simpan & Jalankan
                         </Button>
                     </DialogFooter>

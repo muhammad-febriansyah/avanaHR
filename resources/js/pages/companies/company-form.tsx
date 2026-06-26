@@ -105,13 +105,13 @@ export default function CompanyForm({ company }: CompanyFormProps) {
                                 defaultValue={company?.address ?? ''}
                                 rows={3}
                                 placeholder="Jl. Sudirman No. 1, Jakarta"
-                                className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
                             />
                             <InputError message={errors.address} />
                         </div>
                     </CardContent>
                     <CardFooter className="flex justify-end gap-3">
-                        <Button asChild variant="outline" type="button">
+                        <Button asChild variant="secondary" type="button">
                             <Link href={companies.index.url()}>
                                 <X />
                                 Batal

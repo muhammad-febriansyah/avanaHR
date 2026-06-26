@@ -89,7 +89,9 @@ export default function ApprovalFlowsIndex({
 
     function handleSubmit(event: FormEvent) {
         event.preventDefault();
-        form.post(approvalFlows.store.url(), { onSuccess: () => setOpen(false) });
+        form.post(approvalFlows.store.url(), {
+            onSuccess: () => setOpen(false),
+        });
     }
 
     function handleDelete(id: number) {
@@ -119,30 +121,43 @@ export default function ApprovalFlowsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Nama Alur</TableHead>
                                         <TableHead>Jenis Transaksi</TableHead>
                                         <TableHead>Langkah</TableHead>
                                         <TableHead>Status</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
+                                        <TableHead className="text-right">
+                                            Aksi
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="py-12">
+                                            <TableCell
+                                                colSpan={6}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <GitBranch className="size-6" />
                                                     </div>
                                                     <p className="text-sm text-muted-foreground">
-                                                        Belum ada alur persetujuan
+                                                        Belum ada alur
+                                                        persetujuan
                                                     </p>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell className="font-medium">
                                                     {item.name}
                                                 </TableCell>
@@ -164,7 +179,9 @@ export default function ApprovalFlowsIndex({
                                                                 : 'bg-slate-100 text-slate-600 dark:bg-slate-500/15 dark:text-slate-300'
                                                         }
                                                     >
-                                                        {item.is_active ? 'Aktif' : 'Nonaktif'}
+                                                        {item.is_active
+                                                            ? 'Aktif'
+                                                            : 'Nonaktif'}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell>
@@ -172,7 +189,7 @@ export default function ApprovalFlowsIndex({
                                                         <Button
                                                             asChild
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="secondary"
                                                         >
                                                             <Link
                                                                 href={approvalFlows.show.url(
@@ -188,7 +205,9 @@ export default function ApprovalFlowsIndex({
                                                             description={`Yakin hapus alur "${item.name}" beserta langkahnya?`}
                                                             confirmLabel="Hapus"
                                                             onConfirm={() =>
-                                                                handleDelete(item.id)
+                                                                handleDelete(
+                                                                    item.id,
+                                                                )
                                                             }
                                                             trigger={
                                                                 <Button
@@ -215,7 +234,7 @@ export default function ApprovalFlowsIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -223,7 +242,10 @@ export default function ApprovalFlowsIndex({
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -231,7 +253,7 @@ export default function ApprovalFlowsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -239,7 +261,10 @@ export default function ApprovalFlowsIndex({
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -258,13 +283,19 @@ export default function ApprovalFlowsIndex({
                         <DialogTitle>Alur Persetujuan Baru</DialogTitle>
                     </DialogHeader>
 
-                    <form id="flow-form" onSubmit={handleSubmit} className="grid gap-4">
+                    <form
+                        id="flow-form"
+                        onSubmit={handleSubmit}
+                        className="grid gap-4"
+                    >
                         <div className="grid gap-2">
                             <Label htmlFor="af-name">Nama Alur</Label>
                             <Input
                                 id="af-name"
                                 value={form.data.name}
-                                onChange={(e) => form.setData('name', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('name', e.target.value)
+                                }
                                 placeholder="Mis. Persetujuan Cuti 2 Level"
                             />
                             {form.errors.name && (
@@ -301,14 +332,18 @@ export default function ApprovalFlowsIndex({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >
                             <X />
                             Batal
                         </Button>
-                        <Button type="submit" form="flow-form" disabled={form.processing}>
+                        <Button
+                            type="submit"
+                            form="flow-form"
+                            disabled={form.processing}
+                        >
                             Buat & Atur
                         </Button>
                     </DialogFooter>

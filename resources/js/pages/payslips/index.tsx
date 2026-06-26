@@ -137,6 +137,9 @@ export default function PayslipsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Karyawan</TableHead>
                                         <TableHead>Run</TableHead>
                                         <TableHead>Periode</TableHead>
@@ -155,7 +158,7 @@ export default function PayslipsIndex({
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={6}
+                                                colSpan={7}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -169,8 +172,12 @@ export default function PayslipsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="font-medium">
                                                         {item.employee_name}
@@ -195,7 +202,7 @@ export default function PayslipsIndex({
                                                     <div className="flex justify-end">
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="warning"
                                                             asChild
                                                         >
                                                             <Link
@@ -222,7 +229,7 @@ export default function PayslipsIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -241,7 +248,7 @@ export default function PayslipsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>

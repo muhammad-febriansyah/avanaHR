@@ -7,6 +7,7 @@ import ConfirmDialog from '@/components/confirm-dialog';
 import PageHeader from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
 import {
     Dialog,
     DialogContent,
@@ -16,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RupiahInput } from '@/components/ui/rupiah-input';
 import {
     Table,
     TableBody,
@@ -126,6 +128,7 @@ export default function BpjsParametersIndex({
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead className="w-12">No</TableHead>
                                     <TableHead>Berlaku</TableHead>
                                     <TableHead>Kes (Kary/Persh)</TableHead>
                                     <TableHead>JHT (Kary/Persh)</TableHead>
@@ -140,15 +143,18 @@ export default function BpjsParametersIndex({
                                 {parameters.length === 0 ? (
                                     <TableRow>
                                         <TableCell
-                                            colSpan={6}
+                                            colSpan={7}
                                             className="py-10 text-center text-muted-foreground"
                                         >
                                             Belum ada parameter BPJS.
                                         </TableCell>
                                     </TableRow>
                                 ) : (
-                                    parameters.map((p) => (
+                                    parameters.map((p, index) => (
                                         <TableRow key={p.id}>
+                                            <TableCell className="text-muted-foreground tabular-nums">
+                                                {index + 1}
+                                            </TableCell>
                                             <TableCell className="font-medium">
                                                 {p.effective_date}
                                             </TableCell>
@@ -157,8 +163,9 @@ export default function BpjsParametersIndex({
                                                 {p.kes_rate_employer}%
                                             </TableCell>
                                             <TableCell>
-                                                {p.tk_rates.jht_employee ?? 0}% /{' '}
-                                                {p.tk_rates.jht_employer ?? 0}%
+                                                {p.tk_rates.jht_employee ?? 0}%
+                                                / {p.tk_rates.jht_employer ?? 0}
+                                                %
                                             </TableCell>
                                             <TableCell>
                                                 {p.tk_rates.jp_employee ?? 0}% /{' '}
@@ -178,8 +185,7 @@ export default function BpjsParametersIndex({
                                                                 p.id,
                                                             ),
                                                             {
-                                                                preserveScroll:
-                                                                    true,
+                                                                preserveScroll: true,
                                                             },
                                                         )
                                                     }
@@ -219,15 +225,11 @@ export default function BpjsParametersIndex({
                                 Tanggal Berlaku{' '}
                                 <span className="text-destructive">*</span>
                             </Label>
-                            <Input
+                            <DatePicker
                                 id="effective_date"
-                                type="date"
                                 value={form.data.effective_date ?? ''}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'effective_date',
-                                        e.target.value,
-                                    )
+                                onChange={(value) =>
+                                    form.setData('effective_date', value)
                                 }
                             />
                             {form.errors.effective_date && (
@@ -256,13 +258,11 @@ export default function BpjsParametersIndex({
                             {CAP_FIELDS.map((f) => (
                                 <div key={f.key} className="grid gap-1">
                                     <Label htmlFor={f.key}>{f.label}</Label>
-                                    <Input
+                                    <RupiahInput
                                         id={f.key}
-                                        type="number"
-                                        min={0}
                                         value={form.data[f.key] ?? ''}
-                                        onChange={(e) =>
-                                            form.setData(f.key, e.target.value)
+                                        onChange={(value) =>
+                                            form.setData(f.key, value)
                                         }
                                     />
                                 </div>
@@ -272,7 +272,7 @@ export default function BpjsParametersIndex({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >

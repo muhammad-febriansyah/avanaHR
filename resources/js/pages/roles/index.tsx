@@ -57,6 +57,9 @@ export default function RolesIndex({ roles: rows }: IndexProps) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Role</TableHead>
                                         <TableHead className="text-right">
                                             Hak Akses
@@ -73,7 +76,7 @@ export default function RolesIndex({ roles: rows }: IndexProps) {
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={4}
+                                                colSpan={5}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -87,8 +90,11 @@ export default function RolesIndex({ roles: rows }: IndexProps) {
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {index + 1}
+                                                </TableCell>
                                                 <TableCell className="font-medium">
                                                     <span className="inline-flex items-center gap-2">
                                                         {item.name}
@@ -111,7 +117,7 @@ export default function RolesIndex({ roles: rows }: IndexProps) {
                                                         <Button
                                                             asChild
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="success"
                                                         >
                                                             <Link
                                                                 href={roles.edit.url(

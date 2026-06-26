@@ -150,11 +150,20 @@ export default function ComplianceReport({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Periode</TableHead>
                                         <TableHead>Run</TableHead>
-                                        <TableHead className="text-right">Karyawan</TableHead>
-                                        <TableHead className="text-right">Bruto</TableHead>
-                                        <TableHead className="text-right">PPh 21</TableHead>
+                                        <TableHead className="text-right">
+                                            Karyawan
+                                        </TableHead>
+                                        <TableHead className="text-right">
+                                            Bruto
+                                        </TableHead>
+                                        <TableHead className="text-right">
+                                            PPh 21
+                                        </TableHead>
                                         <TableHead className="text-right">
                                             BPJS Karyawan
                                         </TableHead>
@@ -169,20 +178,28 @@ export default function ComplianceReport({
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={8} className="py-12">
+                                            <TableCell
+                                                colSpan={9}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <FileSpreadsheet className="size-6" />
                                                     </div>
                                                     <p className="text-sm text-muted-foreground">
-                                                        Belum ada payroll run di {year}
+                                                        Belum ada payroll run di{' '}
+                                                        {year}
                                                     </p>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((row) => (
+                                        rows.map((row, index) => (
                                             <TableRow key={row.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="font-medium">
                                                         {row.period_label ??
@@ -212,13 +229,19 @@ export default function ComplianceReport({
                                                     {formatRupiah(row.pph21)}
                                                 </TableCell>
                                                 <TableCell className="text-right tabular-nums">
-                                                    {formatRupiah(row.bpjs_employee)}
+                                                    {formatRupiah(
+                                                        row.bpjs_employee,
+                                                    )}
                                                 </TableCell>
                                                 <TableCell className="text-right tabular-nums">
-                                                    {formatRupiah(row.bpjs_company)}
+                                                    {formatRupiah(
+                                                        row.bpjs_company,
+                                                    )}
                                                 </TableCell>
                                                 <TableCell className="text-right font-medium tabular-nums">
-                                                    {formatRupiah(row.bpjs_total)}
+                                                    {formatRupiah(
+                                                        row.bpjs_total,
+                                                    )}
                                                 </TableCell>
                                             </TableRow>
                                         ))
@@ -233,7 +256,7 @@ export default function ComplianceReport({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -241,7 +264,10 @@ export default function ComplianceReport({
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -249,7 +275,7 @@ export default function ComplianceReport({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -257,7 +283,10 @@ export default function ComplianceReport({
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >

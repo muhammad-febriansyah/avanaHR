@@ -1,9 +1,8 @@
 import { Head } from '@inertiajs/react';
 import PageHeader from '@/components/page-header';
 import { useFlashToast } from '@/hooks/use-flash-toast';
-import JobGradeForm, {
-    type JobGrade,
-} from '@/pages/job-grades/job-grade-form';
+import JobGradeForm from '@/pages/job-grades/job-grade-form';
+import type {JobGrade} from '@/pages/job-grades/job-grade-form';
 
 type EditProps = {
     jobGrade: JobGrade;

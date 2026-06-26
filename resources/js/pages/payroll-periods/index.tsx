@@ -1,29 +1,18 @@
-import { Head, router, useForm } from '@inertiajs/react';
-import { CalendarClock, Lock, LockOpen, Pencil, Plus, Trash2, X } from 'lucide-react';
-import { useState } from 'react';
-import type { FormEvent } from 'react';
+import { Head, Link, router } from '@inertiajs/react';
+import {
+    CalendarClock,
+    Lock,
+    LockOpen,
+    Pencil,
+    Plus,
+    Trash2,
+} from 'lucide-react';
 import payrollPeriods from '@/actions/App/Http/Controllers/PayrollPeriodController';
 import ConfirmDialog from '@/components/confirm-dialog';
 import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import {
     Table,
     TableBody,
@@ -52,17 +41,31 @@ type Period = {
 type IndexProps = { periods: Period[]; statuses: StatusOption[] };
 
 const MONTHS = [
-    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
 ];
 
 const STATUS_STYLES: Record<string, string> = {
     draft: 'bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300',
-    calculated: 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400',
-    reviewed: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400',
-    approved: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    calculated:
+        'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400',
+    reviewed:
+        'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400',
+    approved:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
     locked: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
-    disbursed: 'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
+    disbursed:
+        'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
 };
 
 const dateFormatter = new Intl.DateTimeFormat('id-ID', {
@@ -75,24 +78,8 @@ function formatDate(value: string | null): string {
     return value ? dateFormatter.format(new Date(value)) : '-';
 }
 
-type PeriodForm = {
-    code: string;
-    month: string;
-    year: string;
-    cutoff_date: string;
-    pay_date: string;
-    status: string;
-};
-
-function emptyForm(): PeriodForm {
-    return {
-        code: '',
-        month: '1',
-        year: '2026',
-        cutoff_date: '',
-        pay_date: '',
-        status: 'draft',
-    };
+function labelOf(options: StatusOption[], value: string): string {
+    return options.find((option) => option.value === value)?.label ?? value;
 }
 
 export default function PayrollPeriodsIndex({
@@ -100,52 +87,6 @@ export default function PayrollPeriodsIndex({
     statuses,
 }: IndexProps) {
     useFlashToast();
-
-    const [open, setOpen] = useState(false);
-    const [editing, setEditing] = useState<Period | null>(null);
-    const form = useForm<PeriodForm>(emptyForm());
-
-    function openCreate() {
-        setEditing(null);
-        form.setDefaults(emptyForm());
-        form.reset();
-        form.clearErrors();
-        setOpen(true);
-    }
-
-    function openEdit(item: Period) {
-        setEditing(item);
-        form.clearErrors();
-        form.setData({
-            code: item.code,
-            month: String(item.month),
-            year: String(item.year),
-            cutoff_date: item.cutoff_date ?? '',
-            pay_date: item.pay_date ?? '',
-            status: item.status,
-        });
-        setOpen(true);
-    }
-
-    function handleSubmit(event: FormEvent) {
-        event.preventDefault();
-
-        form.transform((data) => ({
-            ...data,
-            month: Number(data.month),
-            year: Number(data.year),
-            cutoff_date: data.cutoff_date || null,
-            pay_date: data.pay_date || null,
-        }));
-
-        const opts = { preserveScroll: true, onSuccess: () => setOpen(false) };
-
-        if (editing) {
-            form.put(payrollPeriods.update.url(editing.id), opts);
-        } else {
-            form.post(payrollPeriods.store.url(), opts);
-        }
-    }
 
     function handleDelete(id: number) {
         router.delete(payrollPeriods.destroy.url(id), { preserveScroll: true });
@@ -156,7 +97,11 @@ export default function PayrollPeriodsIndex({
     }
 
     function handleReopen(id: number) {
-        router.post(payrollPeriods.reopen.url(id), {}, { preserveScroll: true });
+        router.post(
+            payrollPeriods.reopen.url(id),
+            {},
+            { preserveScroll: true },
+        );
     }
 
     return (
@@ -168,9 +113,11 @@ export default function PayrollPeriodsIndex({
                     title="Periode Payroll"
                     description="Kelola periode penggajian bulanan."
                 >
-                    <Button onClick={openCreate}>
-                        <Plus />
-                        Tambah Periode
+                    <Button asChild>
+                        <Link href={payrollPeriods.create.url()}>
+                            <Plus />
+                            Tambah Periode
+                        </Link>
                     </Button>
                 </PageHeader>
 
@@ -180,6 +127,9 @@ export default function PayrollPeriodsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Kode</TableHead>
                                         <TableHead>Periode</TableHead>
                                         <TableHead>Cut-off</TableHead>
@@ -194,7 +144,7 @@ export default function PayrollPeriodsIndex({
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={6}
+                                                colSpan={7}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -202,14 +152,18 @@ export default function PayrollPeriodsIndex({
                                                         <CalendarClock className="size-6" />
                                                     </div>
                                                     <p className="text-sm text-muted-foreground">
-                                                        Belum ada periode payroll
+                                                        Belum ada periode
+                                                        payroll
                                                     </p>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {index + 1}
+                                                </TableCell>
                                                 <TableCell className="font-medium">
                                                     {item.code}
                                                 </TableCell>
@@ -234,7 +188,10 @@ export default function PayrollPeriodsIndex({
                                                             ]
                                                         }
                                                     >
-                                                        {item.status}
+                                                        {labelOf(
+                                                            statuses,
+                                                            item.status,
+                                                        )}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell>
@@ -252,7 +209,7 @@ export default function PayrollPeriodsIndex({
                                                                 trigger={
                                                                     <Button
                                                                         size="sm"
-                                                                        variant="outline"
+                                                                        variant="secondary"
                                                                     >
                                                                         <Lock />
                                                                         Kunci
@@ -273,7 +230,7 @@ export default function PayrollPeriodsIndex({
                                                                 trigger={
                                                                     <Button
                                                                         size="sm"
-                                                                        variant="outline"
+                                                                        variant="secondary"
                                                                     >
                                                                         <LockOpen />
                                                                         Buka
@@ -282,14 +239,18 @@ export default function PayrollPeriodsIndex({
                                                             />
                                                         )}
                                                         <Button
+                                                            asChild
                                                             size="sm"
-                                                            variant="outline"
-                                                            onClick={() =>
-                                                                openEdit(item)
-                                                            }
+                                                            variant="success"
                                                         >
-                                                            <Pencil />
-                                                            Edit
+                                                            <Link
+                                                                href={payrollPeriods.edit.url(
+                                                                    item.id,
+                                                                )}
+                                                            >
+                                                                <Pencil />
+                                                                Edit
+                                                            </Link>
                                                         </Button>
                                                         <ConfirmDialog
                                                             title="Hapus Periode Payroll"
@@ -321,169 +282,6 @@ export default function PayrollPeriodsIndex({
                     </CardContent>
                 </Card>
             </div>
-
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>
-                            {editing
-                                ? 'Ubah Periode Payroll'
-                                : 'Tambah Periode Payroll'}
-                        </DialogTitle>
-                    </DialogHeader>
-
-                    <form
-                        id="period-form"
-                        onSubmit={handleSubmit}
-                        className="grid gap-4"
-                    >
-                        <div className="grid gap-2">
-                            <Label htmlFor="pp-code">Kode</Label>
-                            <Input
-                                id="pp-code"
-                                value={form.data.code}
-                                onChange={(event) =>
-                                    form.setData('code', event.target.value)
-                                }
-                                placeholder="Mis. PR-2026-07"
-                                autoFocus
-                            />
-                            {form.errors.code && (
-                                <p className="text-sm text-destructive">
-                                    {form.errors.code}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="grid gap-2">
-                                <Label htmlFor="pp-month">Bulan</Label>
-                                <Select
-                                    value={form.data.month}
-                                    onValueChange={(value) =>
-                                        form.setData('month', value)
-                                    }
-                                >
-                                    <SelectTrigger
-                                        id="pp-month"
-                                        className="w-full"
-                                    >
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {MONTHS.map((label, index) => (
-                                            <SelectItem
-                                                key={label}
-                                                value={String(index + 1)}
-                                            >
-                                                {label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="pp-year">Tahun</Label>
-                                <Input
-                                    id="pp-year"
-                                    type="number"
-                                    min={2000}
-                                    max={2100}
-                                    value={form.data.year}
-                                    onChange={(event) =>
-                                        form.setData('year', event.target.value)
-                                    }
-                                />
-                                {form.errors.year && (
-                                    <p className="text-sm text-destructive">
-                                        {form.errors.year}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="grid gap-2">
-                                <Label htmlFor="pp-cutoff">
-                                    Tanggal Cut-off
-                                </Label>
-                                <Input
-                                    id="pp-cutoff"
-                                    type="date"
-                                    value={form.data.cutoff_date}
-                                    onChange={(event) =>
-                                        form.setData(
-                                            'cutoff_date',
-                                            event.target.value,
-                                        )
-                                    }
-                                />
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="pp-pay">Tanggal Bayar</Label>
-                                <Input
-                                    id="pp-pay"
-                                    type="date"
-                                    value={form.data.pay_date}
-                                    onChange={(event) =>
-                                        form.setData(
-                                            'pay_date',
-                                            event.target.value,
-                                        )
-                                    }
-                                />
-                            </div>
-                        </div>
-
-                        {editing && (
-                            <div className="grid gap-2">
-                                <Label htmlFor="pp-status">Status</Label>
-                                <Select
-                                    value={form.data.status}
-                                    onValueChange={(value) =>
-                                        form.setData('status', value)
-                                    }
-                                >
-                                    <SelectTrigger
-                                        id="pp-status"
-                                        className="w-full"
-                                    >
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {statuses.map((option) => (
-                                            <SelectItem
-                                                key={option.value}
-                                                value={option.value}
-                                            >
-                                                {option.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        )}
-                    </form>
-
-                    <DialogFooter>
-                        <Button
-                            variant="outline"
-                            type="button"
-                            onClick={() => setOpen(false)}
-                        >
-                            <X />
-                            Batal
-                        </Button>
-                        <Button
-                            type="submit"
-                            form="period-form"
-                            disabled={form.processing}
-                        >
-                            {editing ? 'Simpan Perubahan' : 'Simpan'}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </>
     );
 }

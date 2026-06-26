@@ -1,9 +1,8 @@
 import { Head } from '@inertiajs/react';
 import PageHeader from '@/components/page-header';
 import { useFlashToast } from '@/hooks/use-flash-toast';
-import EmployeeForm, {
-    type CustomFieldDef,
-} from '@/pages/employees/employee-form';
+import EmployeeForm from '@/pages/employees/employee-form';
+import type {CustomFieldDef} from '@/pages/employees/employee-form';
 import type { StatusOption } from '@/types/employee';
 
 type CreateProps = {

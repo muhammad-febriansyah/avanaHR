@@ -40,6 +40,16 @@ it('renders the lifecycle index', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('lifecycle/index')
             ->has('events.data')
+            ->has('types'),
+        );
+});
+
+it('renders the lifecycle create page', function () {
+    $this->actingAs($this->admin)
+        ->get(route('lifecycle.create'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('lifecycle/create')
             ->has('types')
             ->has('options.employees'),
         );

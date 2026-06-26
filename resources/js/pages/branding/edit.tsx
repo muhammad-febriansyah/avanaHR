@@ -108,7 +108,10 @@ export default function BrandingEdit({ company }: BrandingProps) {
                             </div>
 
                             <div>
-                                <Button type="submit" disabled={form.processing}>
+                                <Button
+                                    type="submit"
+                                    disabled={form.processing}
+                                >
                                     <Save />
                                     Simpan
                                 </Button>

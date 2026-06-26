@@ -8,6 +8,7 @@ use App\Models\EmployeeLifecycleEvent;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -53,12 +54,22 @@ class EmployeeLifecycleEventController extends Controller
             'events' => $events,
             'filters' => (object) $filters,
             'types' => $this->typeOptions(),
+        ]);
+    }
+
+    public function create(): Response
+    {
+        $this->authorize('create', EmployeeLifecycleEvent::class);
+
+        return Inertia::render('lifecycle/create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Lifecycle', 'href' => route('lifecycle.index')],
+                ['title' => 'Catat', 'href' => route('lifecycle.create')],
+            ],
+            'types' => $this->typeOptions(),
             'options' => [
-                'employees' => Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'employee_no'])
-                    ->map(fn (Employee $employee): array => [
-                        'id' => $employee->id,
-                        'label' => $employee->fullName().' ('.$employee->employee_no.')',
-                    ]),
+                'employees' => $this->employeeOptions(),
             ],
         ]);
     }
@@ -90,6 +101,18 @@ class EmployeeLifecycleEventController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Peristiwa lifecycle berhasil dihapus.']);
 
         return back();
+    }
+
+    /**
+     * @return Collection<int, array{id: int, label: string}>
+     */
+    private function employeeOptions(): Collection
+    {
+        return Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'employee_no'])
+            ->map(fn (Employee $employee): array => [
+                'id' => $employee->id,
+                'label' => $employee->fullName().' ('.$employee->employee_no.')',
+            ]);
     }
 
     /**

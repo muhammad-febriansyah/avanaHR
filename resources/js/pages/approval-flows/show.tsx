@@ -1,6 +1,7 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { ArrowLeft, Filter, Plus, Trash2, Users } from 'lucide-react';
-import { type FormEvent, useState } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import approvalFlows from '@/actions/App/Http/Controllers/ApprovalFlowController';
 import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RupiahInput } from '@/components/ui/rupiah-input';
 import {
     Select,
     SelectContent,
@@ -113,11 +115,17 @@ export default function ApprovalFlowShow({
     }
 
     function removeStep(id: number) {
-        router.delete(approvalFlows.destroyStep.url(id), { preserveScroll: true });
+        router.delete(approvalFlows.destroyStep.url(id), {
+            preserveScroll: true,
+        });
     }
 
     function toggleActive() {
-        router.patch(approvalFlows.update.url(flow.id), {}, { preserveScroll: true });
+        router.patch(
+            approvalFlows.update.url(flow.id),
+            {},
+            { preserveScroll: true },
+        );
     }
 
     function saveConditions(event: FormEvent) {
@@ -131,12 +139,23 @@ export default function ApprovalFlowShow({
         router.patch(
             approvalFlows.updateConditions.url(flow.id),
             {
-                amount_min: conditions.amount_min === '' ? null : Number(conditions.amount_min),
-                amount_max: conditions.amount_max === '' ? null : Number(conditions.amount_max),
+                amount_min:
+                    conditions.amount_min === ''
+                        ? null
+                        : Number(conditions.amount_min),
+                amount_max:
+                    conditions.amount_max === ''
+                        ? null
+                        : Number(conditions.amount_max),
                 grade_in: grades,
                 department_id:
-                    conditions.department_id === '' ? null : Number(conditions.department_id),
-                branch_id: conditions.branch_id === '' ? null : Number(conditions.branch_id),
+                    conditions.department_id === ''
+                        ? null
+                        : Number(conditions.department_id),
+                branch_id:
+                    conditions.branch_id === ''
+                        ? null
+                        : Number(conditions.branch_id),
             },
             {
                 preserveScroll: true,
@@ -155,10 +174,10 @@ export default function ApprovalFlowShow({
                     title={flow.name}
                     description={`Transaksi: ${label(transactionTypes, flow.transaction_type)}`}
                 >
-                    <Button variant="outline" onClick={toggleActive}>
+                    <Button variant="secondary" onClick={toggleActive}>
                         {flow.is_active ? 'Nonaktifkan' : 'Aktifkan'}
                     </Button>
-                    <Button asChild variant="outline">
+                    <Button asChild variant="secondary">
                         <a href={approvalFlows.index.url()}>
                             <ArrowLeft />
                             Kembali
@@ -205,7 +224,10 @@ export default function ApprovalFlowShow({
                                             </span>
                                             <div className="min-w-0 flex-1">
                                                 <div className="font-medium">
-                                                    {label(approverTypes, step.approver_type)}
+                                                    {label(
+                                                        approverTypes,
+                                                        step.approver_type,
+                                                    )}
                                                     {step.approver_ref
                                                         ? ` · ${step.approver_ref}`
                                                         : ''}
@@ -227,7 +249,9 @@ export default function ApprovalFlowShow({
                                                 size="sm"
                                                 variant="ghost"
                                                 className="text-destructive hover:text-destructive"
-                                                onClick={() => removeStep(step.id)}
+                                                onClick={() =>
+                                                    removeStep(step.id)
+                                                }
                                             >
                                                 <Trash2 />
                                             </Button>
@@ -240,7 +264,9 @@ export default function ApprovalFlowShow({
 
                     <Card className="h-fit">
                         <CardHeader>
-                            <CardTitle className="text-base">Tambah Langkah</CardTitle>
+                            <CardTitle className="text-base">
+                                Tambah Langkah
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={addStep} className="grid gap-4">
@@ -252,7 +278,10 @@ export default function ApprovalFlowShow({
                                             form.setData('approver_type', value)
                                         }
                                     >
-                                        <SelectTrigger id="st-type" className="w-full">
+                                        <SelectTrigger
+                                            id="st-type"
+                                            className="w-full"
+                                        >
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -276,7 +305,10 @@ export default function ApprovalFlowShow({
                                         id="st-ref"
                                         value={form.data.approver_ref}
                                         onChange={(e) =>
-                                            form.setData('approver_ref', e.target.value)
+                                            form.setData(
+                                                'approver_ref',
+                                                e.target.value,
+                                            )
                                         }
                                         placeholder="Mis. finance"
                                     />
@@ -291,7 +323,10 @@ export default function ApprovalFlowShow({
                                                 form.setData('mode', value)
                                             }
                                         >
-                                            <SelectTrigger id="st-mode" className="w-full">
+                                            <SelectTrigger
+                                                id="st-mode"
+                                                className="w-full"
+                                            >
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -305,7 +340,9 @@ export default function ApprovalFlowShow({
                                         </Select>
                                     </div>
                                     <div className="grid gap-2">
-                                        <Label htmlFor="st-min">Min. Setuju</Label>
+                                        <Label htmlFor="st-min">
+                                            Min. Setuju
+                                        </Label>
                                         <Input
                                             id="st-min"
                                             type="number"
@@ -323,7 +360,9 @@ export default function ApprovalFlowShow({
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="st-sla">SLA (jam, opsional)</Label>
+                                    <Label htmlFor="st-sla">
+                                        SLA (jam, opsional)
+                                    </Label>
                                     <Input
                                         id="st-sla"
                                         type="number"
@@ -331,7 +370,10 @@ export default function ApprovalFlowShow({
                                         max="720"
                                         value={form.data.sla_hours}
                                         onChange={(e) =>
-                                            form.setData('sla_hours', e.target.value)
+                                            form.setData(
+                                                'sla_hours',
+                                                e.target.value,
+                                            )
                                         }
                                     />
                                 </div>
@@ -340,7 +382,10 @@ export default function ApprovalFlowShow({
                                     <Checkbox
                                         checked={form.data.allow_delegate}
                                         onCheckedChange={(checked) =>
-                                            form.setData('allow_delegate', checked === true)
+                                            form.setData(
+                                                'allow_delegate',
+                                                checked === true,
+                                            )
                                         }
                                     />
                                     Izinkan delegasi
@@ -352,7 +397,10 @@ export default function ApprovalFlowShow({
                                     </p>
                                 )}
 
-                                <Button type="submit" disabled={form.processing}>
+                                <Button
+                                    type="submit"
+                                    disabled={form.processing}
+                                >
                                     <Plus />
                                     Tambah Langkah
                                 </Button>
@@ -368,49 +416,51 @@ export default function ApprovalFlowShow({
                             Kondisi Routing
                         </CardTitle>
                         <p className="text-sm text-muted-foreground">
-                            Alur ini hanya dipakai saat semua kondisi terpenuhi. Biarkan kosong =
-                            berlaku untuk semua pengajuan.
+                            Alur ini hanya dipakai saat semua kondisi terpenuhi.
+                            Biarkan kosong = berlaku untuk semua pengajuan.
                         </p>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={saveConditions} className="grid gap-4">
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="cond-amount-min">Nominal minimum</Label>
-                                    <Input
+                                    <Label htmlFor="cond-amount-min">
+                                        Nominal minimum
+                                    </Label>
+                                    <RupiahInput
                                         id="cond-amount-min"
-                                        type="number"
-                                        min="0"
                                         value={conditions.amount_min}
-                                        onChange={(e) =>
+                                        onChange={(value) =>
                                             setConditions((prev) => ({
                                                 ...prev,
-                                                amount_min: e.target.value,
+                                                amount_min: value,
                                             }))
                                         }
-                                        placeholder="Mis. 1000000"
+                                        placeholder="1.000.000"
                                     />
                                 </div>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="cond-amount-max">Nominal maksimum</Label>
-                                    <Input
+                                    <Label htmlFor="cond-amount-max">
+                                        Nominal maksimum
+                                    </Label>
+                                    <RupiahInput
                                         id="cond-amount-max"
-                                        type="number"
-                                        min="0"
                                         value={conditions.amount_max}
-                                        onChange={(e) =>
+                                        onChange={(value) =>
                                             setConditions((prev) => ({
                                                 ...prev,
-                                                amount_max: e.target.value,
+                                                amount_max: value,
                                             }))
                                         }
-                                        placeholder="Mis. 5000000"
+                                        placeholder="5.000.000"
                                     />
                                 </div>
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="cond-grade">Grade (kode, pisahkan dengan koma)</Label>
+                                <Label htmlFor="cond-grade">
+                                    Grade (kode, pisahkan dengan koma)
+                                </Label>
                                 <Input
                                     id="cond-grade"
                                     value={conditions.grade_in}
@@ -425,14 +475,18 @@ export default function ApprovalFlowShow({
                                 {gradeOptions.length > 0 && (
                                     <p className="text-xs text-muted-foreground">
                                         Tersedia:{' '}
-                                        {gradeOptions.map((option) => option.value).join(', ')}
+                                        {gradeOptions
+                                            .map((option) => option.value)
+                                            .join(', ')}
                                     </p>
                                 )}
                             </div>
 
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="cond-department">ID Departemen</Label>
+                                    <Label htmlFor="cond-department">
+                                        ID Departemen
+                                    </Label>
                                     <Input
                                         id="cond-department"
                                         type="number"
@@ -454,15 +508,23 @@ export default function ApprovalFlowShow({
                                         onValueChange={(value) =>
                                             setConditions((prev) => ({
                                                 ...prev,
-                                                branch_id: value === 'all' ? '' : value,
+                                                branch_id:
+                                                    value === 'all'
+                                                        ? ''
+                                                        : value,
                                             }))
                                         }
                                     >
-                                        <SelectTrigger id="cond-branch" className="w-full">
+                                        <SelectTrigger
+                                            id="cond-branch"
+                                            className="w-full"
+                                        >
                                             <SelectValue placeholder="Semua cabang" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="all">Semua cabang</SelectItem>
+                                            <SelectItem value="all">
+                                                Semua cabang
+                                            </SelectItem>
                                             {branchOptions.map((option) => (
                                                 <SelectItem
                                                     key={option.value}
@@ -477,7 +539,10 @@ export default function ApprovalFlowShow({
                             </div>
 
                             <div>
-                                <Button type="submit" disabled={savingConditions}>
+                                <Button
+                                    type="submit"
+                                    disabled={savingConditions}
+                                >
                                     Simpan Kondisi
                                 </Button>
                             </div>

@@ -51,6 +51,21 @@ class CustomFieldController extends Controller
         ]);
     }
 
+    public function create(): Response
+    {
+        $this->authorize('create', CustomField::class);
+
+        return Inertia::render('custom-fields/create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Custom Field', 'href' => route('custom-fields.index')],
+                ['title' => 'Tambah', 'href' => route('custom-fields.create')],
+            ],
+            'entities' => $this->entityOptions(),
+            'types' => $this->typeOptions(),
+        ]);
+    }
+
     public function store(StoreCustomFieldRequest $request): RedirectResponse
     {
         $data = $request->validated();
@@ -67,7 +82,32 @@ class CustomFieldController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Custom field berhasil ditambahkan.']);
 
-        return back();
+        return redirect()->route('custom-fields.index');
+    }
+
+    public function edit(CustomField $customField): Response
+    {
+        $this->authorize('update', $customField);
+
+        return Inertia::render('custom-fields/edit', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Custom Field', 'href' => route('custom-fields.index')],
+                ['title' => 'Edit', 'href' => route('custom-fields.edit', $customField)],
+            ],
+            'customField' => [
+                'id' => $customField->id,
+                'entity_type' => $customField->entity_type,
+                'key' => $customField->key,
+                'label' => $customField->label,
+                'type' => $customField->type,
+                'options' => $customField->options ?? [],
+                'is_required' => $customField->is_required,
+                'order' => $customField->order,
+            ],
+            'entities' => $this->entityOptions(),
+            'types' => $this->typeOptions(),
+        ]);
     }
 
     public function update(UpdateCustomFieldRequest $request, CustomField $customField): RedirectResponse
@@ -84,7 +124,7 @@ class CustomFieldController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Custom field berhasil diperbarui.']);
 
-        return back();
+        return redirect()->route('custom-fields.index');
     }
 
     public function destroy(CustomField $customField): RedirectResponse

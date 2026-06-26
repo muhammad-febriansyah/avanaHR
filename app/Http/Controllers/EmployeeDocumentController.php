@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -71,13 +72,22 @@ class EmployeeDocumentController extends Controller
             'filters' => (object) $filters,
             'types' => $this->typeOptions(),
             'accessLevels' => $this->accessOptions(),
-            'options' => [
-                'employees' => Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'employee_no'])
-                    ->map(fn (Employee $employee): array => [
-                        'id' => $employee->id,
-                        'label' => $employee->fullName().' ('.$employee->employee_no.')',
-                    ]),
+        ]);
+    }
+
+    public function create(): Response
+    {
+        $this->authorize('create', EmployeeDocument::class);
+
+        return Inertia::render('employee-documents/create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Dokumen', 'href' => route('employee-documents.index')],
+                ['title' => 'Tambah', 'href' => route('employee-documents.create')],
             ],
+            'employees' => $this->employeeOptions(),
+            'types' => $this->typeOptions(),
+            'accessLevels' => $this->accessOptions(),
         ]);
     }
 
@@ -95,7 +105,37 @@ class EmployeeDocumentController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Dokumen berhasil ditambahkan.']);
 
-        return back();
+        return redirect()->route('employee-documents.index');
+    }
+
+    public function edit(EmployeeDocument $employeeDocument): Response
+    {
+        $this->authorize('update', $employeeDocument);
+
+        $employeeDocument->loadMissing('employee:id,first_name,last_name,employee_no');
+
+        return Inertia::render('employee-documents/edit', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Dokumen', 'href' => route('employee-documents.index')],
+                ['title' => 'Edit', 'href' => route('employee-documents.edit', $employeeDocument)],
+            ],
+            'document' => [
+                'id' => $employeeDocument->id,
+                'employee_id' => $employeeDocument->employee_id,
+                'employee_name' => $employeeDocument->employee?->fullName(),
+                'employee_no' => $employeeDocument->employee?->employee_no,
+                'document_type' => $employeeDocument->document_type,
+                'number' => $employeeDocument->number,
+                'issued_at' => $employeeDocument->issued_at?->format('Y-m-d'),
+                'expired_at' => $employeeDocument->expired_at?->format('Y-m-d'),
+                'reminder_days' => $employeeDocument->reminder_days,
+                'access_level' => $employeeDocument->access_level,
+                'file_url' => $employeeDocument->file_path ? Storage::url($employeeDocument->file_path) : null,
+            ],
+            'types' => $this->typeOptions(),
+            'accessLevels' => $this->accessOptions(),
+        ]);
     }
 
     public function update(UpdateEmployeeDocumentRequest $request, EmployeeDocument $employeeDocument): RedirectResponse
@@ -104,7 +144,7 @@ class EmployeeDocumentController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Dokumen berhasil diperbarui.']);
 
-        return back();
+        return redirect()->route('employee-documents.index');
     }
 
     public function destroy(EmployeeDocument $employeeDocument): RedirectResponse
@@ -137,6 +177,18 @@ class EmployeeDocumentController extends Controller
         }
 
         return 'valid';
+    }
+
+    /**
+     * @return Collection<int, array{id: int, label: string}>
+     */
+    private function employeeOptions(): Collection
+    {
+        return Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'employee_no'])
+            ->map(fn (Employee $employee): array => [
+                'id' => $employee->id,
+                'label' => $employee->fullName().' ('.$employee->employee_no.')',
+            ]);
     }
 
     /**

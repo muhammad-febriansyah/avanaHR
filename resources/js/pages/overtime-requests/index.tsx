@@ -1,4 +1,4 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import {
     ChevronLeft,
     ChevronRight,
@@ -6,25 +6,15 @@ import {
     Pencil,
     Plus,
     Trash2,
-    X,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import type { FormEvent } from 'react';
 import overtimeRequests from '@/actions/App/Http/Controllers/OvertimeRequestController';
 import ConfirmDialog from '@/components/confirm-dialog';
 import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -43,7 +33,6 @@ import {
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import type { Paginator } from '@/types/employee';
 
-type EmployeeOption = { id: number; label: string };
 type StatusOption = { value: string; label: string };
 
 type OvertimeRow = {
@@ -64,7 +53,6 @@ type IndexProps = {
     requests: Paginator<OvertimeRow>;
     filters: Filters;
     statuses: StatusOption[];
-    options: { employees: EmployeeOption[] };
 };
 
 const ALL_STATUS = 'all';
@@ -87,40 +75,25 @@ function formatDuration(minutes: number): string {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-    pending: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
-    approved: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    pending:
+        'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
+    approved:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
     rejected: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
 };
 
 const STATUS_LABELS: Record<string, string> = {
-    pending: 'Pending',
+    pending: 'Menunggu',
     approved: 'Disetujui',
     rejected: 'Ditolak',
     revision: 'Revisi',
     cancelled: 'Dibatalkan',
 };
 
-type OvertimeForm = {
-    employee_id: string;
-    date: string;
-    start_time: string;
-    end_time: string;
-    reason: string;
-};
-
-const emptyForm: OvertimeForm = {
-    employee_id: '',
-    date: '',
-    start_time: '',
-    end_time: '',
-    reason: '',
-};
-
 export default function OvertimeRequestsIndex({
     requests: paginator,
     filters = {},
     statuses,
-    options,
 }: IndexProps) {
     useFlashToast();
 
@@ -153,42 +126,6 @@ export default function OvertimeRequestsIndex({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
-    const [open, setOpen] = useState(false);
-    const [editing, setEditing] = useState<OvertimeRow | null>(null);
-    const form = useForm<OvertimeForm>(emptyForm);
-
-    function openCreate() {
-        setEditing(null);
-        form.setDefaults(emptyForm);
-        form.reset();
-        form.clearErrors();
-        setOpen(true);
-    }
-
-    function openEdit(item: OvertimeRow) {
-        setEditing(item);
-        form.clearErrors();
-        form.setData({
-            employee_id: '',
-            date: item.date ?? '',
-            start_time: item.start_time ?? '',
-            end_time: item.end_time ?? '',
-            reason: item.reason ?? '',
-        });
-        setOpen(true);
-    }
-
-    function handleSubmit(event: FormEvent) {
-        event.preventDefault();
-        const opts = { preserveScroll: true, onSuccess: () => setOpen(false) };
-
-        if (editing) {
-            form.put(overtimeRequests.update.url(editing.id), opts);
-        } else {
-            form.post(overtimeRequests.store.url(), opts);
-        }
-    }
-
     function handleDelete(id: number) {
         router.delete(overtimeRequests.destroy.url(id), {
             preserveScroll: true,
@@ -206,9 +143,11 @@ export default function OvertimeRequestsIndex({
                     title="Lembur"
                     description="Ajukan lembur karyawan. Persetujuan diproses lewat Inbox Approval."
                 >
-                    <Button onClick={openCreate}>
-                        <Plus />
-                        Ajukan Lembur
+                    <Button asChild>
+                        <Link href={overtimeRequests.create.url()}>
+                            <Plus />
+                            Ajukan Lembur
+                        </Link>
                     </Button>
                 </PageHeader>
 
@@ -258,6 +197,9 @@ export default function OvertimeRequestsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Karyawan</TableHead>
                                         <TableHead>Tanggal</TableHead>
                                         <TableHead>Waktu</TableHead>
@@ -272,7 +214,7 @@ export default function OvertimeRequestsIndex({
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={6}
+                                                colSpan={7}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -287,8 +229,12 @@ export default function OvertimeRequestsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="font-medium">
                                                         {item.employee_name}
@@ -328,16 +274,18 @@ export default function OvertimeRequestsIndex({
                                                         {item.status ===
                                                         'pending' ? (
                                                             <Button
+                                                                asChild
                                                                 size="sm"
-                                                                variant="outline"
-                                                                onClick={() =>
-                                                                    openEdit(
-                                                                        item,
-                                                                    )
-                                                                }
+                                                                variant="success"
                                                             >
-                                                                <Pencil />
-                                                                Edit
+                                                                <Link
+                                                                    href={overtimeRequests.edit.url(
+                                                                        item.id,
+                                                                    )}
+                                                                >
+                                                                    <Pencil />
+                                                                    Edit
+                                                                </Link>
                                                             </Button>
                                                         ) : null}
                                                         <ConfirmDialog
@@ -374,7 +322,7 @@ export default function OvertimeRequestsIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -393,7 +341,7 @@ export default function OvertimeRequestsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -416,162 +364,6 @@ export default function OvertimeRequestsIndex({
                     </CardContent>
                 </Card>
             </div>
-
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>
-                            {editing
-                                ? 'Ubah Pengajuan Lembur'
-                                : 'Ajukan Lembur'}
-                        </DialogTitle>
-                    </DialogHeader>
-
-                    <form
-                        id="overtime-form"
-                        onSubmit={handleSubmit}
-                        className="grid gap-4"
-                    >
-                        {editing ? (
-                            <div className="rounded-lg border bg-muted/40 p-3 text-sm">
-                                <div className="font-medium">
-                                    {editing.employee_name}
-                                </div>
-                                <div className="text-muted-foreground">
-                                    {editing.employee_no}
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="grid gap-2">
-                                <Label htmlFor="ot-employee">Karyawan</Label>
-                                <Select
-                                    value={form.data.employee_id}
-                                    onValueChange={(value) =>
-                                        form.setData('employee_id', value)
-                                    }
-                                >
-                                    <SelectTrigger
-                                        id="ot-employee"
-                                        className="w-full"
-                                    >
-                                        <SelectValue placeholder="Pilih karyawan" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {options.employees.map((option) => (
-                                            <SelectItem
-                                                key={option.id}
-                                                value={String(option.id)}
-                                            >
-                                                {option.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {form.errors.employee_id && (
-                                    <p className="text-sm text-destructive">
-                                        {form.errors.employee_id}
-                                    </p>
-                                )}
-                            </div>
-                        )}
-
-                        <div className="grid gap-2">
-                            <Label htmlFor="ot-date">Tanggal</Label>
-                            <Input
-                                id="ot-date"
-                                type="date"
-                                value={form.data.date}
-                                onChange={(event) =>
-                                    form.setData('date', event.target.value)
-                                }
-                            />
-                            {form.errors.date && (
-                                <p className="text-sm text-destructive">
-                                    {form.errors.date}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="grid gap-2">
-                                <Label htmlFor="ot-start">Jam Mulai</Label>
-                                <Input
-                                    id="ot-start"
-                                    type="time"
-                                    value={form.data.start_time}
-                                    onChange={(event) =>
-                                        form.setData(
-                                            'start_time',
-                                            event.target.value,
-                                        )
-                                    }
-                                />
-                                {form.errors.start_time && (
-                                    <p className="text-sm text-destructive">
-                                        {form.errors.start_time}
-                                    </p>
-                                )}
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="ot-end">Jam Selesai</Label>
-                                <Input
-                                    id="ot-end"
-                                    type="time"
-                                    value={form.data.end_time}
-                                    onChange={(event) =>
-                                        form.setData(
-                                            'end_time',
-                                            event.target.value,
-                                        )
-                                    }
-                                />
-                                {form.errors.end_time && (
-                                    <p className="text-sm text-destructive">
-                                        {form.errors.end_time}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="grid gap-2">
-                            <Label htmlFor="ot-reason">Alasan</Label>
-                            <textarea
-                                id="ot-reason"
-                                value={form.data.reason}
-                                onChange={(event) =>
-                                    form.setData('reason', event.target.value)
-                                }
-                                rows={3}
-                                placeholder="Alasan lembur (opsional)"
-                                className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
-                            />
-                            {form.errors.reason && (
-                                <p className="text-sm text-destructive">
-                                    {form.errors.reason}
-                                </p>
-                            )}
-                        </div>
-                    </form>
-
-                    <DialogFooter>
-                        <Button
-                            variant="outline"
-                            type="button"
-                            onClick={() => setOpen(false)}
-                        >
-                            <X />
-                            Batal
-                        </Button>
-                        <Button
-                            type="submit"
-                            form="overtime-form"
-                            disabled={form.processing}
-                        >
-                            {editing ? 'Simpan Perubahan' : 'Simpan'}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </>
     );
 }

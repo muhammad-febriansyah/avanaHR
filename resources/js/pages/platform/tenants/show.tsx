@@ -1,15 +1,20 @@
 import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, Pencil } from 'lucide-react';
-import type { ReactNode } from 'react';
+import {
+    ArrowLeft,
+    Building2,
+    CalendarDays,
+    CreditCard,
+    Globe,
+    Pencil,
+    Users,
+} from 'lucide-react';
 import tenants from '@/actions/App/Http/Controllers/Platform/TenantController';
+import { DetailItem } from '@/components/detail/detail-item';
+import { InfoHero } from '@/components/detail/info-hero';
+import { SectionCard } from '@/components/detail/section-card';
+import { StatTile } from '@/components/detail/stat-tile';
 import PageHeader from '@/components/page-header';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import { formatDateID } from '@/lib/format';
 import type { TenantFull } from '@/types/tenant';
@@ -52,20 +57,6 @@ function capitalize(value: string): string {
     return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-function DetailRow({ label, value }: { label: string; value: ReactNode }) {
-    const display =
-        value === null || value === undefined || value === '' ? '-' : value;
-
-    return (
-        <div className="flex flex-col gap-1 border-b border-border/50 pb-3 last:border-0 last:pb-0">
-            <span className="text-xs text-muted-foreground">{label}</span>
-            <span className="text-sm font-medium text-foreground">
-                {display}
-            </span>
-        </div>
-    );
-}
-
 export default function TenantsShow({ tenant }: ShowProps) {
     useFlashToast();
 
@@ -84,7 +75,7 @@ export default function TenantsShow({ tenant }: ShowProps) {
 
             <div className="flex flex-1 flex-col gap-5 p-4 md:p-6">
                 <PageHeader title="Detail Tenant">
-                    <Button asChild variant="outline">
+                    <Button asChild variant="secondary">
                         <Link href={tenants.index.url()}>
                             <ArrowLeft />
                             Kembali
@@ -98,94 +89,95 @@ export default function TenantsShow({ tenant }: ShowProps) {
                     </Button>
                 </PageHeader>
 
-                {/* Hero */}
-                <Card>
-                    <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                        <span className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#2F54C9,#6E9BE6)] text-xl font-semibold text-white">
-                            {initials}
-                        </span>
-                        <div className="flex-1">
-                            <div className="flex flex-wrap items-center gap-2.5">
-                                <h2 className="text-lg font-semibold text-navy">
-                                    {tenant.name}
-                                </h2>
-                                <TenantStatusPill status={tenant.status} />
-                            </div>
-                            <p className="mt-0.5 text-sm text-muted-foreground">
-                                {tenant.slug}
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
+                <InfoHero
+                    initials={initials}
+                    title={tenant.name}
+                    subtitle={tenant.slug}
+                    badges={<TenantStatusPill status={tenant.status} />}
+                />
+
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <StatTile
+                        label="Jumlah Karyawan"
+                        value={tenant.employees_count ?? 0}
+                        icon={Users}
+                        accent="blue"
+                    />
+                    <StatTile
+                        label="Paket"
+                        value={
+                            subscription?.tier
+                                ? capitalize(subscription.tier)
+                                : '—'
+                        }
+                        icon={CreditCard}
+                        accent="violet"
+                        sub={subscription?.status ?? undefined}
+                    />
+                    <StatTile
+                        label="Mata Uang"
+                        value={tenant.currency}
+                        icon={Globe}
+                        accent="green"
+                        sub={tenant.locale}
+                    />
+                    <StatTile
+                        label="Dibuat"
+                        value={formatDateID(tenant.created_at)}
+                        icon={CalendarDays}
+                        accent="amber"
+                    />
+                </div>
 
                 <div className="grid gap-5 lg:grid-cols-3">
-                    <Card className="lg:col-span-2">
-                        <CardHeader>
-                            <CardTitle className="text-base text-navy">
-                                Informasi Tenant
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="grid gap-3 sm:grid-cols-2">
-                            <DetailRow label="Slug" value={tenant.slug} />
-                            <DetailRow label="Locale" value={tenant.locale} />
-                            <DetailRow
-                                label="Timezone"
-                                value={tenant.timezone}
-                            />
-                            <DetailRow
-                                label="Currency"
-                                value={tenant.currency}
-                            />
-                            <DetailRow
-                                label="Dibuat"
-                                value={formatDateID(tenant.created_at)}
-                            />
-                        </CardContent>
-                    </Card>
+                    <SectionCard
+                        title="Informasi Tenant"
+                        icon={Building2}
+                        className="lg:col-span-2"
+                        contentClassName="grid gap-3 sm:grid-cols-2"
+                    >
+                        <DetailItem label="Nama" value={tenant.name} />
+                        <DetailItem label="Slug" value={tenant.slug} />
+                        <DetailItem
+                            label="Locale"
+                            value={tenant.locale}
+                            icon={Globe}
+                        />
+                        <DetailItem label="Timezone" value={tenant.timezone} />
+                        <DetailItem label="Currency" value={tenant.currency} />
+                        <DetailItem
+                            label="Dibuat"
+                            value={formatDateID(tenant.created_at)}
+                            icon={CalendarDays}
+                        />
+                    </SectionCard>
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-base text-navy">
-                                Langganan
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="grid gap-3">
-                            <DetailRow
-                                label="Paket"
-                                value={
-                                    subscription?.tier
-                                        ? capitalize(subscription.tier)
-                                        : '-'
-                                }
-                            />
-                            <DetailRow
-                                label="Status"
-                                value={subscription?.status}
-                            />
-                            <DetailRow
-                                label="Mulai"
-                                value={formatDateID(subscription?.starts_at)}
-                            />
-                            <DetailRow
-                                label="Berakhir"
-                                value={formatDateID(subscription?.ends_at)}
-                            />
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-base text-navy">
-                                Statistik
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="grid gap-3">
-                            <DetailRow
-                                label="Jumlah Karyawan"
-                                value={tenant.employees_count ?? 0}
-                            />
-                        </CardContent>
-                    </Card>
+                    <SectionCard
+                        title="Langganan"
+                        icon={CreditCard}
+                        contentClassName="grid gap-3"
+                    >
+                        <DetailItem
+                            label="Paket"
+                            value={
+                                subscription?.tier
+                                    ? capitalize(subscription.tier)
+                                    : null
+                            }
+                        />
+                        <DetailItem
+                            label="Status"
+                            value={subscription?.status}
+                        />
+                        <DetailItem
+                            label="Mulai"
+                            value={formatDateID(subscription?.starts_at)}
+                        />
+                        <DetailItem
+                            label="Berakhir"
+                            value={formatDateID(subscription?.ends_at)}
+                        />
+                    </SectionCard>
                 </div>
             </div>
         </>

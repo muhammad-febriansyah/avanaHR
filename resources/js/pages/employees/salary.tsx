@@ -8,6 +8,7 @@ import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
 import {
     Dialog,
     DialogContent,
@@ -17,6 +18,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RupiahInput } from '@/components/ui/rupiah-input';
 import {
     Select,
     SelectContent,
@@ -196,6 +198,9 @@ export default function EmployeeSalary({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Komponen</TableHead>
                                         <TableHead>Jenis</TableHead>
                                         <TableHead className="text-right">
@@ -211,7 +216,7 @@ export default function EmployeeSalary({
                                     {salaryComponents.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={5}
+                                                colSpan={6}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -225,8 +230,11 @@ export default function EmployeeSalary({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        salaryComponents.map((item) => (
+                                        salaryComponents.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {index + 1}
+                                                </TableCell>
                                                 <TableCell className="font-medium">
                                                     {item.component_name ?? '-'}
                                                 </TableCell>
@@ -250,7 +258,7 @@ export default function EmployeeSalary({
                                                     <div className="flex items-center justify-end gap-2">
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="success"
                                                             onClick={() =>
                                                                 openEdit(item)
                                                             }
@@ -370,16 +378,11 @@ export default function EmployeeSalary({
                         ) : (
                             <div className="grid gap-2">
                                 <Label htmlFor="amount">Nominal (Rp)</Label>
-                                <Input
+                                <RupiahInput
                                     id="amount"
-                                    type="number"
-                                    min={0}
                                     value={form.data.amount}
-                                    onChange={(event) =>
-                                        form.setData(
-                                            'amount',
-                                            event.target.value,
-                                        )
+                                    onChange={(value) =>
+                                        form.setData('amount', value)
                                     }
                                     placeholder="Mis. 5000000"
                                 />
@@ -403,15 +406,11 @@ export default function EmployeeSalary({
                             <Label htmlFor="effective_date">
                                 Tanggal Berlaku
                             </Label>
-                            <Input
+                            <DatePicker
                                 id="effective_date"
-                                type="date"
                                 value={form.data.effective_date}
-                                onChange={(event) =>
-                                    form.setData(
-                                        'effective_date',
-                                        event.target.value,
-                                    )
+                                onChange={(value) =>
+                                    form.setData('effective_date', value)
                                 }
                             />
                             {form.errors.effective_date && (
@@ -424,7 +423,7 @@ export default function EmployeeSalary({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >

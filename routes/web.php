@@ -80,17 +80,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('leave-balances', LeaveBalanceController::class)
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('leave-requests', LeaveRequestController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     Route::resource('departments', DepartmentController::class)
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('positions', PositionController::class)
         ->only(['store', 'update', 'destroy']);
     Route::resource('shifts', ShiftController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     Route::resource('payroll-components', PayrollComponentController::class)
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('payroll-periods', PayrollPeriodController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     Route::post('payroll-periods/{payrollPeriod}/close', [PayrollPeriodController::class, 'close'])
         ->name('payroll-periods.close');
     Route::post('payroll-periods/{payrollPeriod}/reopen', [PayrollPeriodController::class, 'reopen'])
@@ -109,6 +109,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('employees.history');
     Route::get('employees/{employee}/tax-bpjs', [EmployeeTaxBpjsController::class, 'index'])
         ->name('employees.tax-bpjs.index');
+    Route::get('employees/{employee}/tax-profiles/create', [EmployeeTaxBpjsController::class, 'createTax'])
+        ->name('employees.tax-profiles.create');
+    Route::get('employees/{employee}/bpjs-profiles/create', [EmployeeTaxBpjsController::class, 'createBpjs'])
+        ->name('employees.bpjs-profiles.create');
     Route::post('employees/{employee}/tax-profiles', [EmployeeTaxBpjsController::class, 'storeTax'])
         ->name('employees.tax-profiles.store');
     Route::delete('tax-profiles/{taxProfile}', [EmployeeTaxBpjsController::class, 'destroyTax'])
@@ -162,12 +166,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('work-visits.reports.destroy');
 
     Route::resource('overtime-requests', OvertimeRequestController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
     Route::resource('employee-documents', EmployeeDocumentController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     Route::resource('lifecycle', EmployeeLifecycleEventController::class)
-        ->only(['index', 'store', 'destroy']);
+        ->only(['index', 'create', 'store', 'destroy']);
     Route::resource('movements', EmployeeMovementController::class)
         ->only(['index', 'create', 'store', 'show', 'destroy']);
     Route::post('movements/{movement}/apply', [EmployeeMovementController::class, 'apply'])
@@ -196,7 +200,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('approval-flows/{approvalFlow}/conditions', [ApprovalFlowController::class, 'updateConditions'])
         ->name('approval-flows.conditions');
     Route::resource('custom-fields', CustomFieldController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     Route::get('branding', [BrandingController::class, 'edit'])->name('branding.edit');
     Route::post('branding', [BrandingController::class, 'update'])->name('branding.update');
     Route::get('security-settings', [SecuritySettingController::class, 'edit'])
@@ -222,6 +226,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // HR helpdesk / ticketing.
     Route::get('hr-tickets', [HrTicketController::class, 'index'])->name('hr-tickets.index');
+    Route::get('hr-tickets/create', [HrTicketController::class, 'create'])->name('hr-tickets.create');
     Route::post('hr-tickets', [HrTicketController::class, 'store'])->name('hr-tickets.store');
     Route::get('hr-tickets/{ticket}', [HrTicketController::class, 'show'])->name('hr-tickets.show');
     Route::post('hr-tickets/{ticket}/messages', [HrTicketController::class, 'reply'])

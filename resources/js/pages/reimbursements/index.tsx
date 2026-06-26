@@ -16,6 +16,7 @@ import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Combobox } from '@/components/ui/combobox';
 import {
     Dialog,
     DialogContent,
@@ -25,6 +26,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RupiahInput } from '@/components/ui/rupiah-input';
 import {
     Select,
     SelectContent,
@@ -71,13 +73,15 @@ const ALL_STATUS = 'all';
 const ALL_CATEGORY = 'all';
 
 const STATUS_STYLES: Record<string, string> = {
-    pending: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
-    approved: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    pending:
+        'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
+    approved:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
     rejected: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
 };
 
 const STATUS_LABELS: Record<string, string> = {
-    pending: 'Pending',
+    pending: 'Menunggu',
     approved: 'Disetujui',
     rejected: 'Ditolak',
     revision: 'Revisi',
@@ -283,6 +287,9 @@ export default function ReimbursementsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Karyawan</TableHead>
                                         <TableHead>Kategori</TableHead>
                                         <TableHead className="text-right">
@@ -299,7 +306,7 @@ export default function ReimbursementsIndex({
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={6}
+                                                colSpan={7}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -314,8 +321,12 @@ export default function ReimbursementsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="font-medium">
                                                         {item.employee_name}
@@ -359,7 +370,7 @@ export default function ReimbursementsIndex({
                                                         'pending' ? (
                                                             <Button
                                                                 size="sm"
-                                                                variant="outline"
+                                                                variant="success"
                                                                 onClick={() =>
                                                                     openEdit(
                                                                         item,
@@ -404,7 +415,7 @@ export default function ReimbursementsIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -423,7 +434,7 @@ export default function ReimbursementsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -474,29 +485,22 @@ export default function ReimbursementsIndex({
                         ) : (
                             <div className="grid gap-2">
                                 <Label htmlFor="rb-employee">Karyawan</Label>
-                                <Select
+                                <Combobox
+                                    id="rb-employee"
                                     value={form.data.employee_id}
-                                    onValueChange={(value) =>
+                                    onChange={(value) =>
                                         form.setData('employee_id', value)
                                     }
-                                >
-                                    <SelectTrigger
-                                        id="rb-employee"
-                                        className="w-full"
-                                    >
-                                        <SelectValue placeholder="Pilih karyawan" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {options.employees.map((option) => (
-                                            <SelectItem
-                                                key={option.id}
-                                                value={String(option.id)}
-                                            >
-                                                {option.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                    options={options.employees.map(
+                                        (option) => ({
+                                            value: String(option.id),
+                                            label: option.label,
+                                        }),
+                                    )}
+                                    placeholder="Pilih karyawan"
+                                    searchPlaceholder="Cari karyawan…"
+                                    emptyText="Karyawan tidak ditemukan"
+                                />
                                 {form.errors.employee_id && (
                                     <p className="text-sm text-destructive">
                                         {form.errors.employee_id}
@@ -563,16 +567,14 @@ export default function ReimbursementsIndex({
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="rb-amount">Nominal (Rp)</Label>
-                            <Input
+                            <Label htmlFor="rb-amount">Nominal</Label>
+                            <RupiahInput
                                 id="rb-amount"
-                                type="number"
-                                min={1}
                                 value={form.data.amount}
-                                onChange={(event) =>
-                                    form.setData('amount', event.target.value)
+                                onChange={(value) =>
+                                    form.setData('amount', value)
                                 }
-                                placeholder="Mis. 500000"
+                                placeholder="Mis. 500.000"
                             />
                             {form.errors.amount && (
                                 <p className="text-sm text-destructive">
@@ -582,7 +584,9 @@ export default function ReimbursementsIndex({
                             {form.data.amount &&
                                 Number(form.data.amount) > 0 && (
                                     <p className="text-xs text-muted-foreground">
-                                        {rupiah.format(Number(form.data.amount))}
+                                        {rupiah.format(
+                                            Number(form.data.amount),
+                                        )}
                                     </p>
                                 )}
                         </div>
@@ -590,7 +594,7 @@ export default function ReimbursementsIndex({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >

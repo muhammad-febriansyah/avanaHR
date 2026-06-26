@@ -66,7 +66,9 @@ function BarList({ items, accent }: { items: Bucket[]; accent: string }) {
                 <div key={item.label} className="flex flex-col gap-1">
                     <div className="flex items-center justify-between text-sm">
                         <span className="text-foreground">{item.label}</span>
-                        <span className="font-medium tabular-nums">{item.total}</span>
+                        <span className="font-medium tabular-nums">
+                            {item.total}
+                        </span>
                     </div>
                     <div className="h-2 overflow-hidden rounded-full bg-muted">
                         <div
@@ -86,10 +88,30 @@ const KPIS: Array<{
     icon: typeof Users;
     accent: string;
 }> = [
-    { key: 'total', label: 'Total Karyawan', icon: Users, accent: 'bg-primary/10 text-primary' },
-    { key: 'active', label: 'Aktif', icon: UserCheck, accent: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400' },
-    { key: 'hires_this_month', label: 'Hire Bulan Ini', icon: CalendarPlus, accent: 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400' },
-    { key: 'separations_this_month', label: 'Keluar Bulan Ini', icon: UserMinus, accent: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400' },
+    {
+        key: 'total',
+        label: 'Total Karyawan',
+        icon: Users,
+        accent: 'bg-primary/10 text-primary',
+    },
+    {
+        key: 'active',
+        label: 'Aktif',
+        icon: UserCheck,
+        accent: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    },
+    {
+        key: 'hires_this_month',
+        label: 'Hire Bulan Ini',
+        icon: CalendarPlus,
+        accent: 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400',
+    },
+    {
+        key: 'separations_this_month',
+        label: 'Keluar Bulan Ini',
+        icon: UserMinus,
+        accent: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
+    },
 ];
 
 export default function WorkforceAnalytics({
@@ -139,7 +161,10 @@ export default function WorkforceAnalytics({
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="flex items-end gap-3" style={{ height: 160 }}>
+                        <div
+                            className="flex items-end gap-3"
+                            style={{ height: 160 }}
+                        >
                             {hireTrend.map((month) => {
                                 const max = Math.max(
                                     1,
@@ -159,7 +184,8 @@ export default function WorkforceAnalytics({
                                                 className="w-full rounded-t bg-primary"
                                                 style={{
                                                     height: `${(month.total / max) * 100}%`,
-                                                    minHeight: month.total > 0 ? 4 : 0,
+                                                    minHeight:
+                                                        month.total > 0 ? 4 : 0,
                                                 }}
                                             />
                                         </div>
@@ -187,7 +213,9 @@ export default function WorkforceAnalytics({
 
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-base">Status Karyawan</CardTitle>
+                            <CardTitle className="text-base">
+                                Status Karyawan
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <BarList
@@ -199,7 +227,9 @@ export default function WorkforceAnalytics({
 
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-base">Jenis Kelamin</CardTitle>
+                            <CardTitle className="text-base">
+                                Jenis Kelamin
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <BarList
@@ -211,7 +241,9 @@ export default function WorkforceAnalytics({
 
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-base">Tipe Kerja</CardTitle>
+                            <CardTitle className="text-base">
+                                Tipe Kerja
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <BarList

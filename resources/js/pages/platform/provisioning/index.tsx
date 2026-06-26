@@ -41,8 +41,10 @@ type IndexProps = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
-    completed: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
-    pending: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
+    completed:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    pending:
+        'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
     failed: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
 };
 
@@ -83,11 +85,7 @@ export default function ProvisioningIndex({
     }, [search]);
 
     function apply(id: number) {
-        router.post(
-            provisioning.apply.url(id),
-            {},
-            { preserveScroll: true },
-        );
+        router.post(provisioning.apply.url(id), {}, { preserveScroll: true });
     }
 
     const rows = paginator.data;
@@ -115,17 +113,27 @@ export default function ProvisioningIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Tenant</TableHead>
                                         <TableHead>Status</TableHead>
-                                        <TableHead>Konfigurasi Default</TableHead>
+                                        <TableHead>
+                                            Konfigurasi Default
+                                        </TableHead>
                                         <TableHead>Terakhir</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
+                                        <TableHead className="text-right">
+                                            Aksi
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="py-12">
+                                            <TableCell
+                                                colSpan={6}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <Rocket className="size-6" />
@@ -137,8 +145,12 @@ export default function ProvisioningIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((row) => (
+                                        rows.map((row, index) => (
                                             <TableRow key={row.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="font-medium">
                                                         {row.name}
@@ -150,10 +162,15 @@ export default function ProvisioningIndex({
                                                 <TableCell>
                                                     <Badge
                                                         variant="secondary"
-                                                        className={STATUS_STYLES[row.status]}
+                                                        className={
+                                                            STATUS_STYLES[
+                                                                row.status
+                                                            ]
+                                                        }
                                                     >
-                                                        {STATUS_LABELS[row.status] ??
-                                                            row.status}
+                                                        {STATUS_LABELS[
+                                                            row.status
+                                                        ] ?? row.status}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell>
@@ -179,8 +196,10 @@ export default function ProvisioningIndex({
                                                     ) : (
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
-                                                            onClick={() => apply(row.id)}
+                                                            variant="secondary"
+                                                            onClick={() =>
+                                                                apply(row.id)
+                                                            }
                                                         >
                                                             <Sparkles />
                                                             Terapkan Config
@@ -200,7 +219,7 @@ export default function ProvisioningIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -208,7 +227,10 @@ export default function ProvisioningIndex({
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -216,7 +238,7 @@ export default function ProvisioningIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -224,7 +246,10 @@ export default function ProvisioningIndex({
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >

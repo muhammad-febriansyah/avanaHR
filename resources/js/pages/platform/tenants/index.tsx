@@ -243,6 +243,9 @@ export default function TenantsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         {sortHeader('Nama', 'name')}
                                         <TableHead>Paket</TableHead>
                                         <TableHead>Karyawan</TableHead>
@@ -257,7 +260,7 @@ export default function TenantsIndex({
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={6}
+                                                colSpan={7}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -271,8 +274,12 @@ export default function TenantsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((tenant) => (
+                                        rows.map((tenant, index) => (
                                             <TableRow key={tenant.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="flex flex-col">
                                                         <span className="font-medium whitespace-nowrap">
@@ -286,7 +293,8 @@ export default function TenantsIndex({
                                                 <TableCell>
                                                     {tenant.subscription?.tier
                                                         ? capitalize(
-                                                              tenant.subscription
+                                                              tenant
+                                                                  .subscription
                                                                   .tier,
                                                           )
                                                         : '-'}
@@ -393,7 +401,7 @@ export default function TenantsIndex({
                             </div>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() => {
@@ -413,7 +421,7 @@ export default function TenantsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() => {

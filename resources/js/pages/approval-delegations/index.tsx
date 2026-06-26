@@ -7,7 +7,7 @@ import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
 import {
     Select,
@@ -162,22 +162,20 @@ export default function ApprovalDelegationsIndex({
 
                             <div className="space-y-1">
                                 <Label>Mulai</Label>
-                                <Input
-                                    type="date"
+                                <DatePicker
                                     value={form.data.starts_at}
-                                    onChange={(e) =>
-                                        form.setData('starts_at', e.target.value)
+                                    onChange={(value) =>
+                                        form.setData('starts_at', value)
                                     }
                                 />
                             </div>
 
                             <div className="space-y-1">
                                 <Label>Selesai</Label>
-                                <Input
-                                    type="date"
+                                <DatePicker
                                     value={form.data.ends_at}
-                                    onChange={(e) =>
-                                        form.setData('ends_at', e.target.value)
+                                    onChange={(value) =>
+                                        form.setData('ends_at', value)
                                     }
                                 />
                                 {form.errors.ends_at ? (
@@ -188,7 +186,10 @@ export default function ApprovalDelegationsIndex({
                             </div>
 
                             <div className="md:col-span-2 lg:col-span-4">
-                                <Button type="submit" disabled={form.processing}>
+                                <Button
+                                    type="submit"
+                                    disabled={form.processing}
+                                >
                                     <Plus />
                                     Tambah Delegasi
                                 </Button>
@@ -202,6 +203,7 @@ export default function ApprovalDelegationsIndex({
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead className="w-12">No</TableHead>
                                     <TableHead>Delegasikan ke</TableHead>
                                     <TableHead>Jenis</TableHead>
                                     <TableHead>Periode</TableHead>
@@ -215,15 +217,18 @@ export default function ApprovalDelegationsIndex({
                                 {delegations.length === 0 ? (
                                     <TableRow>
                                         <TableCell
-                                            colSpan={5}
+                                            colSpan={6}
                                             className="py-10 text-center text-muted-foreground"
                                         >
                                             Belum ada delegasi.
                                         </TableCell>
                                     </TableRow>
                                 ) : (
-                                    delegations.map((d) => (
+                                    delegations.map((d, index) => (
                                         <TableRow key={d.id}>
+                                            <TableCell className="text-muted-foreground tabular-nums">
+                                                {index + 1}
+                                            </TableCell>
                                             <TableCell className="font-medium">
                                                 {d.to_user ?? '—'}
                                             </TableCell>
@@ -253,7 +258,9 @@ export default function ApprovalDelegationsIndex({
                                                     title="Hapus Delegasi"
                                                     description={`Hapus delegasi ke "${d.to_user}"?`}
                                                     confirmLabel="Hapus"
-                                                    onConfirm={() => remove(d.id)}
+                                                    onConfirm={() =>
+                                                        remove(d.id)
+                                                    }
                                                     trigger={
                                                         <Button
                                                             size="sm"

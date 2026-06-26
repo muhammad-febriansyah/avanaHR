@@ -50,8 +50,10 @@ type IndexProps = {
 const ALL_TYPE = 'all';
 
 const DANGER = 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400';
-const WARN = 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400';
-const OK = 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400';
+const WARN =
+    'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400';
+const OK =
+    'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400';
 
 const TYPE_STYLES: Record<string, string> = {
     login_success: OK,
@@ -127,7 +129,9 @@ export default function SecurityEventsIndex({
                                     setType(value);
                                     go({
                                         type:
-                                            value === ALL_TYPE ? undefined : value,
+                                            value === ALL_TYPE
+                                                ? undefined
+                                                : value,
                                     });
                                 }}
                             >
@@ -154,6 +158,9 @@ export default function SecurityEventsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Waktu</TableHead>
                                         <TableHead>Tipe</TableHead>
                                         <TableHead>User</TableHead>
@@ -165,34 +172,47 @@ export default function SecurityEventsIndex({
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={6} className="py-12">
+                                            <TableCell
+                                                colSpan={7}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <ShieldAlert className="size-6" />
                                                     </div>
                                                     <p className="text-sm text-muted-foreground">
-                                                        Belum ada peristiwa keamanan
+                                                        Belum ada peristiwa
+                                                        keamanan
                                                     </p>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((row) => (
+                                        rows.map((row, index) => (
                                             <TableRow key={row.id}>
-                                                <TableCell className="whitespace-nowrap text-xs text-muted-foreground tabular-nums">
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
+                                                <TableCell className="text-xs whitespace-nowrap text-muted-foreground tabular-nums">
                                                     {row.created_at}
                                                 </TableCell>
                                                 <TableCell>
                                                     <Badge
                                                         variant="secondary"
-                                                        className={TYPE_STYLES[row.type] ?? WARN}
+                                                        className={
+                                                            TYPE_STYLES[
+                                                                row.type
+                                                            ] ?? WARN
+                                                        }
                                                     >
                                                         {typeLabel(row.type)}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="font-medium">
-                                                        {row.user_name ?? 'Anonim'}
+                                                        {row.user_name ??
+                                                            'Anonim'}
                                                     </div>
                                                     <div className="text-xs text-muted-foreground">
                                                         {row.user_email}
@@ -211,14 +231,24 @@ export default function SecurityEventsIndex({
                                                         </span>
                                                     ) : (
                                                         <div className="flex flex-wrap gap-1">
-                                                            {row.meta.map((pair) => (
-                                                                <span
-                                                                    key={pair.key}
-                                                                    className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground"
-                                                                >
-                                                                    {pair.key}: {pair.value}
-                                                                </span>
-                                                            ))}
+                                                            {row.meta.map(
+                                                                (pair) => (
+                                                                    <span
+                                                                        key={
+                                                                            pair.key
+                                                                        }
+                                                                        className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground"
+                                                                    >
+                                                                        {
+                                                                            pair.key
+                                                                        }
+                                                                        :{' '}
+                                                                        {
+                                                                            pair.value
+                                                                        }
+                                                                    </span>
+                                                                ),
+                                                            )}
                                                         </div>
                                                     )}
                                                 </TableCell>
@@ -235,7 +265,7 @@ export default function SecurityEventsIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -243,7 +273,10 @@ export default function SecurityEventsIndex({
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -251,7 +284,7 @@ export default function SecurityEventsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -259,7 +292,10 @@ export default function SecurityEventsIndex({
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >

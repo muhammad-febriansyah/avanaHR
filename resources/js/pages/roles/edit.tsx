@@ -1,10 +1,8 @@
 import { Head } from '@inertiajs/react';
 import PageHeader from '@/components/page-header';
 import { useFlashToast } from '@/hooks/use-flash-toast';
-import RoleForm, {
-    type PermissionGroup,
-    type Role,
-} from '@/pages/roles/role-form';
+import RoleForm from '@/pages/roles/role-form';
+import type {PermissionGroup, Role} from '@/pages/roles/role-form';
 
 type EditProps = {
     role: Role;

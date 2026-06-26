@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { formatRupiah } from '@/lib/format';
+import { RupiahInput } from '@/components/ui/rupiah-input';
 
 export type JobGrade = {
     id: number;
@@ -68,48 +68,42 @@ export default function JobGradeForm({ jobGrade }: JobGradeFormProps) {
 
                         <div className="grid gap-2">
                             <Label htmlFor="salary_band_min">
-                                Batas Bawah Gaji (Rp) <RequiredMark />
+                                Batas Bawah Gaji <RequiredMark />
                             </Label>
-                            <Input
+                            <RupiahInput
                                 id="salary_band_min"
-                                name="salary_band_min"
-                                type="number"
-                                min={0}
-                                step={1}
                                 value={min}
-                                onChange={(event) => setMin(event.target.value)}
-                                required
+                                onChange={(value) => setMin(value)}
                                 placeholder="5000000"
                             />
-                            <p className="text-xs text-muted-foreground tabular-nums">
-                                {formatRupiah(Number(min) || 0)}
-                            </p>
+                            <input
+                                type="hidden"
+                                name="salary_band_min"
+                                value={min}
+                            />
                             <InputError message={errors.salary_band_min} />
                         </div>
 
                         <div className="grid gap-2">
                             <Label htmlFor="salary_band_max">
-                                Batas Atas Gaji (Rp) <RequiredMark />
+                                Batas Atas Gaji <RequiredMark />
                             </Label>
-                            <Input
+                            <RupiahInput
                                 id="salary_band_max"
-                                name="salary_band_max"
-                                type="number"
-                                min={0}
-                                step={1}
                                 value={max}
-                                onChange={(event) => setMax(event.target.value)}
-                                required
+                                onChange={(value) => setMax(value)}
                                 placeholder="10000000"
                             />
-                            <p className="text-xs text-muted-foreground tabular-nums">
-                                {formatRupiah(Number(max) || 0)}
-                            </p>
+                            <input
+                                type="hidden"
+                                name="salary_band_max"
+                                value={max}
+                            />
                             <InputError message={errors.salary_band_max} />
                         </div>
                     </CardContent>
                     <CardFooter className="flex justify-end gap-3">
-                        <Button asChild variant="outline" type="button">
+                        <Button asChild variant="secondary" type="button">
                             <Link href={jobGrades.index.url()}>
                                 <X />
                                 Batal

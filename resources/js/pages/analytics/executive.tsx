@@ -51,7 +51,9 @@ function BarList({ items, accent }: { items: Bucket[]; accent: string }) {
                 <div key={item.label} className="flex flex-col gap-1">
                     <div className="flex items-center justify-between text-sm">
                         <span>{TYPE_LABELS[item.label] ?? item.label}</span>
-                        <span className="font-medium tabular-nums">{item.total}</span>
+                        <span className="font-medium tabular-nums">
+                            {item.total}
+                        </span>
                     </div>
                     <div className="h-2 overflow-hidden rounded-full bg-muted">
                         <div
@@ -208,7 +210,9 @@ export default function ExecutiveDashboard({
 
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-base">Tipe Kerja</CardTitle>
+                            <CardTitle className="text-base">
+                                Tipe Kerja
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <BarList items={byType} accent="bg-violet-500" />

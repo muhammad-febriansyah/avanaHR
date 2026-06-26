@@ -57,9 +57,12 @@ const ALL_STATUS = 'all';
 
 const STATUS_STYLES: Record<string, string> = {
     draft: 'bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300',
-    calculated: 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400',
-    approved: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
-    disbursed: 'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
+    calculated:
+        'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400',
+    approved:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    disbursed:
+        'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
 };
 
 type RunForm = { type: string; period_ref: string; status: string };
@@ -204,8 +207,13 @@ export default function ThrBonusRunsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Tipe</TableHead>
-                                        <TableHead>Periode / Keterangan</TableHead>
+                                        <TableHead>
+                                            Periode / Keterangan
+                                        </TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead className="text-right">
                                             Aksi
@@ -216,7 +224,7 @@ export default function ThrBonusRunsIndex({
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={4}
+                                                colSpan={5}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -230,8 +238,11 @@ export default function ThrBonusRunsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {index + 1}
+                                                </TableCell>
                                                 <TableCell className="font-medium">
                                                     {labelOf(types, item.type)}
                                                 </TableCell>
@@ -257,7 +268,7 @@ export default function ThrBonusRunsIndex({
                                                     <div className="flex items-center justify-end gap-2">
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
+                                                            variant="success"
                                                             onClick={() =>
                                                                 openEdit(item)
                                                             }
@@ -300,7 +311,9 @@ export default function ThrBonusRunsIndex({
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            {editing ? 'Ubah Run THR/Bonus' : 'Tambah Run THR/Bonus'}
+                            {editing
+                                ? 'Ubah Run THR/Bonus'
+                                : 'Tambah Run THR/Bonus'}
                         </DialogTitle>
                     </DialogHeader>
 
@@ -388,7 +401,7 @@ export default function ThrBonusRunsIndex({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >

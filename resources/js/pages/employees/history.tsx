@@ -6,7 +6,7 @@ import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
 import {
     Table,
@@ -50,6 +50,30 @@ type HistoryProps = {
     salary: SalaryRow[];
 };
 
+const STATUS_LABELS: Record<string, string> = {
+    probation: 'Masa Percobaan',
+    active: 'Aktif',
+    on_leave: 'Cuti',
+    suspended: 'Diskors',
+    resigned: 'Mengundurkan Diri',
+    terminated: 'Diberhentikan',
+};
+
+const EMPLOYMENT_TYPE_LABELS: Record<string, string> = {
+    permanent: 'Tetap',
+    contract: 'Kontrak',
+    intern: 'Magang',
+    outsource: 'Alih Daya',
+};
+
+function statusText(value: string): string {
+    return STATUS_LABELS[value] ?? value;
+}
+
+function employmentTypeText(value: string): string {
+    return EMPLOYMENT_TYPE_LABELS[value] ?? value;
+}
+
 function todayISO(): string {
     return new Date().toISOString().slice(0, 10);
 }
@@ -58,6 +82,7 @@ function isActiveOn(emp: Employment, asOf: string): boolean {
     if (!emp.effective_date || emp.effective_date > asOf) {
         return false;
     }
+
     return !emp.end_date || emp.end_date >= asOf;
 }
 
@@ -77,7 +102,7 @@ export default function EmployeeHistory({
                     title={`Riwayat — ${employee.name}`}
                     description="Riwayat jabatan, grade, dan gaji berdasarkan tanggal efektif."
                 >
-                    <Button asChild variant="outline">
+                    <Button asChild variant="secondary">
                         <Link href={employees.show.url(employee.id)}>
                             <ArrowLeft />
                             Kembali
@@ -96,11 +121,10 @@ export default function EmployeeHistory({
                             >
                                 Per tanggal
                             </Label>
-                            <Input
+                            <DatePicker
                                 id="asof"
-                                type="date"
                                 value={asOf}
-                                onChange={(e) => setAsOf(e.target.value)}
+                                onChange={(v) => setAsOf(v)}
                                 className="w-40"
                             />
                         </div>
@@ -113,6 +137,7 @@ export default function EmployeeHistory({
                         ) : (
                             employments.map((emp) => {
                                 const active = isActiveOn(emp, asOf);
+
                                 return (
                                     <div
                                         key={emp.id}
@@ -148,12 +173,28 @@ export default function EmployeeHistory({
                                             </div>
                                         </div>
                                         <div className="mt-2 grid gap-x-6 gap-y-1 text-sm text-muted-foreground sm:grid-cols-2 lg:grid-cols-3">
-                                            <span>Jabatan: {emp.position ?? '-'}</span>
-                                            <span>Departemen: {emp.department ?? '-'}</span>
-                                            <span>Grade: {emp.job_grade ?? '-'}</span>
-                                            <span>Atasan: {emp.manager ?? '-'}</span>
-                                            <span>Tipe: {emp.employment_type}</span>
-                                            <span>Status: {emp.status}</span>
+                                            <span>
+                                                Jabatan: {emp.position ?? '-'}
+                                            </span>
+                                            <span>
+                                                Departemen:{' '}
+                                                {emp.department ?? '-'}
+                                            </span>
+                                            <span>
+                                                Grade: {emp.job_grade ?? '-'}
+                                            </span>
+                                            <span>
+                                                Atasan: {emp.manager ?? '-'}
+                                            </span>
+                                            <span>
+                                                Tipe:{' '}
+                                                {employmentTypeText(
+                                                    emp.employment_type,
+                                                )}
+                                            </span>
+                                            <span>
+                                                Status: {statusText(emp.status)}
+                                            </span>
                                         </div>
                                     </div>
                                 );
@@ -170,6 +211,7 @@ export default function EmployeeHistory({
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead className="w-12">No</TableHead>
                                     <TableHead>Komponen</TableHead>
                                     <TableHead>Tipe</TableHead>
                                     <TableHead className="text-right">
@@ -182,15 +224,18 @@ export default function EmployeeHistory({
                                 {salary.length === 0 ? (
                                     <TableRow>
                                         <TableCell
-                                            colSpan={4}
+                                            colSpan={5}
                                             className="py-8 text-center text-muted-foreground"
                                         >
                                             Belum ada riwayat gaji.
                                         </TableCell>
                                     </TableRow>
                                 ) : (
-                                    salary.map((row) => (
+                                    salary.map((row, index) => (
                                         <TableRow key={row.id}>
+                                            <TableCell className="text-muted-foreground tabular-nums">
+                                                {index + 1}
+                                            </TableCell>
                                             <TableCell className="font-medium">
                                                 {row.component_name ?? '-'}
                                             </TableCell>

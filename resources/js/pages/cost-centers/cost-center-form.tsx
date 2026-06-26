@@ -60,7 +60,7 @@ export default function CostCenterForm({ costCenter }: CostCenterFormProps) {
                         </div>
                     </CardContent>
                     <CardFooter className="flex justify-end gap-3">
-                        <Button asChild variant="outline" type="button">
+                        <Button asChild variant="secondary" type="button">
                             <Link href={costCenters.index.url()}>
                                 <X />
                                 Batal

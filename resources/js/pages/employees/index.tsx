@@ -190,7 +190,7 @@ export default function EmployeesIndex({
                                 className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-3 py-1 text-xs font-medium text-muted-foreground"
                             >
                                 {statusLabels.get(option.value) ?? option.label}
-                                <span className="tabular-nums text-foreground">
+                                <span className="text-foreground tabular-nums">
                                     {stats[option.value] ?? 0}
                                 </span>
                             </span>
@@ -236,6 +236,9 @@ export default function EmployeesIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         {sortHeader(
                                             'No. Karyawan',
                                             'employee_no',
@@ -258,7 +261,7 @@ export default function EmployeesIndex({
                                     {rows.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={8}
+                                                colSpan={9}
                                                 className="py-12"
                                             >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
@@ -272,11 +275,15 @@ export default function EmployeesIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((employee) => {
+                                        rows.map((employee, index) => {
                                             const fullName = `${employee.first_name}${employee.last_name ? ` ${employee.last_name}` : ''}`;
 
                                             return (
                                                 <TableRow key={employee.id}>
+                                                    <TableCell className="text-muted-foreground tabular-nums">
+                                                        {(paginator.from ?? 1) +
+                                                            index}
+                                                    </TableCell>
                                                     <TableCell className="font-medium">
                                                         {employee.employee_no}
                                                     </TableCell>
@@ -295,8 +302,8 @@ export default function EmployeesIndex({
                                                     <TableCell>
                                                         {employee
                                                             .current_employment
-                                                            ?.department?.name ??
-                                                            '-'}
+                                                            ?.department
+                                                            ?.name ?? '-'}
                                                     </TableCell>
                                                     <TableCell>
                                                         {employee
@@ -409,7 +416,7 @@ export default function EmployeesIndex({
                             </div>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() => {
@@ -429,7 +436,7 @@ export default function EmployeesIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() => {

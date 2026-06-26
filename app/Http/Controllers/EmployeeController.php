@@ -161,7 +161,7 @@ class EmployeeController extends Controller
     {
         return array_map(fn (EmployeeStatus $status): array => [
             'value' => $status->value,
-            'label' => ucwords(str_replace('_', ' ', $status->value)),
+            'label' => $status->label(),
         ], EmployeeStatus::cases());
     }
 }

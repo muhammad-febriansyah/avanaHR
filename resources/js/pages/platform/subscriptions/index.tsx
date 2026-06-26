@@ -50,13 +50,33 @@ type IndexProps = {
 const ALL_TIER = 'all';
 
 const TIER_STYLES: Record<string, string> = {
-    essential: 'bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300',
-    professional: 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400',
-    enterprise: 'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
+    essential:
+        'bg-slate-100 text-slate-700 dark:bg-slate-500/15 dark:text-slate-300',
+    professional:
+        'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400',
+    enterprise:
+        'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
+};
+
+const STATUS_LABELS: Record<string, string> = {
+    active: 'Aktif',
+    suspended: 'Ditangguhkan',
+    inactive: 'Nonaktif',
+    pending: 'Menunggu',
+    expired: 'Kedaluwarsa',
+    trial: 'Uji Coba',
 };
 
 function cap(value: string | null): string {
     return value ? value.charAt(0).toUpperCase() + value.slice(1) : '-';
+}
+
+function statusLabel(value: string | null): string {
+    if (!value) {
+        return '-';
+    }
+
+    return STATUS_LABELS[value] ?? cap(value);
 }
 
 export default function SubscriptionsIndex({
@@ -143,7 +163,9 @@ export default function SubscriptionsIndex({
                                     setTier(value);
                                     go({
                                         tier:
-                                            value === ALL_TIER ? undefined : value,
+                                            value === ALL_TIER
+                                                ? undefined
+                                                : value,
                                     });
                                 }}
                             >
@@ -170,6 +192,9 @@ export default function SubscriptionsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Tenant</TableHead>
                                         <TableHead>Tier</TableHead>
                                         <TableHead>Status</TableHead>
@@ -181,7 +206,10 @@ export default function SubscriptionsIndex({
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={6} className="py-12">
+                                            <TableCell
+                                                colSpan={7}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <CreditCard className="size-6" />
@@ -193,8 +221,12 @@ export default function SubscriptionsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((row) => (
+                                        rows.map((row, index) => (
                                             <TableRow key={row.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="font-medium">
                                                         {row.name}
@@ -207,7 +239,11 @@ export default function SubscriptionsIndex({
                                                     {row.tier ? (
                                                         <Badge
                                                             variant="secondary"
-                                                            className={TIER_STYLES[row.tier]}
+                                                            className={
+                                                                TIER_STYLES[
+                                                                    row.tier
+                                                                ]
+                                                            }
                                                         >
                                                             {cap(row.tier)}
                                                         </Badge>
@@ -218,7 +254,7 @@ export default function SubscriptionsIndex({
                                                     )}
                                                 </TableCell>
                                                 <TableCell className="text-muted-foreground">
-                                                    {cap(row.status)}
+                                                    {statusLabel(row.status)}
                                                 </TableCell>
                                                 <TableCell className="tabular-nums">
                                                     {row.features_enabled}/
@@ -228,7 +264,8 @@ export default function SubscriptionsIndex({
                                                     {row.starts_at ?? '-'}
                                                 </TableCell>
                                                 <TableCell className="text-xs text-muted-foreground tabular-nums">
-                                                    {row.ends_at ?? 'Tanpa batas'}
+                                                    {row.ends_at ??
+                                                        'Tanpa batas'}
                                                 </TableCell>
                                             </TableRow>
                                         ))
@@ -243,7 +280,7 @@ export default function SubscriptionsIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -251,7 +288,10 @@ export default function SubscriptionsIndex({
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -259,7 +299,7 @@ export default function SubscriptionsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -267,7 +307,10 @@ export default function SubscriptionsIndex({
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >

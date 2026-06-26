@@ -37,9 +37,12 @@ type IndexProps = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
-    completed: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
-    running: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
-    pending: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
+    completed:
+        'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+    running:
+        'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
+    pending:
+        'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400',
     failed: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
 };
 
@@ -90,18 +93,26 @@ export default function BackupsIndex({ backups: paginator }: IndexProps) {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Waktu</TableHead>
                                         <TableHead>Tipe</TableHead>
                                         <TableHead>Lokasi</TableHead>
                                         <TableHead>Cakupan</TableHead>
                                         <TableHead>Status</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
+                                        <TableHead className="text-right">
+                                            Aksi
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={6} className="py-12">
+                                            <TableCell
+                                                colSpan={7}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <DatabaseBackup className="size-6" />
@@ -113,43 +124,57 @@ export default function BackupsIndex({ backups: paginator }: IndexProps) {
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((row) => (
+                                        rows.map((row, index) => (
                                             <TableRow key={row.id}>
-                                                <TableCell className="whitespace-nowrap text-xs text-muted-foreground tabular-nums">
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
+                                                <TableCell className="text-xs whitespace-nowrap text-muted-foreground tabular-nums">
                                                     {row.created_at}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {TYPE_LABELS[row.type] ?? row.type}
+                                                    {TYPE_LABELS[row.type] ??
+                                                        row.type}
                                                 </TableCell>
                                                 <TableCell className="max-w-[16rem] truncate font-mono text-xs text-muted-foreground">
                                                     {row.location ?? '-'}
                                                 </TableCell>
                                                 <TableCell className="text-muted-foreground">
-                                                    {row.tenant_name ?? 'Semua tenant'}
+                                                    {row.tenant_name ??
+                                                        'Semua tenant'}
                                                 </TableCell>
                                                 <TableCell>
                                                     <Badge
                                                         variant="secondary"
-                                                        className={STATUS_STYLES[row.status]}
+                                                        className={
+                                                            STATUS_STYLES[
+                                                                row.status
+                                                            ]
+                                                        }
                                                     >
-                                                        {STATUS_LABELS[row.status] ??
-                                                            row.status}
+                                                        {STATUS_LABELS[
+                                                            row.status
+                                                        ] ?? row.status}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell className="text-right">
-                                                    {row.status === 'completed' ? (
+                                                    {row.status ===
+                                                    'completed' ? (
                                                         <ConfirmDialog
                                                             title="Pulihkan Backup"
                                                             description={`Yakin pulihkan data dari backup #${row.id}? Tindakan ini menimpa data saat ini.`}
                                                             confirmLabel="Pulihkan"
-                                                            onConfirm={() => restore(row.id)}
+                                                            onConfirm={() =>
+                                                                restore(row.id)
+                                                            }
                                                             trigger={
                                                                 <Button
                                                                     size="sm"
-                                                                    variant="outline"
+                                                                    variant="secondary"
                                                                 >
                                                                     <RotateCcw />
-                                                                    Restore
+                                                                    Pulihkan
                                                                 </Button>
                                                             }
                                                         />
@@ -172,7 +197,7 @@ export default function BackupsIndex({ backups: paginator }: IndexProps) {
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -180,7 +205,10 @@ export default function BackupsIndex({ backups: paginator }: IndexProps) {
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -188,7 +216,7 @@ export default function BackupsIndex({ backups: paginator }: IndexProps) {
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -196,7 +224,10 @@ export default function BackupsIndex({ backups: paginator }: IndexProps) {
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >

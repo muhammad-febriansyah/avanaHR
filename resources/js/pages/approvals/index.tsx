@@ -60,6 +60,7 @@ export default function ApprovalsIndex({ requests }: IndexProps) {
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead className="w-12">No</TableHead>
                                     <TableHead>Transaksi</TableHead>
                                     <TableHead>Pemohon</TableHead>
                                     <TableHead>Langkah</TableHead>
@@ -73,7 +74,7 @@ export default function ApprovalsIndex({ requests }: IndexProps) {
                                 {requests.length === 0 ? (
                                     <TableRow>
                                         <TableCell
-                                            colSpan={5}
+                                            colSpan={6}
                                             className="py-12 text-center text-muted-foreground"
                                         >
                                             <Inbox className="mx-auto mb-2 size-8 opacity-40" />
@@ -82,8 +83,11 @@ export default function ApprovalsIndex({ requests }: IndexProps) {
                                         </TableCell>
                                     </TableRow>
                                 ) : (
-                                    requests.map((item) => (
+                                    requests.map((item, index) => (
                                         <TableRow key={item.id}>
+                                            <TableCell className="text-muted-foreground tabular-nums">
+                                                {index + 1}
+                                            </TableCell>
                                             <TableCell>
                                                 <div className="font-medium">
                                                     {item.title}
@@ -110,7 +114,7 @@ export default function ApprovalsIndex({ requests }: IndexProps) {
                                                 <Button
                                                     asChild
                                                     size="sm"
-                                                    variant="outline"
+                                                    variant="warning"
                                                 >
                                                     <Link
                                                         href={approvals.show.url(

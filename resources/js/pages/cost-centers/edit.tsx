@@ -1,9 +1,8 @@
 import { Head } from '@inertiajs/react';
 import PageHeader from '@/components/page-header';
 import { useFlashToast } from '@/hooks/use-flash-toast';
-import CostCenterForm, {
-    type CostCenter,
-} from '@/pages/cost-centers/cost-center-form';
+import CostCenterForm from '@/pages/cost-centers/cost-center-form';
+import type {CostCenter} from '@/pages/cost-centers/cost-center-form';
 
 type EditProps = {
     costCenter: CostCenter;

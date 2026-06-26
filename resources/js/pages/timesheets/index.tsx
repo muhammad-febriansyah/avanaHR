@@ -15,6 +15,8 @@ import ConfirmDialog from '@/components/confirm-dialog';
 import PageHeader from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Combobox } from '@/components/ui/combobox';
+import { DatePicker } from '@/components/ui/date-picker';
 import {
     Dialog,
     DialogContent,
@@ -24,13 +26,6 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import {
     Table,
     TableBody,
@@ -175,17 +170,25 @@ export default function TimesheetsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Karyawan</TableHead>
                                         <TableHead>Tanggal</TableHead>
                                         <TableHead>Jam</TableHead>
                                         <TableHead>Catatan</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
+                                        <TableHead className="text-right">
+                                            Aksi
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="py-12">
+                                            <TableCell
+                                                colSpan={6}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <ClipboardList className="size-6" />
@@ -197,8 +200,12 @@ export default function TimesheetsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell>
                                                     <div className="font-medium">
                                                         {item.employee_name}
@@ -207,8 +214,12 @@ export default function TimesheetsIndex({
                                                         {item.employee_no}
                                                     </div>
                                                 </TableCell>
-                                                <TableCell>{item.date}</TableCell>
-                                                <TableCell>{item.hours} jam</TableCell>
+                                                <TableCell>
+                                                    {item.date}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {item.hours} jam
+                                                </TableCell>
                                                 <TableCell className="max-w-[18rem] truncate text-muted-foreground">
                                                     {item.note ?? '-'}
                                                 </TableCell>
@@ -216,8 +227,10 @@ export default function TimesheetsIndex({
                                                     <div className="flex items-center justify-end gap-2">
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
-                                                            onClick={() => openEdit(item)}
+                                                            variant="success"
+                                                            onClick={() =>
+                                                                openEdit(item)
+                                                            }
                                                         >
                                                             <Pencil />
                                                             Edit
@@ -227,7 +240,9 @@ export default function TimesheetsIndex({
                                                             description={`Yakin ingin menghapus timesheet "${item.employee_name}" (${item.date})?`}
                                                             confirmLabel="Hapus"
                                                             onConfirm={() =>
-                                                                handleDelete(item.id)
+                                                                handleDelete(
+                                                                    item.id,
+                                                                )
                                                             }
                                                             trigger={
                                                                 <Button
@@ -254,7 +269,7 @@ export default function TimesheetsIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -262,7 +277,10 @@ export default function TimesheetsIndex({
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -270,7 +288,7 @@ export default function TimesheetsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -278,7 +296,10 @@ export default function TimesheetsIndex({
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -299,10 +320,16 @@ export default function TimesheetsIndex({
                         </DialogTitle>
                     </DialogHeader>
 
-                    <form id="timesheet-form" onSubmit={handleSubmit} className="grid gap-4">
+                    <form
+                        id="timesheet-form"
+                        onSubmit={handleSubmit}
+                        className="grid gap-4"
+                    >
                         {editing ? (
                             <div className="rounded-lg border bg-muted/40 p-3 text-sm">
-                                <div className="font-medium">{editing.employee_name}</div>
+                                <div className="font-medium">
+                                    {editing.employee_name}
+                                </div>
                                 <div className="text-muted-foreground">
                                     {editing.employee_no}
                                 </div>
@@ -310,26 +337,22 @@ export default function TimesheetsIndex({
                         ) : (
                             <div className="grid gap-2">
                                 <Label htmlFor="ts-employee">Karyawan</Label>
-                                <Select
+                                <Combobox
+                                    id="ts-employee"
                                     value={form.data.employee_id}
-                                    onValueChange={(value) =>
+                                    onChange={(value) =>
                                         form.setData('employee_id', value)
                                     }
-                                >
-                                    <SelectTrigger id="ts-employee" className="w-full">
-                                        <SelectValue placeholder="Pilih karyawan" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {options.employees.map((option) => (
-                                            <SelectItem
-                                                key={option.id}
-                                                value={String(option.id)}
-                                            >
-                                                {option.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                    options={options.employees.map(
+                                        (option) => ({
+                                            value: String(option.id),
+                                            label: option.label,
+                                        }),
+                                    )}
+                                    placeholder="Pilih karyawan"
+                                    searchPlaceholder="Cari karyawan…"
+                                    emptyText="Karyawan tidak ditemukan"
+                                />
                                 {form.errors.employee_id && (
                                     <p className="text-sm text-destructive">
                                         {form.errors.employee_id}
@@ -341,12 +364,11 @@ export default function TimesheetsIndex({
                         <div className="grid grid-cols-2 gap-3">
                             <div className="grid gap-2">
                                 <Label htmlFor="ts-date">Tanggal</Label>
-                                <Input
+                                <DatePicker
                                     id="ts-date"
-                                    type="date"
                                     value={form.data.date}
-                                    onChange={(event) =>
-                                        form.setData('date', event.target.value)
+                                    onChange={(value) =>
+                                        form.setData('date', value)
                                     }
                                 />
                                 {form.errors.date && (
@@ -365,7 +387,10 @@ export default function TimesheetsIndex({
                                     max="24"
                                     value={form.data.hours}
                                     onChange={(event) =>
-                                        form.setData('hours', event.target.value)
+                                        form.setData(
+                                            'hours',
+                                            event.target.value,
+                                        )
                                     }
                                 />
                                 {form.errors.hours && (
@@ -381,7 +406,9 @@ export default function TimesheetsIndex({
                             <textarea
                                 id="ts-note"
                                 value={form.data.note}
-                                onChange={(event) => form.setData('note', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData('note', event.target.value)
+                                }
                                 rows={3}
                                 placeholder="Aktivitas / proyek (opsional)"
                                 className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
@@ -396,7 +423,7 @@ export default function TimesheetsIndex({
 
                     <DialogFooter>
                         <Button
-                            variant="outline"
+                            variant="secondary"
                             type="button"
                             onClick={() => setOpen(false)}
                         >

@@ -55,7 +55,50 @@ class EmployeeTaxBpjsController extends Controller
                     'tk_basis' => (int) $bp->tk_basis,
                     'participation_flags' => $bp->participation_flags ?? [],
                 ]),
-            'ptkpOptions' => ['TK/0', 'TK/1', 'TK/2', 'TK/3', 'K/0', 'K/1', 'K/2', 'K/3'],
+            'ptkpOptions' => $this->ptkpOptions(),
+        ]);
+    }
+
+    public function createTax(Request $request, Employee $employee): Response
+    {
+        abort_unless($request->user()?->can('payroll.run'), 403);
+
+        return Inertia::render('employees/tax-profile-create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Karyawan', 'href' => route('employees.index')],
+                ['title' => $employee->fullName(), 'href' => route('employees.show', $employee)],
+                ['title' => 'Pajak & BPJS', 'href' => route('employees.tax-bpjs.index', $employee)],
+                ['title' => 'Tambah Profil Pajak', 'href' => route('employees.tax-profiles.create', $employee)],
+            ],
+            'employee' => [
+                'id' => $employee->id,
+                'name' => $employee->fullName(),
+                'employee_no' => $employee->employee_no,
+            ],
+            'ptkpOptions' => $this->ptkpOptions(),
+            'taxMethodOptions' => $this->taxMethodOptions(),
+        ]);
+    }
+
+    public function createBpjs(Request $request, Employee $employee): Response
+    {
+        abort_unless($request->user()?->can('payroll.run'), 403);
+
+        return Inertia::render('employees/bpjs-profile-create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Karyawan', 'href' => route('employees.index')],
+                ['title' => $employee->fullName(), 'href' => route('employees.show', $employee)],
+                ['title' => 'Pajak & BPJS', 'href' => route('employees.tax-bpjs.index', $employee)],
+                ['title' => 'Tambah Profil BPJS', 'href' => route('employees.bpjs-profiles.create', $employee)],
+            ],
+            'employee' => [
+                'id' => $employee->id,
+                'name' => $employee->fullName(),
+                'employee_no' => $employee->employee_no,
+            ],
+            'participationOptions' => $this->participationOptions(),
         ]);
     }
 
@@ -112,5 +155,39 @@ class EmployeeTaxBpjsController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Profil BPJS dihapus.']);
 
         return back();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function ptkpOptions(): array
+    {
+        return ['TK/0', 'TK/1', 'TK/2', 'TK/3', 'K/0', 'K/1', 'K/2', 'K/3'];
+    }
+
+    /**
+     * @return list<array{value: string, label: string}>
+     */
+    private function taxMethodOptions(): array
+    {
+        return [
+            ['value' => 'ter', 'label' => 'TER'],
+            ['value' => 'gross', 'label' => 'Gross'],
+            ['value' => 'nett', 'label' => 'Nett'],
+        ];
+    }
+
+    /**
+     * @return list<array{value: string, label: string}>
+     */
+    private function participationOptions(): array
+    {
+        return [
+            ['value' => 'kesehatan', 'label' => 'Kesehatan'],
+            ['value' => 'jht', 'label' => 'JHT'],
+            ['value' => 'jkk', 'label' => 'JKK'],
+            ['value' => 'jkm', 'label' => 'JKM'],
+            ['value' => 'jp', 'label' => 'JP'],
+        ];
     }
 }

@@ -1,4 +1,5 @@
 import { Form, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { Save, ShieldAlert, X } from 'lucide-react';
 import { useState } from 'react';
 import users from '@/actions/App/Http/Controllers/UserController';
@@ -8,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useFlashToast } from '@/hooks/use-flash-toast';
-import { Head } from '@inertiajs/react';
 
 type User = {
     id: number;
@@ -81,10 +81,15 @@ export default function UsersEdit({ user, roles, isSelf }: EditProps) {
                                             className="flex items-center gap-3 rounded-lg border border-border/60 px-3 py-2.5 text-sm hover:bg-muted/50"
                                         >
                                             <Checkbox
-                                                checked={selected.includes(role)}
+                                                checked={selected.includes(
+                                                    role,
+                                                )}
                                                 disabled={isSelf}
                                                 onCheckedChange={(checked) =>
-                                                    toggle(role, checked === true)
+                                                    toggle(
+                                                        role,
+                                                        checked === true,
+                                                    )
                                                 }
                                             />
                                             <span className="font-medium">
@@ -95,7 +100,11 @@ export default function UsersEdit({ user, roles, isSelf }: EditProps) {
                                 </div>
                             </CardContent>
                             <CardFooter className="flex justify-end gap-3">
-                                <Button asChild variant="outline" type="button">
+                                <Button
+                                    asChild
+                                    variant="secondary"
+                                    type="button"
+                                >
                                     <Link href={users.index.url()}>
                                         <X />
                                         Batal

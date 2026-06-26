@@ -1,4 +1,4 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import {
     ChevronLeft,
     ChevronRight,
@@ -6,26 +6,14 @@ import {
     Plus,
     SlidersHorizontal,
     Trash2,
-    X,
 } from 'lucide-react';
 import { useState } from 'react';
-import type { FormEvent } from 'react';
 import customFields from '@/actions/App/Http/Controllers/CustomFieldController';
 import ConfirmDialog from '@/components/confirm-dialog';
 import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -72,24 +60,6 @@ function label(options: Option[], value: string): string {
     return options.find((option) => option.value === value)?.label ?? value;
 }
 
-function slugify(value: string): string {
-    return value
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '_')
-        .replace(/^_+|_+$/g, '')
-        .replace(/^([0-9])/, 'f_$1');
-}
-
-type FieldForm = {
-    entity_type: string;
-    key: string;
-    label: string;
-    type: string;
-    options: string;
-    is_required: boolean;
-    order: string;
-};
-
 export default function CustomFieldsIndex({
     fields: paginator,
     filters,
@@ -99,17 +69,6 @@ export default function CustomFieldsIndex({
     useFlashToast();
 
     const [entity, setEntity] = useState(filters.entity_type ?? ALL);
-    const [open, setOpen] = useState(false);
-    const [editing, setEditing] = useState<FieldRow | null>(null);
-    const form = useForm<FieldForm>({
-        entity_type: 'employee',
-        key: '',
-        label: '',
-        type: 'text',
-        options: '',
-        is_required: false,
-        order: '0',
-    });
 
     function go(value: string) {
         setEntity(value);
@@ -118,67 +77,6 @@ export default function CustomFieldsIndex({
             { entity_type: value === ALL ? undefined : value },
             { preserveState: true, preserveScroll: true, replace: true },
         );
-    }
-
-    function openCreate() {
-        setEditing(null);
-        form.setData({
-            entity_type: 'employee',
-            key: '',
-            label: '',
-            type: 'text',
-            options: '',
-            is_required: false,
-            order: '0',
-        });
-        form.clearErrors();
-        setOpen(true);
-    }
-
-    function openEdit(item: FieldRow) {
-        setEditing(item);
-        form.clearErrors();
-        form.setData({
-            entity_type: item.entity_type,
-            key: item.key,
-            label: item.label,
-            type: item.type,
-            options: item.options.join('\n'),
-            is_required: item.is_required,
-            order: String(item.order),
-        });
-        setOpen(true);
-    }
-
-    function onLabelChange(value: string) {
-        const next: Partial<FieldForm> = { label: value };
-        // Auto-fill the key from the label while creating, until edited manually.
-        if (!editing && (form.data.key === '' || form.data.key === slugify(form.data.label))) {
-            next.key = slugify(value);
-        }
-        form.setData({ ...form.data, ...next });
-    }
-
-    function payloadOptions(): string[] {
-        return form.data.options
-            .split('\n')
-            .map((line) => line.trim())
-            .filter(Boolean);
-    }
-
-    function handleSubmit(event: FormEvent) {
-        event.preventDefault();
-        form.transform((data) => ({
-            ...data,
-            options: payloadOptions(),
-        }));
-        const opts = { preserveScroll: true, onSuccess: () => setOpen(false) };
-
-        if (editing) {
-            form.put(customFields.update.url(editing.id), opts);
-        } else {
-            form.post(customFields.store.url(), opts);
-        }
     }
 
     function handleDelete(id: number) {
@@ -196,9 +94,11 @@ export default function CustomFieldsIndex({
                     title="Custom Field"
                     description="Tambah field data sendiri (mis. ukuran seragam) tanpa ubah sistem."
                 >
-                    <Button onClick={openCreate}>
-                        <Plus />
-                        Tambah Field
+                    <Button asChild>
+                        <Link href={customFields.create.url()}>
+                            <Plus />
+                            Tambah Field
+                        </Link>
                     </Button>
                 </PageHeader>
 
@@ -209,9 +109,14 @@ export default function CustomFieldsIndex({
                                 <SelectValue placeholder="Semua Entitas" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value={ALL}>Semua Entitas</SelectItem>
+                                <SelectItem value={ALL}>
+                                    Semua Entitas
+                                </SelectItem>
                                 {entities.map((option) => (
-                                    <SelectItem key={option.value} value={option.value}>
+                                    <SelectItem
+                                        key={option.value}
+                                        value={option.value}
+                                    >
                                         {option.label}
                                     </SelectItem>
                                 ))}
@@ -222,18 +127,26 @@ export default function CustomFieldsIndex({
                             <Table>
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHead className="w-12">
+                                            No
+                                        </TableHead>
                                         <TableHead>Entitas</TableHead>
                                         <TableHead>Label</TableHead>
                                         <TableHead>Kunci</TableHead>
                                         <TableHead>Tipe</TableHead>
                                         <TableHead>Wajib</TableHead>
-                                        <TableHead className="text-right">Aksi</TableHead>
+                                        <TableHead className="text-right">
+                                            Aksi
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {rows.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={6} className="py-12">
+                                            <TableCell
+                                                colSpan={7}
+                                                className="py-12"
+                                            >
                                                 <div className="flex flex-col items-center justify-center gap-3 text-center">
                                                     <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                                                         <SlidersHorizontal className="size-6" />
@@ -245,10 +158,17 @@ export default function CustomFieldsIndex({
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        rows.map((item) => (
+                                        rows.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                <TableCell className="text-muted-foreground tabular-nums">
+                                                    {(paginator.from ?? 1) +
+                                                        index}
+                                                </TableCell>
                                                 <TableCell className="text-muted-foreground">
-                                                    {label(entities, item.entity_type)}
+                                                    {label(
+                                                        entities,
+                                                        item.entity_type,
+                                                    )}
                                                 </TableCell>
                                                 <TableCell className="font-medium">
                                                     {item.label}
@@ -262,7 +182,12 @@ export default function CustomFieldsIndex({
                                                     item.options.length > 0 ? (
                                                         <span className="text-xs text-muted-foreground">
                                                             {' '}
-                                                            ({item.options.length} opsi)
+                                                            (
+                                                            {
+                                                                item.options
+                                                                    .length
+                                                            }{' '}
+                                                            opsi)
                                                         </span>
                                                     ) : null}
                                                 </TableCell>
@@ -283,19 +208,27 @@ export default function CustomFieldsIndex({
                                                 <TableCell>
                                                     <div className="flex items-center justify-end gap-2">
                                                         <Button
+                                                            asChild
                                                             size="sm"
-                                                            variant="outline"
-                                                            onClick={() => openEdit(item)}
+                                                            variant="success"
                                                         >
-                                                            <Pencil />
-                                                            Edit
+                                                            <Link
+                                                                href={customFields.edit.url(
+                                                                    item.id,
+                                                                )}
+                                                            >
+                                                                <Pencil />
+                                                                Edit
+                                                            </Link>
                                                         </Button>
                                                         <ConfirmDialog
                                                             title="Hapus Custom Field"
                                                             description={`Yakin hapus field "${item.label}"? Nilai tersimpan ikut hilang.`}
                                                             confirmLabel="Hapus"
                                                             onConfirm={() =>
-                                                                handleDelete(item.id)
+                                                                handleDelete(
+                                                                    item.id,
+                                                                )
                                                             }
                                                             trigger={
                                                                 <Button
@@ -322,7 +255,7 @@ export default function CustomFieldsIndex({
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.prev_page_url}
                                     onClick={() =>
@@ -330,7 +263,10 @@ export default function CustomFieldsIndex({
                                         router.get(
                                             paginator.prev_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -338,7 +274,7 @@ export default function CustomFieldsIndex({
                                     Sebelumnya
                                 </Button>
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="sm"
                                     disabled={!paginator.next_page_url}
                                     onClick={() =>
@@ -346,7 +282,10 @@ export default function CustomFieldsIndex({
                                         router.get(
                                             paginator.next_page_url,
                                             {},
-                                            { preserveState: true, preserveScroll: true },
+                                            {
+                                                preserveState: true,
+                                                preserveScroll: true,
+                                            },
                                         )
                                     }
                                 >
@@ -358,156 +297,6 @@ export default function CustomFieldsIndex({
                     </CardContent>
                 </Card>
             </div>
-
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>
-                            {editing ? 'Ubah Custom Field' : 'Tambah Custom Field'}
-                        </DialogTitle>
-                    </DialogHeader>
-
-                    <form id="cf-form" onSubmit={handleSubmit} className="grid gap-4">
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="grid gap-2">
-                                <Label htmlFor="cf-entity">Entitas</Label>
-                                <Select
-                                    value={form.data.entity_type}
-                                    onValueChange={(value) =>
-                                        form.setData('entity_type', value)
-                                    }
-                                    disabled={!!editing}
-                                >
-                                    <SelectTrigger id="cf-entity" className="w-full">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {entities.map((option) => (
-                                            <SelectItem
-                                                key={option.value}
-                                                value={option.value}
-                                            >
-                                                {option.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="cf-type">Tipe</Label>
-                                <Select
-                                    value={form.data.type}
-                                    onValueChange={(value) => form.setData('type', value)}
-                                >
-                                    <SelectTrigger id="cf-type" className="w-full">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {types.map((option) => (
-                                            <SelectItem
-                                                key={option.value}
-                                                value={option.value}
-                                            >
-                                                {option.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-
-                        <div className="grid gap-2">
-                            <Label htmlFor="cf-label">Label</Label>
-                            <Input
-                                id="cf-label"
-                                value={form.data.label}
-                                onChange={(e) => onLabelChange(e.target.value)}
-                                placeholder="Mis. Ukuran Seragam"
-                            />
-                            {form.errors.label && (
-                                <p className="text-sm text-destructive">
-                                    {form.errors.label}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="grid gap-2">
-                            <Label htmlFor="cf-key">Kunci</Label>
-                            <Input
-                                id="cf-key"
-                                value={form.data.key}
-                                onChange={(e) => form.setData('key', e.target.value)}
-                                placeholder="ukuran_seragam"
-                                disabled={!!editing}
-                                className="font-mono"
-                            />
-                            {form.errors.key && (
-                                <p className="text-sm text-destructive">
-                                    {form.errors.key}
-                                </p>
-                            )}
-                        </div>
-
-                        {form.data.type === 'select' && (
-                            <div className="grid gap-2">
-                                <Label htmlFor="cf-options">
-                                    Pilihan (satu per baris)
-                                </Label>
-                                <textarea
-                                    id="cf-options"
-                                    value={form.data.options}
-                                    onChange={(e) =>
-                                        form.setData('options', e.target.value)
-                                    }
-                                    rows={4}
-                                    placeholder={'S\nM\nL\nXL'}
-                                    className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
-                                />
-                            </div>
-                        )}
-
-                        <div className="flex items-center justify-between">
-                            <label className="flex items-center gap-2 text-sm">
-                                <Checkbox
-                                    checked={form.data.is_required}
-                                    onCheckedChange={(checked) =>
-                                        form.setData('is_required', checked === true)
-                                    }
-                                />
-                                Wajib diisi
-                            </label>
-                            <div className="flex items-center gap-2">
-                                <Label htmlFor="cf-order" className="text-sm">
-                                    Urutan
-                                </Label>
-                                <Input
-                                    id="cf-order"
-                                    type="number"
-                                    min="0"
-                                    max="999"
-                                    value={form.data.order}
-                                    onChange={(e) => form.setData('order', e.target.value)}
-                                    className="w-20"
-                                />
-                            </div>
-                        </div>
-                    </form>
-
-                    <DialogFooter>
-                        <Button
-                            variant="outline"
-                            type="button"
-                            onClick={() => setOpen(false)}
-                        >
-                            <X />
-                            Batal
-                        </Button>
-                        <Button type="submit" form="cf-form" disabled={form.processing}>
-                            {editing ? 'Simpan Perubahan' : 'Simpan'}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </>
     );
 }
