@@ -70,12 +70,13 @@ export default function AuditLogsIndex({ logs, filters, events }: IndexProps) {
                             <Input
                                 defaultValue={filters.search ?? ''}
                                 onKeyDown={(e) => {
-                                    if (e.key === 'Enter')
-                                        apply(
+                                    if (e.key === 'Enter') {
+apply(
                                             'search',
                                             (e.target as HTMLInputElement)
                                                 .value,
                                         );
+}
                                 }}
                                 placeholder="Cari user / event / entitas…"
                                 className="pl-10"
