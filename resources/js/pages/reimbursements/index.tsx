@@ -1,4 +1,4 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import {
     ChevronLeft,
     ChevronRight,
@@ -157,14 +157,6 @@ export default function ReimbursementsIndex({
     const [editing, setEditing] = useState<Row | null>(null);
     const form = useForm<ReimForm>(emptyForm);
 
-    function openCreate() {
-        setEditing(null);
-        form.setDefaults(emptyForm);
-        form.reset();
-        form.clearErrors();
-        setOpen(true);
-    }
-
     function openEdit(item: Row) {
         setEditing(item);
         form.clearErrors();
@@ -206,9 +198,11 @@ export default function ReimbursementsIndex({
                     title="Reimbursement"
                     description="Kelola klaim penggantian biaya karyawan. Persetujuan dilakukan via Inbox Approval."
                 >
-                    <Button onClick={openCreate}>
-                        <Plus />
-                        Tambah Klaim
+                    <Button asChild>
+                        <Link href={reimbursements.create.url()}>
+                            <Plus />
+                            Tambah Klaim
+                        </Link>
                     </Button>
                 </PageHeader>
 

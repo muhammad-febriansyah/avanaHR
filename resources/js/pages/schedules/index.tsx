@@ -1,4 +1,4 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import { CalendarPlus, CalendarRange, Trash2, Wand2 } from 'lucide-react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
@@ -8,7 +8,6 @@ import PageHeader from '@/components/page-header';
 import { RequiredMark } from '@/components/required-mark';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { DatePicker } from '@/components/ui/date-picker';
 import {
     Dialog,
@@ -68,15 +67,8 @@ export default function SchedulesIndex({
     options,
 }: IndexProps) {
     const [assignOpen, setAssignOpen] = useState(false);
-    const [generateOpen, setGenerateOpen] = useState(false);
 
     const assign = useForm({ employee_id: '', shift_id: '', date: '' });
-    const generate = useForm<{
-        pattern_id: string;
-        employee_ids: number[];
-        start_date: string;
-        end_date: string;
-    }>({ pattern_id: '', employee_ids: [], start_date: '', end_date: '' });
 
     function applyFilter(key: string, value: string) {
         router.get(
@@ -97,26 +89,6 @@ export default function SchedulesIndex({
         });
     }
 
-    function toggleEmployee(id: number) {
-        generate.setData(
-            'employee_ids',
-            generate.data.employee_ids.includes(id)
-                ? generate.data.employee_ids.filter((e) => e !== id)
-                : [...generate.data.employee_ids, id],
-        );
-    }
-
-    function submitGenerate(event: FormEvent) {
-        event.preventDefault();
-        generate.post(schedules.generate.url(), {
-            preserveScroll: true,
-            onSuccess: () => {
-                generate.reset();
-                setGenerateOpen(false);
-            },
-        });
-    }
-
     return (
         <>
             <Head title="Roster Shift" />
@@ -126,12 +98,11 @@ export default function SchedulesIndex({
                     title="Roster Shift"
                     description="Jadwal shift karyawan per tanggal. Buat manual atau generate dari pola."
                 >
-                    <Button
-                        variant="outline"
-                        onClick={() => setGenerateOpen(true)}
-                    >
-                        <Wand2 />
-                        Generate dari Pola
+                    <Button asChild variant="outline">
+                        <Link href={schedules.generatePage.url()}>
+                            <Wand2 />
+                            Generate dari Pola
+                        </Link>
                     </Button>
                     <Button onClick={() => setAssignOpen(true)}>
                         <CalendarPlus />
@@ -356,126 +327,6 @@ export default function SchedulesIndex({
                             </Button>
                             <Button type="submit" disabled={assign.processing}>
                                 Simpan
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
-
-            {/* Generate from pattern */}
-            <Dialog open={generateOpen} onOpenChange={setGenerateOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Generate Roster dari Pola</DialogTitle>
-                    </DialogHeader>
-                    <form onSubmit={submitGenerate} className="grid gap-4">
-                        <div className="grid gap-2">
-                            <Label>
-                                Pola Shift <RequiredMark />
-                            </Label>
-                            <Select
-                                value={generate.data.pattern_id}
-                                onValueChange={(v) =>
-                                    generate.setData('pattern_id', v)
-                                }
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Pilih pola" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {options.patterns.map((p) => (
-                                        <SelectItem
-                                            key={p.id}
-                                            value={String(p.id)}
-                                        >
-                                            {p.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            {generate.errors.pattern_id && (
-                                <p className="text-sm text-destructive">
-                                    {generate.errors.pattern_id}
-                                </p>
-                            )}
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="grid gap-2">
-                                <Label>
-                                    Mulai <RequiredMark />
-                                </Label>
-                                <DatePicker
-                                    value={generate.data.start_date}
-                                    onChange={(v) =>
-                                        generate.setData('start_date', v)
-                                    }
-                                    placeholder="Tanggal mulai"
-                                />
-                                {generate.errors.start_date && (
-                                    <p className="text-sm text-destructive">
-                                        {generate.errors.start_date}
-                                    </p>
-                                )}
-                            </div>
-                            <div className="grid gap-2">
-                                <Label>
-                                    Selesai <RequiredMark />
-                                </Label>
-                                <DatePicker
-                                    value={generate.data.end_date}
-                                    onChange={(v) =>
-                                        generate.setData('end_date', v)
-                                    }
-                                    placeholder="Tanggal selesai"
-                                />
-                                {generate.errors.end_date && (
-                                    <p className="text-sm text-destructive">
-                                        {generate.errors.end_date}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                        <div className="grid gap-2">
-                            <Label>
-                                Karyawan <RequiredMark />
-                            </Label>
-                            <div className="max-h-48 overflow-y-auto rounded-md border border-border p-2">
-                                {options.employees.map((e) => (
-                                    <label
-                                        key={e.id}
-                                        className="flex items-center gap-2 rounded px-1 py-1 text-sm hover:bg-muted"
-                                    >
-                                        <Checkbox
-                                            checked={generate.data.employee_ids.includes(
-                                                e.id,
-                                            )}
-                                            onCheckedChange={() =>
-                                                toggleEmployee(e.id)
-                                            }
-                                        />
-                                        {e.label}
-                                    </label>
-                                ))}
-                            </div>
-                            {generate.errors.employee_ids && (
-                                <p className="text-sm text-destructive">
-                                    {generate.errors.employee_ids}
-                                </p>
-                            )}
-                        </div>
-                        <DialogFooter>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => setGenerateOpen(false)}
-                            >
-                                Batal
-                            </Button>
-                            <Button
-                                type="submit"
-                                disabled={generate.processing}
-                            >
-                                Generate
                             </Button>
                         </DialogFooter>
                     </form>

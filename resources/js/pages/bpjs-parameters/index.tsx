@@ -1,23 +1,10 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
-import type { FormEvent } from 'react';
 import bpjsParameters from '@/actions/App/Http/Controllers/BpjsParameterController';
 import ConfirmDialog from '@/components/confirm-dialog';
 import PageHeader from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { DatePicker } from '@/components/ui/date-picker';
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { RupiahInput } from '@/components/ui/rupiah-input';
 import {
     Table,
     TableBody,
@@ -48,65 +35,10 @@ type Parameter = {
     tk_rates: TkRates;
 };
 
-type Defaults = {
-    kes_rate_employee: number;
-    kes_rate_employer: number;
-    kes_cap: number;
-    tk_rates: TkRates;
-};
+type IndexProps = { parameters: Parameter[] };
 
-type IndexProps = { parameters: Parameter[]; defaults: Defaults };
-
-const RATE_FIELDS: { key: string; label: string }[] = [
-    { key: 'kes_rate_employee', label: 'Kesehatan Karyawan (%)' },
-    { key: 'kes_rate_employer', label: 'Kesehatan Perusahaan (%)' },
-    { key: 'jht_employee', label: 'JHT Karyawan (%)' },
-    { key: 'jht_employer', label: 'JHT Perusahaan (%)' },
-    { key: 'jkk', label: 'JKK (%)' },
-    { key: 'jkm', label: 'JKM (%)' },
-    { key: 'jp_employee', label: 'JP Karyawan (%)' },
-    { key: 'jp_employer', label: 'JP Perusahaan (%)' },
-];
-
-const CAP_FIELDS: { key: string; label: string }[] = [
-    { key: 'kes_cap', label: 'Plafon Kesehatan (Rp)' },
-    { key: 'jp_cap', label: 'Plafon JP (Rp)' },
-];
-
-export default function BpjsParametersIndex({
-    parameters,
-    defaults,
-}: IndexProps) {
+export default function BpjsParametersIndex({ parameters }: IndexProps) {
     useFlashToast();
-
-    const [open, setOpen] = useState(false);
-    const form = useForm<Record<string, string>>({});
-
-    function openCreate() {
-        form.clearErrors();
-        form.setData({
-            effective_date: '',
-            kes_rate_employee: String(defaults.kes_rate_employee),
-            kes_rate_employer: String(defaults.kes_rate_employer),
-            kes_cap: String(defaults.kes_cap),
-            jht_employee: String(defaults.tk_rates.jht_employee ?? 0),
-            jht_employer: String(defaults.tk_rates.jht_employer ?? 0),
-            jkk: String(defaults.tk_rates.jkk ?? 0),
-            jkm: String(defaults.tk_rates.jkm ?? 0),
-            jp_employee: String(defaults.tk_rates.jp_employee ?? 0),
-            jp_employer: String(defaults.tk_rates.jp_employer ?? 0),
-            jp_cap: String(defaults.tk_rates.jp_cap ?? 0),
-        });
-        setOpen(true);
-    }
-
-    function submit(event: FormEvent) {
-        event.preventDefault();
-        form.post(bpjsParameters.store.url(), {
-            preserveScroll: true,
-            onSuccess: () => setOpen(false),
-        });
-    }
 
     return (
         <>
@@ -117,9 +49,11 @@ export default function BpjsParametersIndex({
                     title="Parameter BPJS"
                     description="Iuran & plafon BPJS per tenant, berlaku per tanggal efektif."
                 >
-                    <Button onClick={openCreate}>
-                        <Plus />
-                        Tambah Parameter
+                    <Button asChild>
+                        <Link href={bpjsParameters.create.url()}>
+                            <Plus />
+                            Tambah Parameter
+                        </Link>
                     </Button>
                 </PageHeader>
 
@@ -208,88 +142,6 @@ export default function BpjsParametersIndex({
                     </CardContent>
                 </Card>
             </div>
-
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="max-h-[85vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>Tambah Parameter BPJS</DialogTitle>
-                    </DialogHeader>
-
-                    <form
-                        id="bpjs-param-form"
-                        onSubmit={submit}
-                        className="grid gap-4"
-                    >
-                        <div className="grid gap-1">
-                            <Label htmlFor="effective_date">
-                                Tanggal Berlaku{' '}
-                                <span className="text-destructive">*</span>
-                            </Label>
-                            <DatePicker
-                                id="effective_date"
-                                value={form.data.effective_date ?? ''}
-                                onChange={(value) =>
-                                    form.setData('effective_date', value)
-                                }
-                            />
-                            {form.errors.effective_date && (
-                                <p className="text-sm text-destructive">
-                                    {form.errors.effective_date}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                            {RATE_FIELDS.map((f) => (
-                                <div key={f.key} className="grid gap-1">
-                                    <Label htmlFor={f.key}>{f.label}</Label>
-                                    <Input
-                                        id={f.key}
-                                        type="number"
-                                        step="0.01"
-                                        min={0}
-                                        value={form.data[f.key] ?? ''}
-                                        onChange={(e) =>
-                                            form.setData(f.key, e.target.value)
-                                        }
-                                        placeholder="Mis. 0"
-                                    />
-                                </div>
-                            ))}
-                            {CAP_FIELDS.map((f) => (
-                                <div key={f.key} className="grid gap-1">
-                                    <Label htmlFor={f.key}>{f.label}</Label>
-                                    <RupiahInput
-                                        id={f.key}
-                                        value={form.data[f.key] ?? ''}
-                                        onChange={(value) =>
-                                            form.setData(f.key, value)
-                                        }
-                                        placeholder="Masukkan nilai"
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </form>
-
-                    <DialogFooter>
-                        <Button
-                            variant="secondary"
-                            type="button"
-                            onClick={() => setOpen(false)}
-                        >
-                            Batal
-                        </Button>
-                        <Button
-                            type="submit"
-                            form="bpjs-param-form"
-                            disabled={form.processing}
-                        >
-                            Simpan
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </>
     );
 }

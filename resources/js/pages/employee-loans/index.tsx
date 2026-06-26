@@ -1,4 +1,4 @@
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import {
     ChevronLeft,
     ChevronRight,
@@ -145,14 +145,6 @@ export default function EmployeeLoansIndex({
     const [editing, setEditing] = useState<Row | null>(null);
     const form = useForm<LoanForm>(emptyForm);
 
-    function openCreate() {
-        setEditing(null);
-        form.setDefaults(emptyForm);
-        form.reset();
-        form.clearErrors();
-        setOpen(true);
-    }
-
     function openEdit(item: Row) {
         setEditing(item);
         form.clearErrors();
@@ -204,9 +196,11 @@ export default function EmployeeLoansIndex({
                     title="Pinjaman"
                     description="Kelola pinjaman karyawan dan cicilannya. Persetujuan diproses melalui Inbox Approval."
                 >
-                    <Button onClick={openCreate}>
-                        <Plus />
-                        Tambah Pinjaman
+                    <Button asChild>
+                        <Link href={employeeLoans.create.url()}>
+                            <Plus />
+                            Tambah Pinjaman
+                        </Link>
                     </Button>
                 </PageHeader>
 

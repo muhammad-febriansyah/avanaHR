@@ -103,6 +103,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     Route::resource('shift-patterns', ShiftPatternController::class)
         ->only(['index', 'store', 'update', 'destroy']);
+    Route::get('schedules/generate', [ScheduleController::class, 'generatePage'])
+        ->name('schedules.generate-roster');
     Route::post('schedules/generate', [ScheduleController::class, 'generate'])
         ->name('schedules.generate');
     Route::resource('schedules', ScheduleController::class)
@@ -160,11 +162,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('bank-files', BankFileController::class)
         ->only(['index', 'store', 'destroy']);
     Route::resource('bpjs-parameters', BpjsParameterController::class)
-        ->only(['index', 'store', 'destroy']);
+        ->only(['index', 'create', 'store', 'destroy']);
     Route::resource('reimbursements', ReimbursementController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+        ->only(['index', 'create', 'store', 'update', 'destroy']);
     Route::resource('employee-loans', EmployeeLoanController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+        ->only(['index', 'create', 'store', 'update', 'destroy']);
     Route::resource('thr-bonus-runs', ThrBonusRunController::class)
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('work-calendars', WorkCalendarController::class)

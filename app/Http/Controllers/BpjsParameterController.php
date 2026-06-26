@@ -42,6 +42,20 @@ class BpjsParameterController extends Controller
         ]);
     }
 
+    public function create(Request $request): Response
+    {
+        abort_unless($request->user()->can('payroll.run'), 403);
+
+        return Inertia::render('bpjs-parameters/create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Parameter BPJS', 'href' => route('bpjs-parameters.index')],
+                ['title' => 'Tambah', 'href' => route('bpjs-parameters.create')],
+            ],
+            'defaults' => config('payroll.bpjs_defaults'),
+        ]);
+    }
+
     public function store(StoreBpjsParameterRequest $request): RedirectResponse
     {
         $data = $request->validated();
@@ -64,7 +78,7 @@ class BpjsParameterController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Parameter BPJS ditambahkan.']);
 
-        return back();
+        return redirect()->route('bpjs-parameters.index');
     }
 
     public function destroy(Request $request, BpjsParameter $bpjsParameter): RedirectResponse

@@ -65,6 +65,23 @@ class ScheduleController extends Controller
         ]);
     }
 
+    public function generatePage(): Response
+    {
+        $this->authorize('create', Schedule::class);
+
+        return Inertia::render('schedules/generate', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Roster Shift', 'href' => route('schedules.index')],
+                ['title' => 'Generate dari Pola', 'href' => route('schedules.generate-roster')],
+            ],
+            'employees' => Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'employee_no'])
+                ->map(fn (Employee $e): array => ['id' => $e->id, 'label' => $e->fullName().' ('.$e->employee_no.')']),
+            'patterns' => ShiftPattern::orderBy('name')->get(['id', 'name'])
+                ->map(fn (ShiftPattern $p): array => ['id' => $p->id, 'label' => $p->name]),
+        ]);
+    }
+
     public function store(StoreScheduleRequest $request): RedirectResponse
     {
         $data = $request->validated();
@@ -97,7 +114,7 @@ class ScheduleController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => "Roster dibuat: {$written} jadwal."]);
 
-        return back();
+        return redirect()->route('schedules.index');
     }
 
     public function destroy(Schedule $schedule): RedirectResponse

@@ -69,6 +69,26 @@ class ReimbursementController extends Controller
         ]);
     }
 
+    public function create(Request $request): Response
+    {
+        abort_unless($request->user()->can('payroll.run'), 403);
+
+        return Inertia::render('reimbursements/create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Reimbursement', 'href' => route('reimbursements.index')],
+                ['title' => 'Ajukan', 'href' => route('reimbursements.create')],
+            ],
+            'categories' => $this->categoryOptions(),
+            'settlements' => $this->settlementOptions(),
+            'employees' => Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'employee_no'])
+                ->map(fn (Employee $employee): array => [
+                    'id' => $employee->id,
+                    'label' => $employee->fullName().' ('.$employee->employee_no.')',
+                ]),
+        ]);
+    }
+
     public function store(StoreReimbursementRequest $request): RedirectResponse
     {
         $reimbursement = Reimbursement::create([
@@ -87,7 +107,7 @@ class ReimbursementController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
 
-        return back();
+        return redirect()->route('reimbursements.index');
     }
 
     public function update(UpdateReimbursementRequest $request, Reimbursement $reimbursement): RedirectResponse

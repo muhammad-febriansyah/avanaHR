@@ -67,6 +67,24 @@ class EmployeeLoanController extends Controller
         ]);
     }
 
+    public function create(Request $request): Response
+    {
+        abort_unless($request->user()->can('payroll.run'), 403);
+
+        return Inertia::render('employee-loans/create', [
+            'breadcrumbs' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Pinjaman', 'href' => route('employee-loans.index')],
+                ['title' => 'Ajukan', 'href' => route('employee-loans.create')],
+            ],
+            'employees' => Employee::orderBy('first_name')->get(['id', 'first_name', 'last_name', 'employee_no'])
+                ->map(fn (Employee $employee): array => [
+                    'id' => $employee->id,
+                    'label' => $employee->fullName().' ('.$employee->employee_no.')',
+                ]),
+        ]);
+    }
+
     public function store(StoreEmployeeLoanRequest $request): RedirectResponse
     {
         $data = $request->validated();
@@ -89,7 +107,7 @@ class EmployeeLoanController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
 
-        return back();
+        return redirect()->route('employee-loans.index');
     }
 
     public function update(UpdateEmployeeLoanRequest $request, EmployeeLoan $employeeLoan): RedirectResponse
