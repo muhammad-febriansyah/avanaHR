@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Payroll\CommitPaidPayrollRunAction;
 use App\Actions\Payroll\ProcessPayrollRunAction;
 use App\Http\Requests\PayrollRun\StorePayrollRunRequest;
 use App\Http\Requests\PayrollRun\UpdatePayrollRunRequest;
@@ -230,7 +231,7 @@ class PayrollRunController extends Controller
     /**
      * Mark an approved run as paid (after bank disbursement). Final + immutable.
      */
-    public function pay(Request $request, PayrollRun $payrollRun): RedirectResponse
+    public function pay(Request $request, PayrollRun $payrollRun, CommitPaidPayrollRunAction $commit): RedirectResponse
     {
         $this->authorize('approve', $payrollRun);
 
@@ -239,6 +240,9 @@ class PayrollRunController extends Controller
 
             return back();
         }
+
+        // Commit loan repayments + reimbursement payouts before locking as paid.
+        $commit->execute($payrollRun);
 
         $this->transition($request, $payrollRun, 'paid', 'payroll.paid');
 

@@ -16,7 +16,9 @@ class Schedule extends Model
     protected function casts(): array
     {
         return [
-            'date' => 'date',
+            // Pin to Y-m-d so updateOrCreate matches identically across drivers
+            // (SQLite keeps the time component a plain 'date' cast would add).
+            'date' => 'date:Y-m-d',
         ];
     }
 

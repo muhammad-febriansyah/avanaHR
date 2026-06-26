@@ -3,13 +3,20 @@
 namespace App\Actions\Payroll;
 
 use App\Enums\EmployeeStatus;
+use App\Enums\RequestStatus;
 use App\Models\BpjsParameter;
 use App\Models\Employee;
+use App\Models\EmployeeLoan;
 use App\Models\EmployeeSalaryComponent;
+use App\Models\OvertimeRequest;
 use App\Models\PayrollComponent;
+use App\Models\PayrollPeriod;
 use App\Models\PayrollRun;
 use App\Models\Payslip;
+use App\Models\Reimbursement;
 use App\Support\Payroll\BpjsCalculator;
+use App\Support\Payroll\OvertimeCalculator;
+use App\Support\Payroll\Pph21AnnualCalculator;
 use App\Support\Payroll\Pph21TerCalculator;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
@@ -26,6 +33,8 @@ class ProcessPayrollRunAction
     public function __construct(
         private readonly BpjsCalculator $bpjs,
         private readonly Pph21TerCalculator $tax,
+        private readonly OvertimeCalculator $overtime,
+        private readonly Pph21AnnualCalculator $annualTax,
     ) {}
 
     public function execute(PayrollRun $run): PayrollRun
@@ -40,7 +49,7 @@ class ProcessPayrollRunAction
             ->orderByDesc('effective_date')
             ->first();
 
-        return DB::transaction(function () use ($run, $periodStart, $periodEnd, $daysInMonth, $param): PayrollRun {
+        return DB::transaction(function () use ($run, $period, $periodStart, $periodEnd, $daysInMonth, $param): PayrollRun {
             // Idempotent: clear prior payslips (cascade removes lines).
             $run->payslips()->each(fn (Payslip $payslip) => $payslip->delete());
 
@@ -50,7 +59,7 @@ class ProcessPayrollRunAction
             $bpjsTotal = 0;
 
             foreach ($this->payrollableEmployees($periodStart, $periodEnd) as $employee) {
-                $result = $this->buildPayslip($employee, $periodStart, $periodEnd, $daysInMonth, $param);
+                $result = $this->buildPayslip($employee, $period, $periodStart, $periodEnd, $daysInMonth, $param);
 
                 $payslip = $run->payslips()->create([
                     'employee_id' => $employee->id,
@@ -113,6 +122,7 @@ class ProcessPayrollRunAction
      */
     private function buildPayslip(
         Employee $employee,
+        PayrollPeriod $period,
         CarbonImmutable $periodStart,
         CarbonImmutable $periodEnd,
         int $daysInMonth,
@@ -125,6 +135,8 @@ class ProcessPayrollRunAction
         $earnings = 0;
         $taxableEarnings = 0;
         $deductionComponents = 0;
+        // Un-prorated monthly fixed earnings — the "upah sebulan" base for overtime.
+        $monthlyFixedEarning = 0;
 
         // Pass 1: fixed components. The prorated fixed-earning total is the base
         // for percentage components.
@@ -146,6 +158,7 @@ class ProcessPayrollRunAction
             if ($component->type === 'earning') {
                 $earnings += $amount;
                 $fixedEarningBase += $amount;
+                $monthlyFixedEarning += (int) round($sc->amount);
                 if ($component->is_taxable) {
                     $taxableEarnings += $amount;
                 }
@@ -170,6 +183,75 @@ class ProcessPayrollRunAction
             }
         }
 
+        // Overtime pay (Kepmenaker 102/2004) from approved requests in-period.
+        // Taxable earning; not part of the BPJS wage base in this engine.
+        $overtimePay = 0;
+        if (config('payroll.overtime.enabled', true)) {
+            $overtimeMinutes = OvertimeRequest::query()
+                ->where('employee_id', $employee->id)
+                ->where('status', RequestStatus::Approved)
+                ->whereBetween('date', [$periodStart->toDateString(), $periodEnd->toDateString()])
+                ->get()
+                ->map(function (OvertimeRequest $ot): int {
+                    // Prefer logged actual minutes; fall back to planned when not yet recorded.
+                    $actual = (int) ($ot->actual_minutes ?? 0);
+
+                    return $actual > 0 ? $actual : (int) ($ot->planned_minutes ?? 0);
+                })
+                ->all();
+
+            $overtimePay = $this->overtime->totalPay($monthlyFixedEarning, $overtimeMinutes);
+        }
+
+        if ($overtimePay > 0) {
+            $lines[] = [
+                'component_code' => (string) config('payroll.overtime.component_code', 'LEMBUR'),
+                'component_name' => (string) config('payroll.overtime.component_name', 'Uang Lembur'),
+                'type' => 'earning',
+                'amount' => $overtimePay,
+            ];
+            $earnings += $overtimePay;
+            if (config('payroll.overtime.taxable', true)) {
+                $taxableEarnings += $overtimePay;
+            }
+        }
+
+        // Reimbursement payout — approved claims settled via payroll, not yet
+        // assigned to a period. Non-taxable earning (expense reimbursement);
+        // excluded from the BPJS wage base. Committed (period stamped) on pay.
+        $reimbursements = $this->reimbursementPayouts($employee);
+        $reimbursementTotal = 0;
+        foreach ($reimbursements as $reimbursement) {
+            $reimbursementTotal += $reimbursement['amount'];
+        }
+        if ($reimbursementTotal > 0) {
+            $lines[] = [
+                'component_code' => 'REIMBURSE',
+                'component_name' => 'Reimbursement',
+                'type' => 'earning',
+                'amount' => $reimbursementTotal,
+            ];
+            $earnings += $reimbursementTotal;
+        }
+
+        // Loan installment deduction — flat monthly installment per active loan,
+        // capped at the outstanding balance. Read-only preview; the balance is
+        // reduced and the installment recorded when the run is marked paid.
+        $loanDeductions = $this->loanDeductions($employee, $period);
+        $loanTotal = 0;
+        foreach ($loanDeductions as $loan) {
+            $loanTotal += $loan['amount'];
+        }
+        if ($loanTotal > 0) {
+            $lines[] = [
+                'component_code' => 'LOAN',
+                'component_name' => 'Cicilan Pinjaman',
+                'type' => 'deduction',
+                'amount' => $loanTotal,
+            ];
+            $deductionComponents += $loanTotal;
+        }
+
         // BPJS.
         $profile = $this->effective($employee->bpjsProfiles(), $periodEnd);
         $bpjs = $param !== null
@@ -183,19 +265,42 @@ class ProcessPayrollRunAction
             $lines[] = $line;
         }
 
-        // PPh 21 (TER monthly).
+        // PPh 21 — TER monthly (Jan–Nov); December applies the annual correction.
         $taxProfile = $this->effective($employee->taxProfiles(), $periodEnd);
         $taxableEmployerBpjs = $this->taxableEmployerBpjs($bpjs);
         $taxableGross = $taxableEarnings + $taxableEmployerBpjs;
 
         $tax = 0;
+        $annualSummary = null;
         $ptkp = $taxProfile?->ptkp_status;
+        $isDecemberCorrection = config('payroll.annual.enabled', true)
+            && (int) $period->month === 12;
+
         if ($ptkp !== null) {
-            $tax = $this->tax->monthlyTax($taxableGross, $ptkp);
+            if ($isDecemberCorrection) {
+                [$ytdTaxable, $ytdWithheld] = $this->priorYearWithholding($employee, (int) $period->year);
+                // beginning_ytd carries prior-employer cumulative taxable income.
+                $annualTaxable = $ytdTaxable + (int) ($taxProfile->beginning_ytd ?? 0) + $taxableGross;
+                $annualTax = $this->annualTax->annualTax($annualTaxable, $ptkp);
+                $tax = $annualTax - $ytdWithheld; // December withholding (may be a refund)
+                $annualSummary = [
+                    'annual_taxable' => $annualTaxable,
+                    'annual_tax' => $annualTax,
+                    'ytd_withheld' => $ytdWithheld,
+                    'december_correction' => $tax,
+                ];
+            } else {
+                $tax = $this->tax->monthlyTax($taxableGross, $ptkp);
+            }
         }
 
-        if ($tax > 0) {
-            $lines[] = ['component_code' => 'PPH21', 'component_name' => 'PPh 21', 'type' => 'deduction', 'amount' => $tax];
+        if ($tax !== 0) {
+            $lines[] = [
+                'component_code' => 'PPH21',
+                'component_name' => $isDecemberCorrection ? 'PPh 21 (Koreksi Tahunan)' : 'PPh 21',
+                'type' => 'deduction',
+                'amount' => $tax,
+            ];
         }
 
         $gross = $earnings;
@@ -215,11 +320,99 @@ class ProcessPayrollRunAction
                 'employee_name' => $employee->fullName(),
                 'ptkp_status' => $ptkp,
                 'prorate_ratio' => round($ratio, 4),
+                'overtime_pay' => $overtimePay,
+                'overtime_base' => $monthlyFixedEarning,
+                'reimbursement_total' => $reimbursementTotal,
+                'reimbursement_ids' => array_column($reimbursements, 'id'),
+                'loan_total' => $loanTotal,
+                'loan_deductions' => $loanDeductions,
                 'taxable_gross' => $taxableGross,
+                'annual' => $annualSummary,
                 'bpjs' => $bpjs,
                 'has_tax_profile' => $taxProfile !== null,
             ],
         ];
+    }
+
+    /**
+     * Cumulative taxable income + PPh 21 withheld from this year's earlier
+     * periods (Jan–Nov), used for the December annual correction.
+     *
+     * @return array{0:int, 1:int} [ytdTaxable, ytdWithheld]
+     */
+    private function priorYearWithholding(Employee $employee, int $year): array
+    {
+        $payslips = Payslip::query()
+            ->where('employee_id', $employee->id)
+            ->whereHas('run.period', fn ($query) => $query->where('year', $year)->where('month', '<', 12))
+            ->get(['tax', 'snapshot']);
+
+        $taxable = 0;
+        $withheld = 0;
+        foreach ($payslips as $payslip) {
+            $withheld += (int) $payslip->tax;
+            $taxable += (int) ($payslip->snapshot['taxable_gross'] ?? 0);
+        }
+
+        return [$taxable, $withheld];
+    }
+
+    /**
+     * Approved reimbursements settled via payroll and not yet paid (no period).
+     *
+     * @return list<array{id:int, amount:int, category:string}>
+     */
+    private function reimbursementPayouts(Employee $employee): array
+    {
+        return Reimbursement::query()
+            ->where('employee_id', $employee->id)
+            ->where('status', RequestStatus::Approved)
+            ->where('settlement', 'payroll')
+            ->whereNull('period_id')
+            ->get(['id', 'amount', 'category'])
+            ->map(fn (Reimbursement $reimbursement): array => [
+                'id' => $reimbursement->id,
+                'amount' => (int) $reimbursement->amount,
+                'category' => (string) $reimbursement->category,
+            ])
+            ->all();
+    }
+
+    /**
+     * Due loan installments for the period — one flat installment per active
+     * loan with an outstanding balance and tenor remaining, capped at the
+     * balance, skipping loans already deducted in this period.
+     *
+     * @return list<array{loan_id:int, amount:int}>
+     */
+    private function loanDeductions(Employee $employee, PayrollPeriod $period): array
+    {
+        $loans = EmployeeLoan::query()
+            ->where('employee_id', $employee->id)
+            ->where('status', RequestStatus::Approved)
+            ->where('outstanding', '>', 0)
+            ->with('installments:id,loan_id,period_id,status')
+            ->get();
+
+        $deductions = [];
+        foreach ($loans as $loan) {
+            $paidCount = $loan->installments->where('status', 'paid')->count();
+            if ($paidCount >= (int) $loan->tenor_months) {
+                continue;
+            }
+            if ($loan->installments->firstWhere('period_id', $period->id) !== null) {
+                continue;
+            }
+
+            $amount = min((int) $loan->installment, (int) $loan->outstanding);
+            if ($amount <= 0) {
+                continue;
+            }
+
+            $deductions[] = ['loan_id' => (int) $loan->id, 'amount' => $amount];
+        }
+
+        return $deductions;
     }
 
     /**

@@ -40,7 +40,9 @@ class ApprovalNotificationMail extends Mailable
             'approval.revision' => 'Pengajuan Anda perlu revisi',
             'approval.sla_reminder' => 'Pengingat: persetujuan melewati SLA',
             'approval.escalated' => 'Persetujuan dieskalasi ke Anda',
-            default => 'Notifikasi persetujuan',
+            'document.expiring' => 'Pengingat: dokumen karyawan akan kedaluwarsa',
+            'contract.expiring' => 'Pengingat: kontrak karyawan akan berakhir',
+            default => 'Notifikasi',
         };
     }
 }

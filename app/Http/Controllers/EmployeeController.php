@@ -87,9 +87,13 @@ class EmployeeController extends Controller
 
     public function update(UpdateEmployeeRequest $request, Employee $employee, UpdateEmployeeAction $action): RedirectResponse
     {
-        $action->handle($employee, $request->validated());
+        $result = $action->handle($employee, $request->validated(), $request->user());
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'Data karyawan berhasil diperbarui.']);
+        $message = $result['pending']
+            ? 'Perubahan data karyawan diajukan dan menunggu persetujuan.'
+            : 'Data karyawan berhasil diperbarui.';
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => $message]);
 
         return redirect()->route('employees.index');
     }

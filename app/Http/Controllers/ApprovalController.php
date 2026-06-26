@@ -9,6 +9,15 @@ use App\Enums\ApprovalActionType;
 use App\Enums\ApprovalStatus;
 use App\Http\Requests\Approval\ActOnApprovalRequest;
 use App\Models\ApprovalRequest;
+use App\Models\AttendanceCorrection;
+use App\Models\BenefitClaim;
+use App\Models\EmployeeChangeRequest;
+use App\Models\EmployeeLoan;
+use App\Models\LeaveRequest;
+use App\Models\OvertimeRequest;
+use App\Models\Reimbursement;
+use App\Models\WorkVisit;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,7 +39,7 @@ class ApprovalController extends Controller
 
         $pending = ApprovalRequest::query()
             ->where('status', ApprovalStatus::Pending)
-            ->with(['flow.steps', 'stepStates', 'approvable', 'requestedBy:id,name'])
+            ->with(['flow.steps', 'stepStates', 'approvable' => $this->approvableEager(), 'requestedBy:id,name'])
             ->latest('id')
             ->get()
             ->filter(fn (ApprovalRequest $approval): bool => $this->engine->canAct($approval, $user))
@@ -55,7 +64,7 @@ class ApprovalController extends Controller
             'stepStates',
             'actions.actor:id,name',
             'requestedBy:id,name',
-            'approvable',
+            'approvable' => $this->approvableEager(),
         ]);
 
         $states = $approvalRequest->stepStates->keyBy('step_order');
@@ -114,6 +123,24 @@ class ApprovalController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Keputusan persetujuan tersimpan.']);
 
         return to_route('approvals.index');
+    }
+
+    /**
+     * Constrained eager load for the polymorphic approvable so that
+     * {@see Approvable::approvalTitle()} never triggers a lazy-load violation.
+     */
+    private function approvableEager(): \Closure
+    {
+        return fn (MorphTo $morphTo) => $morphTo->morphWith([
+            LeaveRequest::class => ['employee'],
+            OvertimeRequest::class => ['employee'],
+            WorkVisit::class => ['employee'],
+            Reimbursement::class => ['employee'],
+            EmployeeLoan::class => ['employee'],
+            EmployeeChangeRequest::class => ['employee'],
+            AttendanceCorrection::class => ['employee'],
+            BenefitClaim::class => ['employeeBenefit.employee', 'employeeBenefit.benefitType'],
+        ]);
     }
 
     /**

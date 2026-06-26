@@ -24,6 +24,7 @@ use App\Http\Controllers\EmployeeLoanController;
 use App\Http\Controllers\EmployeeMovementController;
 use App\Http\Controllers\EmployeeSalaryComponentController;
 use App\Http\Controllers\EmployeeTaxBpjsController;
+use App\Http\Controllers\Form1721A1Controller;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\HrTicketController;
 use App\Http\Controllers\JobGradeController;
@@ -48,8 +49,11 @@ use App\Http\Controllers\PositionController;
 use App\Http\Controllers\ReimbursementController;
 use App\Http\Controllers\ReportBuilderController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SalaryStructureController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SecuritySettingController;
 use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\ShiftPatternController;
 use App\Http\Controllers\ThrBonusRunController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\UserController;
@@ -87,7 +91,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->only(['store', 'update', 'destroy']);
     Route::resource('shifts', ShiftController::class)
         ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+    Route::resource('shift-patterns', ShiftPatternController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
+    Route::post('schedules/generate', [ScheduleController::class, 'generate'])
+        ->name('schedules.generate');
+    Route::resource('schedules', ScheduleController::class)
+        ->only(['index', 'store', 'destroy']);
     Route::resource('payroll-components', PayrollComponentController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('salary-structures', SalaryStructureController::class)
         ->only(['index', 'store', 'update', 'destroy']);
     Route::resource('payroll-periods', PayrollPeriodController::class)
         ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
@@ -217,6 +229,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('analytics.executive');
     Route::get('reports/compliance', [ComplianceReportController::class, 'index'])
         ->name('reports.compliance');
+    Route::get('reports/annual-tax', [Form1721A1Controller::class, 'index'])
+        ->name('reports.annual-tax');
     Route::get('report-builder', [ReportBuilderController::class, 'index'])->name('report-builder.index');
     Route::post('report-builder', [ReportBuilderController::class, 'store'])->name('report-builder.store');
     Route::get('report-builder/{reportDefinition}/run', [ReportBuilderController::class, 'run'])
