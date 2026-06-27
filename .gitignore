@@ -38,3 +38,5 @@ yarn-error.log
 /.agents/
 /.codex/
 /.playwright-mcp/
+/docs/
+/template/
