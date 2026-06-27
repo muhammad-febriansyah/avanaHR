@@ -30,3 +30,8 @@ yarn-error.log
 
 # Playwright MCP browser logs (noise)
 /.playwright-mcp
+/CLAUDE.md
+/AGENTS.md
+/opencode.json
+/.mcp.json
+/.claude/
