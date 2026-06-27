@@ -16,7 +16,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { formatRupiah } from '@/lib/format';
+import { formatDateID, formatRupiah } from '@/lib/format';
 
 type Employment = {
     id: number;
@@ -149,8 +149,13 @@ export default function EmployeeHistory({
                                     >
                                         <div className="flex flex-wrap items-center justify-between gap-2">
                                             <div className="font-medium">
-                                                {emp.effective_date} —{' '}
-                                                {emp.end_date ?? 'sekarang'}
+                                                {formatDateID(
+                                                    emp.effective_date,
+                                                )}{' '}
+                                                —{' '}
+                                                {emp.end_date
+                                                    ? formatDateID(emp.end_date)
+                                                    : 'sekarang'}
                                                 {active && (
                                                     <Badge
                                                         variant="secondary"
@@ -250,7 +255,9 @@ export default function EmployeeHistory({
                                                     : formatRupiah(row.amount)}
                                             </TableCell>
                                             <TableCell>
-                                                {row.effective_date ?? '-'}
+                                                {formatDateID(
+                                                    row.effective_date,
+                                                )}
                                             </TableCell>
                                         </TableRow>
                                     ))

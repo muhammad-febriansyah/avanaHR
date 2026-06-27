@@ -23,6 +23,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useFlashToast } from '@/hooks/use-flash-toast';
+import { formatDateID } from '@/lib/format';
 import type { Paginator } from '@/types/employee';
 
 type Option = { value: string; label: string };
@@ -255,7 +256,9 @@ export default function MovementsIndex({
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell className="tabular-nums">
-                                                    {item.effective_date}
+                                                    {formatDateID(
+                                                        item.effective_date,
+                                                    )}
                                                 </TableCell>
                                                 <TableCell>
                                                     <Badge

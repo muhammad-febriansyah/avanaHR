@@ -8,6 +8,7 @@ use App\Actions\Employee\UpdateEmployeeAction;
 use App\Enums\EmployeeStatus;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Http\Requests\Employee\UpdateEmployeeRequest;
+use App\Models\AuditLog;
 use App\Models\CustomField;
 use App\Models\Employee;
 use App\Repositories\Employee\EmployeeRepository;
@@ -57,7 +58,13 @@ class EmployeeController extends Controller
 
     public function store(StoreEmployeeRequest $request, CreateEmployeeAction $action): RedirectResponse
     {
-        $action->handle($request->validated());
+        $employee = $action->handle($request->validated());
+
+        $this->writeAudit($request, $employee, 'created', null, [
+            'employee_no' => $employee->employee_no,
+            'full_name' => $employee->fullName(),
+            'status' => $employee->status->value,
+        ]);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Karyawan berhasil ditambahkan.']);
 
@@ -110,15 +117,44 @@ class EmployeeController extends Controller
         return redirect()->route('employees.index');
     }
 
-    public function destroy(Employee $employee, DeleteEmployeeAction $action): RedirectResponse
+    public function destroy(Request $request, Employee $employee, DeleteEmployeeAction $action): RedirectResponse
     {
         $this->authorize('delete', $employee);
 
+        $snapshot = [
+            'employee_no' => $employee->employee_no,
+            'full_name' => $employee->fullName(),
+            'status' => $employee->status->value,
+        ];
+
         $action->handle($employee);
+
+        $this->writeAudit($request, $employee, 'deleted', $snapshot, null);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Karyawan berhasil dihapus.']);
 
         return redirect()->route('employees.index');
+    }
+
+    /**
+     * Record an audit-log entry for an employee lifecycle action.
+     *
+     * @param  array<string, mixed>|null  $old
+     * @param  array<string, mixed>|null  $new
+     */
+    private function writeAudit(Request $request, Employee $employee, string $event, ?array $old, ?array $new): void
+    {
+        AuditLog::create([
+            'tenant_id' => $employee->tenant_id,
+            'user_id' => $request->user()->id,
+            'auditable_type' => Employee::class,
+            'auditable_id' => $employee->id,
+            'event' => $event,
+            'old_values' => $old,
+            'new_values' => $new,
+            'ip' => $request->ip(),
+            'user_agent' => (string) $request->userAgent(),
+        ]);
     }
 
     /**

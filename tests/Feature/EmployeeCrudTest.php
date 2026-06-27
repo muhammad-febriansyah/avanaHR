@@ -49,6 +49,15 @@ it('creates an employee scoped to the tenant', function () {
         'employee_no' => 'EMP90001',
         'tenant_id' => $this->tenant->id,
     ]);
+
+    $employee = Employee::where('employee_no', 'EMP90001')->firstOrFail();
+    $this->assertDatabaseHas('audit_logs', [
+        'tenant_id' => $this->tenant->id,
+        'user_id' => $this->admin->id,
+        'auditable_type' => Employee::class,
+        'auditable_id' => $employee->id,
+        'event' => 'created',
+    ]);
 });
 
 it('rejects invalid input with validation errors', function () {
@@ -78,6 +87,12 @@ it('soft deletes an employee', function () {
         ->assertRedirect(route('employees.index'));
 
     $this->assertSoftDeleted('employees', ['id' => $employee->id]);
+
+    $this->assertDatabaseHas('audit_logs', [
+        'auditable_type' => Employee::class,
+        'auditable_id' => $employee->id,
+        'event' => 'deleted',
+    ]);
 });
 
 it('forbids users without the employee permission', function () {

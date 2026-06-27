@@ -16,7 +16,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useFlashToast } from '@/hooks/use-flash-toast';
-import { formatRupiah } from '@/lib/format';
+import { formatDateID, formatRupiah } from '@/lib/format';
 
 type TaxProfile = {
     id: number;
@@ -114,7 +114,7 @@ export default function EmployeeTaxBpjs({
                                                 {index + 1}
                                             </TableCell>
                                             <TableCell className="font-medium">
-                                                {tp.effective_date}
+                                                {formatDateID(tp.effective_date)}
                                             </TableCell>
                                             <TableCell>
                                                 {tp.ptkp_status}
@@ -200,7 +200,7 @@ export default function EmployeeTaxBpjs({
                                                 {index + 1}
                                             </TableCell>
                                             <TableCell className="font-medium">
-                                                {bp.effective_date}
+                                                {formatDateID(bp.effective_date)}
                                             </TableCell>
                                             <TableCell>
                                                 {formatRupiah(

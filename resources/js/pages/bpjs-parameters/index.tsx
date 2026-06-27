@@ -14,7 +14,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useFlashToast } from '@/hooks/use-flash-toast';
-import { formatRupiah } from '@/lib/format';
+import { formatDateID, formatRupiah } from '@/lib/format';
 
 type TkRates = {
     jht_employee?: number;
@@ -90,7 +90,7 @@ export default function BpjsParametersIndex({ parameters }: IndexProps) {
                                                 {index + 1}
                                             </TableCell>
                                             <TableCell className="font-medium">
-                                                {p.effective_date}
+                                                {formatDateID(p.effective_date)}
                                             </TableCell>
                                             <TableCell>
                                                 {p.kes_rate_employee}% /{' '}
