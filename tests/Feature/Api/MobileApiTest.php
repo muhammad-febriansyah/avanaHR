@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LeaveBalance;
+use App\Models\LeaveType;
 use App\Models\Notification;
 use App\Models\PayrollRun;
 use App\Models\Payslip;
@@ -98,4 +99,91 @@ it('marks all notifications read', function () {
     expect(
         Notification::where('user_id', $this->user->id)->whereNull('read_at')->count()
     )->toBe(0);
+});
+
+it('records a clock-in as a raw log and a daily summary', function () {
+    $this->actingAs($this->user, 'api')
+        ->postJson(route('api.me.attendance.clock'), [
+            'type' => 'in',
+            'latitude' => -6.2241,
+            'longitude' => 106.8090,
+            'face_confidence' => 0.95,
+        ])
+        ->assertCreated()
+        ->assertJsonPath('data.is_suspicious', false)
+        ->assertJsonPath('data.today.next_action', 'out');
+
+    $this->assertDatabaseHas('attendance_logs', [
+        'employee_id' => $this->user->employee_id,
+        'type' => 'in',
+        'source' => 'mobile',
+    ]);
+    $this->assertDatabaseHas('attendance_daily', [
+        'employee_id' => $this->user->employee_id,
+    ]);
+});
+
+it('flags a low-confidence face punch as suspicious', function () {
+    $this->actingAs($this->user, 'api')
+        ->postJson(route('api.me.attendance.clock'), ['type' => 'in', 'face_confidence' => 0.40])
+        ->assertCreated()
+        ->assertJsonPath('data.is_suspicious', true);
+});
+
+it('validates the clock type', function () {
+    $this->actingAs($this->user, 'api')
+        ->postJson(route('api.me.attendance.clock'), ['type' => 'jump'])
+        ->assertStatus(422);
+});
+
+it('submits a leave request for the authenticated employee only', function () {
+    $leaveType = LeaveType::firstOrFail();
+
+    $this->actingAs($this->user, 'api')
+        ->postJson(route('api.me.leave-requests.store'), [
+            'leave_type_id' => $leaveType->id,
+            'start_date' => '2026-07-10',
+            'end_date' => '2026-07-11',
+            'reason' => 'Acara keluarga',
+        ])
+        ->assertCreated()
+        ->assertJsonPath('data.days', 2);
+
+    $this->assertDatabaseHas('leave_requests', [
+        'employee_id' => $this->user->employee_id,
+        'leave_type_id' => $leaveType->id,
+        'days' => 2,
+    ]);
+});
+
+it('submits an overtime request', function () {
+    $this->actingAs($this->user, 'api')
+        ->postJson(route('api.me.overtime-requests.store'), [
+            'date' => '2026-07-01',
+            'start_time' => '18:00',
+            'end_time' => '20:30',
+            'reason' => 'Closing bulanan',
+        ])
+        ->assertCreated()
+        ->assertJsonPath('data.planned_minutes', 150);
+
+    $this->assertDatabaseHas('overtime_requests', [
+        'employee_id' => $this->user->employee_id,
+        'planned_minutes' => 150,
+    ]);
+});
+
+it('submits a reimbursement', function () {
+    $this->actingAs($this->user, 'api')
+        ->postJson(route('api.me.reimbursements.store'), [
+            'category' => 'transport',
+            'amount' => 75000,
+        ])
+        ->assertCreated()
+        ->assertJsonPath('data.amount', 75000);
+
+    $this->assertDatabaseHas('reimbursements', [
+        'employee_id' => $this->user->employee_id,
+        'amount' => 75000,
+    ]);
 });
