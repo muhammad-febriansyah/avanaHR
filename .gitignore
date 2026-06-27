@@ -36,3 +36,5 @@ yarn-error.log
 /.mcp.json
 /.claude/
 /.agents/
+/.codex/
+/.playwright-mcp/
