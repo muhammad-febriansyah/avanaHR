@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\SubmitOvertimeRequest;
 use App\Models\OvertimeRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class OvertimeController extends Controller
@@ -16,6 +17,24 @@ class OvertimeController extends Controller
     use ResolvesEmployee;
 
     public function __construct(private readonly ApprovalEngine $engine) {}
+
+    public function index(Request $request): JsonResponse
+    {
+        $overtimes = OvertimeRequest::query()
+            ->where('employee_id', $this->employee($request)->id)
+            ->latest('id')
+            ->paginate(20)
+            ->through(fn (OvertimeRequest $ot): array => [
+                'id' => $ot->id,
+                'date' => $ot->date?->toDateString(),
+                'planned_minutes' => (int) $ot->planned_minutes,
+                'day_type' => $ot->day_type,
+                'reason' => $ot->reason,
+                'status' => $ot->status instanceof \BackedEnum ? $ot->status->value : $ot->status,
+            ]);
+
+        return response()->json($overtimes);
+    }
 
     public function store(SubmitOvertimeRequest $request): JsonResponse
     {

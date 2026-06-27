@@ -203,3 +203,114 @@ it('submits a reimbursement', function () {
         'amount' => 75000,
     ]);
 });
+
+it('submits a loan and lists it', function () {
+    $this->actingAs($this->user, 'api')
+        ->postJson(route('api.me.loans.store'), ['principal' => 12000000, 'tenor_months' => 12])
+        ->assertCreated()
+        ->assertJsonPath('data.installment', 1000000);
+
+    $this->actingAs($this->user, 'api')
+        ->getJson(route('api.me.loans'))
+        ->assertOk()
+        ->assertJsonStructure(['data' => [['id', 'principal', 'installment', 'status']]]);
+});
+
+it('submits a work visit', function () {
+    $this->actingAs($this->user, 'api')
+        ->postJson(route('api.me.work-visits.store'), [
+            'destination' => 'Surabaya',
+            'purpose' => 'Audit cabang',
+            'start_date' => '2026-07-20',
+            'end_date' => '2026-07-22',
+            'estimated_cost' => 3500000,
+        ])
+        ->assertCreated();
+
+    $this->assertDatabaseHas('work_visits', [
+        'employee_id' => $this->user->employee_id,
+        'destination' => 'Surabaya',
+    ]);
+});
+
+it('updates contact profile through maker-checker', function () {
+    $this->actingAs($this->user, 'api')
+        ->putJson(route('api.me.profile.update'), [
+            'phone' => '081234567890',
+            'address' => 'Jl. Test 99',
+        ])
+        ->assertOk()
+        ->assertJsonStructure(['message', 'pending']);
+});
+
+it('registers a device for push notifications', function () {
+    $this->actingAs($this->user, 'api')
+        ->postJson(route('api.me.devices.register'), [
+            'device_id' => 'PIXEL-7',
+            'platform' => 'android',
+            'fcm_token' => 'fcm_abc',
+            'biometric_enabled' => true,
+        ])
+        ->assertOk();
+
+    $this->assertDatabaseHas('device_registrations', [
+        'user_id' => $this->user->id,
+        'device_id' => 'PIXEL-7',
+        'platform' => 'android',
+    ]);
+});
+
+it('lets a manager list, approve, and bulk-approve the inbox', function () {
+    $manager = User::role('manager')->whereNotNull('employee_id')->firstOrFail();
+    $employee = User::role('employee')->whereNotNull('employee_id')
+        ->where('id', '!=', $manager->id)->firstOrFail();
+    $leaveType = LeaveType::firstOrFail();
+
+    // Employee files two leave requests → land in the manager inbox.
+    foreach (['2026-08-01' => '2026-08-01', '2026-08-05' => '2026-08-05'] as $start => $end) {
+        $this->actingAs($employee, 'api')
+            ->postJson(route('api.me.leave-requests.store'), [
+                'leave_type_id' => $leaveType->id,
+                'start_date' => $start,
+                'end_date' => $end,
+            ])->assertCreated();
+    }
+
+    $inbox = $this->actingAs($manager, 'api')
+        ->getJson(route('api.mss.approvals'))
+        ->assertOk()
+        ->json('data');
+
+    expect(count($inbox))->toBeGreaterThanOrEqual(2);
+
+    $ids = collect($inbox)->pluck('id');
+
+    $this->actingAs($manager, 'api')
+        ->postJson(route('api.mss.approvals.act', $ids->first()), ['action' => 'approve'])
+        ->assertOk();
+
+    $this->actingAs($manager, 'api')
+        ->postJson(route('api.mss.approvals.bulk'), [
+            'ids' => $ids->slice(1)->values()->all(),
+            'action' => 'approve',
+        ])
+        ->assertOk()
+        ->assertJsonStructure(['processed', 'results']);
+});
+
+it('forbids a non-manager from the MSS inbox', function () {
+    $employee = User::role('employee')->whereNotNull('employee_id')->firstOrFail();
+
+    $this->actingAs($employee, 'api')
+        ->getJson(route('api.mss.approvals'))
+        ->assertStatus(403);
+});
+
+it('lists the managers team (reporting line)', function () {
+    $manager = User::role('manager')->whereNotNull('employee_id')->firstOrFail();
+
+    $this->actingAs($manager, 'api')
+        ->getJson(route('api.mss.team'))
+        ->assertOk()
+        ->assertJsonStructure(['data']);
+});
