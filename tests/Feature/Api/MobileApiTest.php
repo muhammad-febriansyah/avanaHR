@@ -79,6 +79,22 @@ it('blocks reading another employees payslip (IDOR)', function () {
         ->assertStatus(403);
 });
 
+it('cannot read another tenants payslip (tenant isolation)', function () {
+    // Build a payslip that belongs entirely to a different tenant.
+    $otherTenant = Tenant::factory()->create();
+    app(CurrentTenant::class)->set($otherTenant);
+    $foreignRun = PayrollRun::factory()->create();
+    $foreignPayslip = Payslip::factory()->create(['run_id' => $foreignRun->id]);
+
+    // Restore our tenant context, then try to reach the foreign payslip.
+    app(CurrentTenant::class)->set($this->tenant);
+
+    // TenantScope hides cross-tenant rows entirely → route binding 404s.
+    $this->actingAs($this->user, 'api')
+        ->getJson(route('api.me.payslips.show', $foreignPayslip))
+        ->assertStatus(404);
+});
+
 it('returns leave balances and notifications scoped to the user', function () {
     $this->actingAs($this->user, 'api')
         ->getJson(route('api.me.leave.balances'))
