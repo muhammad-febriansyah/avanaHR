@@ -1,4 +1,0 @@
-[      84ms] [LOG] 🔍 Browser logger active (MCP server detected). Posting to: http://localhost:8000/_boost/browser-logs @ http://localhost:8000/employees/22/edit:157
-[      84ms] [WARNING] The specified value "2026-01-14T17:00:00.000000Z" does not conform to the required format, "yyyy-MM-dd". @ http://localhost:8000/employees/22/edit:340
-[     110ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8000/employees/22/edit:216
-[     140ms] [WARNING] The specified value "2026-01-14T17:00:00.000000Z" does not conform to the required format, "yyyy-MM-dd". @ http://[::1]:5173/node_modules/.vite/deps/@inertiajs_react.js?v=66b95dfc:7967
