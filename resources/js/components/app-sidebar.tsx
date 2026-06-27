@@ -62,6 +62,7 @@ import { index as auditLogsIndex } from '@/routes/audit-logs';
 import { index as benefitTypesIndex } from '@/routes/benefit-types';
 import { index as bpjsParametersIndex } from '@/routes/bpjs-parameters';
 import { edit as brandingEdit } from '@/routes/branding';
+import { edit as webSettingsEdit } from '@/routes/web-settings';
 import { index as employeeBenefitsIndex } from '@/routes/employee-benefits';
 import { index as employeeDocumentsIndex } from '@/routes/employee-documents';
 import { index as hrTicketsIndex } from '@/routes/hr-tickets';
@@ -387,6 +388,11 @@ const navGroups: NavGroup[] = [
                     {
                         title: 'Branding',
                         href: brandingEdit(),
+                        permission: 'setting.manage',
+                    },
+                    {
+                        title: 'Pengaturan Web',
+                        href: webSettingsEdit(),
                         permission: 'setting.manage',
                     },
                     {

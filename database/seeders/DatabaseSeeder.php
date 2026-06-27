@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             'is_super_admin' => true,
         ]);
 
+        $this->call(WebSettingSeeder::class);
         $this->call(DemoTenantSeeder::class);
     }
 }

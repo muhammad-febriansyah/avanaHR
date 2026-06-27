@@ -55,6 +55,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SalaryStructureController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SecuritySettingController;
+use App\Http\Controllers\Settings\WebController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\ShiftPatternController;
 use App\Http\Controllers\ShiftSwapController;
@@ -229,6 +230,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     Route::get('branding', [BrandingController::class, 'edit'])->name('branding.edit');
     Route::post('branding', [BrandingController::class, 'update'])->name('branding.update');
+    Route::get('web-settings', [WebController::class, 'edit'])->name('web-settings.edit');
+    Route::post('web-settings', [WebController::class, 'update'])->name('web-settings.update');
     Route::get('security-settings', [SecuritySettingController::class, 'edit'])
         ->name('security-settings.edit');
     Route::put('security-settings', [SecuritySettingController::class, 'update'])

@@ -1,8 +1,8 @@
 import { Head, useForm } from '@inertiajs/react';
 import { Save } from 'lucide-react';
-import { useState } from 'react';
 import type { FormEvent } from 'react';
 import branding from '@/actions/App/Http/Controllers/BrandingController';
+import FileDropzone from '@/components/file-dropzone';
 import PageHeader from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,16 +17,10 @@ type BrandingProps = {
 export default function BrandingEdit({ company }: BrandingProps) {
     useFlashToast();
 
-    const [preview, setPreview] = useState<string | null>(company.logo_url);
     const form = useForm<{ name: string; logo: File | null }>({
         name: company.name,
         logo: null,
     });
-
-    function onLogoChange(file: File | null) {
-        form.setData('logo', file);
-        setPreview(file ? URL.createObjectURL(file) : company.logo_url);
-    }
 
     function submit(event: FormEvent) {
         event.preventDefault();
@@ -71,35 +65,17 @@ export default function BrandingEdit({ company }: BrandingProps) {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="logo">Logo</Label>
-                                <div className="flex items-center gap-4">
-                                    <div className="flex h-16 w-32 items-center justify-center overflow-hidden rounded-lg border bg-muted">
-                                        {preview ? (
-                                            <img
-                                                src={preview}
-                                                alt="Logo"
-                                                className="max-h-full max-w-full object-contain"
-                                            />
-                                        ) : (
-                                            <span className="text-xs text-muted-foreground">
-                                                Belum ada logo
-                                            </span>
-                                        )}
-                                    </div>
-                                    <Input
-                                        id="logo"
-                                        type="file"
-                                        accept="image/png,image/jpeg,image/webp,image/svg+xml"
-                                        className="max-w-xs"
-                                        onChange={(e) =>
-                                            onLogoChange(
-                                                e.target.files?.[0] ?? null,
-                                            )
-                                        }
-                                    />
-                                </div>
-                                <p className="text-xs text-muted-foreground">
-                                    PNG/JPG/WEBP/SVG, maks 1 MB.
-                                </p>
+                                <FileDropzone
+                                    id="logo"
+                                    value={form.data.logo}
+                                    onChange={(file) =>
+                                        form.setData('logo', file)
+                                    }
+                                    currentUrl={company.logo_url}
+                                    accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                                    hint="PNG/JPG/WEBP/SVG · maks 1 MB"
+                                    variant="image"
+                                />
                                 {form.errors.logo && (
                                     <p className="text-sm text-destructive">
                                         {form.errors.logo}

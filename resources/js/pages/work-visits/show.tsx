@@ -18,6 +18,7 @@ import { DetailItem } from '@/components/detail/detail-item';
 import { InfoHero } from '@/components/detail/info-hero';
 import { SectionCard } from '@/components/detail/section-card';
 import { StatTile } from '@/components/detail/stat-tile';
+import FileDropzone from '@/components/file-dropzone';
 import InputError from '@/components/input-error';
 import PageHeader from '@/components/page-header';
 import { Badge } from '@/components/ui/badge';
@@ -470,21 +471,16 @@ export default function WorkVisitsShow({ workVisit }: ShowProps) {
                                 <Label htmlFor="attachment">
                                     Unggah Berkas (opsional)
                                 </Label>
-                                <Input
+                                <FileDropzone
                                     id="attachment"
-                                    type="file"
-                                    accept=".pdf,.png,.jpg,.jpeg,.webp"
-                                    onChange={(e) =>
-                                        reportForm.setData(
-                                            'attachment',
-                                            e.target.files?.[0] ?? null,
-                                        )
+                                    value={reportForm.data.attachment}
+                                    onChange={(file) =>
+                                        reportForm.setData('attachment', file)
                                     }
+                                    accept=".pdf,.png,.jpg,.jpeg,.webp"
+                                    hint="PDF/PNG/JPG/WEBP · maks 4 MB · mengganti link bila diunggah"
+                                    variant="file"
                                 />
-                                <p className="text-xs text-muted-foreground">
-                                    Maks. 4 MB. PDF, PNG, JPG, WEBP. Mengganti
-                                    link bila diunggah.
-                                </p>
                                 <InputError
                                     message={reportForm.errors.attachment}
                                 />

@@ -2,6 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { Save, X } from 'lucide-react';
 import type { FormEvent } from 'react';
 import employeeDocuments from '@/actions/App/Http/Controllers/EmployeeDocumentController';
+import FileDropzone from '@/components/file-dropzone';
 import InputError from '@/components/input-error';
 import PageHeader from '@/components/page-header';
 import { RequiredMark } from '@/components/required-mark';
@@ -247,21 +248,16 @@ export default function EmployeeDocumentsCreate({
                                     <Label htmlFor="file">
                                         Berkas (PDF / Gambar)
                                     </Label>
-                                    <Input
+                                    <FileDropzone
                                         id="file"
-                                        type="file"
-                                        accept=".pdf,.png,.jpg,.jpeg,.webp"
-                                        onChange={(e) =>
-                                            form.setData(
-                                                'file',
-                                                e.target.files?.[0] ?? null,
-                                            )
+                                        value={form.data.file}
+                                        onChange={(file) =>
+                                            form.setData('file', file)
                                         }
+                                        accept=".pdf,.png,.jpg,.jpeg,.webp"
+                                        hint="PDF/PNG/JPG/WEBP · maks 4 MB"
+                                        variant="file"
                                     />
-                                    <p className="text-xs text-muted-foreground">
-                                        Maksimal 4 MB. Format: PDF, PNG, JPG,
-                                        WEBP.
-                                    </p>
                                     <InputError message={form.errors.file} />
                                 </div>
                             </div>
