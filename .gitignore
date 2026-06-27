@@ -35,3 +35,4 @@ yarn-error.log
 /opencode.json
 /.mcp.json
 /.claude/
+/.agents/
